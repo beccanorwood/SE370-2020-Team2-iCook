@@ -25,5 +25,8 @@ public class Driver
 
         // Moving the cursor to the last row
         System.out.println("Table contains " + resultSet.getInt("COUNT(*)") + " rows");
+
+        // TESTING
+        System.out.println("HI JOEL");
     }
 }
