@@ -1,10 +1,8 @@
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
-import javax.swing.*;
 
 
 public class DatabaseConnection {
@@ -31,4 +29,24 @@ public class DatabaseConnection {
     }
 
 
+    public void addItem(String name) throws SQLException
+    {
+        statement.execute("INSERT INTO test_izzy (first_name) VALUE ('"+name+"')");
+    }
+
+
+    public int getNumOfItemsInTable() throws SQLException
+    {
+        int num;
+
+        // Retrieving the data
+        ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM test_izzy");
+        rs.next();
+
+        // Moving the cursor to the last row
+        num = rs.getInt("COUNT(*)");
+
+        // return the number of items in the table
+        return num;
+    }
 }

@@ -15,16 +15,12 @@ public class Driver
         DatabaseConnection database = new DatabaseConnection();
 
         // Insert an item to the database
-        database.statement.execute("INSERT INTO test_izzy (first_name) VALUE ('test')");
+        database.addItem("hello");
 
         // Retrieving the data
-        ResultSet resultSet = database.statement.executeQuery("SELECT COUNT(*) FROM test_izzy");
-        resultSet.next();
+        int num = database.getNumOfItemsInTable();
 
         // Moving the cursor to the last row
-        System.out.println("Table contains " + resultSet.getInt("COUNT(*)") + " rows");
-
-        // TESTING
-        System.out.println("HI JOEL");
+        System.out.println("Table contains " + num + " rows");
     }
 }
