@@ -1,8 +1,11 @@
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+import javax.swing.*;
+
 
 public class DatabaseConnection {
 
@@ -13,10 +16,11 @@ public class DatabaseConnection {
 
     public Statement statement;
 
+
     // Constructor
     DatabaseConnection() throws SQLException {
         // Register the Driver
-        DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+        DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 
         // Getting the connection
         Connection connection = DriverManager.getConnection(url, username, password);
@@ -25,4 +29,6 @@ public class DatabaseConnection {
         // Creating a statement object
         statement = connection.createStatement();
     }
+
+
 }
