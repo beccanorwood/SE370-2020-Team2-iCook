@@ -1,4 +1,3 @@
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -14,13 +13,20 @@ public class Driver
         // create new database object
         DatabaseConnection database = new DatabaseConnection();
 
-        // Insert an item to the database
-        database.addItem("hello");
+        // Insert an item into the ingredients table
+        //database.addIngredient("milk", 2);
+
+        // Update an item in the ingredients table
+        //database.updateIngredient("milk", 9);
+
+        // Remove an item from the ingredients table
+        //database.deleteIngredient("milk");
 
         // Retrieving the data
-        int num = database.getNumOfItemsInTable();
+        System.out.println("My Ingredients:");
+        database.displayIngredients();
 
-        // Moving the cursor to the last row
-        System.out.println("Table contains " + num + " rows");
+        // get the quantity of a specific ingredient
+        System.out.print("\nAmount of sugar: " + database.getIngredientQuantity("sugar"));
     }
 }

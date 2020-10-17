@@ -1,10 +1,17 @@
+import sun.tools.tree.ReturnStatement;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 
-
+/**
+ * Connects to the database and allows for SQL specific calls
+ *
+ * @author Team 2
+ * @version 10/16/2020
+ */
 public class DatabaseConnection {
 
     private static final String username = "se370";
@@ -15,7 +22,9 @@ public class DatabaseConnection {
     public Statement statement;
 
 
-    // Constructor
+    /**
+     * Constructor
+     */
     DatabaseConnection() throws SQLException {
         // Register the Driver
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
@@ -29,24 +38,59 @@ public class DatabaseConnection {
     }
 
 
-    public void addItem(String name) throws SQLException
-    {
-        statement.execute("INSERT INTO test_izzy (first_name) VALUE ('"+name+"')");
+    /**
+     * Performs SQL statement to add an ingredient to the ingredients table
+     */
+    public void addIngredient(String name, int quantity) throws SQLException {
+        statement.execute("INSERT INTO ingredients (name, quantity) VALUE ('"+name+"', '"+quantity+"') ");
     }
 
 
-    public int getNumOfItemsInTable() throws SQLException
-    {
-        int num;
+    /**
+     * Performs SQL statement to update an ingredient's quantity
+     */
+    public void updateIngredient(String name, int quantity) throws SQLException {
+        statement.execute("UPDATE ingredients SET quantity = '"+quantity+"' WHERE name = '"+name+"' ");
+    }
 
-        // Retrieving the data
-        ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM test_izzy");
-        rs.next();
 
-        // Moving the cursor to the last row
-        num = rs.getInt("COUNT(*)");
+    /**
+     * Performs SQL statement to update an ingredient's quantity
+     */
+    public void deleteIngredient(String name) throws SQLException {
+        statement.execute("DELETE FROM ingredients WHERE name = '"+name+"' ");
+    }
 
-        // return the number of items in the table
-        return num;
+
+    /**
+     * Performs SQL statement to nicely display all ingredients in the table
+     */
+    public void displayIngredients() throws SQLException {
+        // Perform the query
+        ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
+
+        // read each row in the table
+        while (rs.next())
+        {
+            // read each column of the row
+            String name = rs.getString("name");
+            int quantity = rs.getInt("quantity");
+
+            // print out the row
+            System.out.println(name + " " + quantity);
+        }
+    }
+
+
+    /**
+     * Performs SQL statement to return the quantity field of an ingredient
+     */
+    public int getIngredientQuantity(String name) throws SQLException {
+        // perform the query
+        ResultSet rs = statement.executeQuery("SELECT quantity FROM ingredients WHERE name = '"+name+"' ");
+        rs.next();  // move the 'cursor' to the first row (ALWAYS NEED THIS WHEN QUERYING)
+
+        // return the quantity field of the specified ingredient
+        return rs.getInt("quantity");
     }
 }
