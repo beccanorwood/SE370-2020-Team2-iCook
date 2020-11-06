@@ -14,19 +14,19 @@ public class Driver
         DatabaseConnection database = new DatabaseConnection();
 
         // Insert an item into the ingredients table
-        //database.addUserIngredient(1, 2, 50);
+        //database.addIngredient("milk", 2);
 
         // Update an item in the ingredients table
-        //database.updateUserIngredient(1, 9);
+        //database.updateIngredient("milk", 9);
 
         // Remove an item from the ingredients table
-        //database.deleteUserIngredient(2);
+        //database.deleteIngredient("milk");
 
         // Retrieving the data
-        //System.out.println("iCook Ingredients:");
-        //database.displayIngredientsTable();
+        System.out.println("My Ingredients:");
+        database.displayIngredients();
 
         // get the quantity of a specific ingredient
-        //System.out.print("\nSugar is measure in: " + database.getIngredientMeasurement(1));
+        System.out.print("\nAmount of sugar: " + database.getIngredientQuantity("sugar"));
     }
 }

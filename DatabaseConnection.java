@@ -41,31 +41,31 @@ public class DatabaseConnection {
     /**
      * Performs SQL statement to add an ingredient to the ingredients table
      */
-    public void addUserIngredient(int userID, int ingredientID, int quantity) throws SQLException {
-        statement.execute("INSERT INTO user_ingredients (user_id, ingredient_id, quantity) VALUE ("+userID+", "+ingredientID+", "+quantity+") ");
+    public void addIngredient(String name, int quantity) throws SQLException {
+        statement.execute("INSERT INTO ingredients (name, quantity) VALUE ('"+name+"', '"+quantity+"') ");
     }
 
 
     /**
      * Performs SQL statement to update an ingredient's quantity
      */
-    public void updateUserIngredient(int ID, int quantity) throws SQLException {
-        statement.execute("UPDATE user_ingredients SET quantity = '"+quantity+"' WHERE ID = "+ID+" ");
+    public void updateIngredient(String name, int quantity) throws SQLException {
+        statement.execute("UPDATE ingredients SET quantity = '"+quantity+"' WHERE name = '"+name+"' ");
     }
 
 
     /**
      * Performs SQL statement to update an ingredient's quantity
      */
-    public void deleteUserIngredient(int ID) throws SQLException {
-        statement.execute("DELETE FROM user_ingredients WHERE ID = "+ID+" ");
+    public void deleteIngredient(String name) throws SQLException {
+        statement.execute("DELETE FROM ingredients WHERE name = '"+name+"' ");
     }
 
 
     /**
      * Performs SQL statement to nicely display all ingredients in the table
      */
-    public void displayIngredientsTable() throws SQLException {
+    public void displayIngredients() throws SQLException {
         // Perform the query
         ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
 
@@ -74,10 +74,10 @@ public class DatabaseConnection {
         {
             // read each column of the row
             String name = rs.getString("name");
-            String unit_of_measure = rs.getString("unit_of_measure");
+            int quantity = rs.getInt("quantity");
 
             // print out the row
-            System.out.println(name + " measured in " + unit_of_measure );
+            System.out.println(name + " " + quantity);
         }
     }
 
@@ -85,12 +85,12 @@ public class DatabaseConnection {
     /**
      * Performs SQL statement to return the quantity field of an ingredient
      */
-    public String getIngredientMeasurement(int ID) throws SQLException {
+    public int getIngredientQuantity(String name) throws SQLException {
         // perform the query
-        ResultSet rs = statement.executeQuery("SELECT unit_of_measure FROM ingredients WHERE ID = "+ID+" ");
+        ResultSet rs = statement.executeQuery("SELECT quantity FROM ingredients WHERE name = '"+name+"' ");
         rs.next();  // move the 'cursor' to the first row (ALWAYS NEED THIS WHEN QUERYING)
 
         // return the quantity field of the specified ingredient
-        return rs.getString("unit_of_measure");
+        return rs.getInt("quantity");
     }
 }
