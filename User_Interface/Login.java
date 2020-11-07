@@ -4,15 +4,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Login extends JFrame implements ActionListener
-{
+import Database_Connection.*;
+import java.sql.SQLException;
+
+public class Login extends JFrame implements ActionListener {
     private JFrame login_frame;
     private JPanel login_panel;
+    private JTextField userName_field;
+    private JPasswordField passwordField;
 
-    public Login()
-    {
+
+    public Login() {
         //Need text fields for username & password
-
         login_frame = new JFrame("iCook");
         login_frame.setSize(500, 500);
         login_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,7 +42,7 @@ public class Login extends JFrame implements ActionListener
 
         JLabel userName = new JLabel("Enter username: ");
         userName.setForeground(Color.WHITE);
-        JTextField userName_field = new JTextField(20);
+        userName_field = new JTextField(20);
 
         constraints.gridx = 3;
         constraints.gridy = 3;
@@ -50,7 +53,7 @@ public class Login extends JFrame implements ActionListener
 
         JLabel passWord = new JLabel("Enter password: ");
         passWord.setForeground(Color.WHITE);
-        JPasswordField passwordField = new JPasswordField(20);
+        passwordField = new JPasswordField(20);
 
         constraints.gridx = 3;
         constraints.gridy = 6;
@@ -82,7 +85,8 @@ public class Login extends JFrame implements ActionListener
 
         String btn_Selection = e.getActionCommand();
 
-        if(btn_Selection.equals("Back")){
+        // user clicks on "Back"
+        if (btn_Selection.equals("Back")) {
 
             login_frame.setVisible(false);
             login_frame.dispose();
@@ -91,15 +95,39 @@ public class Login extends JFrame implements ActionListener
 
         }
 
-        //else if(btn_Selection.equals("Login")){
+        // user clicks on "Login"
+        else if (btn_Selection.equals("Login")) {
 
-            // send info to DB
-            // make sure the user is valid
-            // if valid, send them to home page
-            // else, display an error
+            // get the username and password into a string
+            String username = userName_field.getText();
+            String password = new String(passwordField.getPassword());
 
-        //}
+            // print them out on the console
+            System.out.println("User name: " + username);
+            System.out.println("Password: "  + password);
 
+            // create a DAO object
+            UserDAO connectDB;
+
+            // try to initialize connection to DB
+            try
+            {
+                // initialize connection to DB
+                connectDB = new UserDAO();
+
+                // determine if the user's login info is valid
+                if ( connectDB.validUserLogin(username, password) )
+                    System.out.println("Successfully logged in");     // if valid, send them to home page
+                else
+                    System.out.println("The user name or password you entered does not match an account");   // else, display an error
+            }
+
+            // catch SQLException error
+            catch (SQLException throwables)
+            {
+                throwables.printStackTrace();
+            }
+        }
     }
 }
 

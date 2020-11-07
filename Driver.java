@@ -14,7 +14,7 @@ public class Driver
         iCook_UI ucook = new iCook_UI();
 
         // create new database object
-        DatabaseConnection database = new DatabaseConnection();
+        //DatabaseConnection database = new DatabaseConnection();
 
         // Insert an item into the ingredients table
         //database.addUserIngredient(1, 2, 50);
