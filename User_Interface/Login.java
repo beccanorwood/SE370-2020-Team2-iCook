@@ -91,6 +91,15 @@ public class Login extends JFrame implements ActionListener
 
         }
 
+        //else if(btn_Selection.equals("Login")){
+
+            // send info to DB
+            // make sure the user is valid
+            // if valid, send them to home page
+            // else, display an error
+
+        //}
+
     }
 }
 

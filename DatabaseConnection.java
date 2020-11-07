@@ -1,4 +1,3 @@
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -92,4 +91,18 @@ public class DatabaseConnection {
         // return the quantity field of the specified ingredient
         return rs.getString("unit_of_measure");
     }
+
+
+    /**
+     * Performs SQL statement to determine if a user exists with given login information
+     */
+    public boolean validUserLogin(String username, String password) throws SQLException {
+        // perform the query
+        ResultSet rs = statement.executeQuery("SELECT * FROM users WHERE user_name = '"+username+"' AND password = '"+password+"' LIMIT 1");
+
+        // returns true if a there is a result
+        // returns false otherwise
+        return rs.next();
+    }
+
 }
