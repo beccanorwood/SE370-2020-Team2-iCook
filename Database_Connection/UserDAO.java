@@ -2,10 +2,17 @@ package Database_Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
+/**
+ * DAO for users table in DB
+ *
+ * @author Team 2
+ * @version 11/7/2020
+ */
 public class UserDAO extends BaseDAO {
 
     /**
-     * Constructor
+     * Constructor. Does nothing.
      */
     public UserDAO() throws SQLException {
     }
@@ -29,6 +36,7 @@ public class UserDAO extends BaseDAO {
             System.out.println(name + " measured in " + unit_of_measure );
         }
     }
+
 
     /**
      * Performs SQL statement to determine if a user exists with given login information
