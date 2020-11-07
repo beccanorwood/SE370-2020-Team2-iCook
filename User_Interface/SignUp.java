@@ -5,10 +5,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import Database_Connection.*;
+import java.sql.SQLException;
+
 public class SignUp extends JFrame implements ActionListener
 {
     private JFrame signup_frame;
     private JPanel signup_panel;
+    private JTextField firstName_field;
+    private JTextField lastName_field;
+    private JTextField email_field;
+    private JTextField userName_field;
+    private JPasswordField passwordField;
 
     public SignUp()
     {
@@ -39,7 +47,7 @@ public class SignUp extends JFrame implements ActionListener
         create.addActionListener(this);
 
         JLabel firstName = new JLabel("Enter First Name: ");
-        JTextField firstName_field = new JTextField(20);
+        firstName_field = new JTextField(20);
         firstName.setForeground(Color.WHITE);
 
         constraints.gridx = 3;
@@ -50,7 +58,7 @@ public class SignUp extends JFrame implements ActionListener
         signup_panel.add(firstName_field, constraints);
 
         JLabel lastName = new JLabel("Enter Last Name: ");
-        JTextField lastName_field = new JTextField(20);
+        lastName_field = new JTextField(20);
         lastName.setForeground(Color.WHITE);
 
         constraints.gridx = 3;
@@ -61,7 +69,7 @@ public class SignUp extends JFrame implements ActionListener
         signup_panel.add(lastName_field, constraints);
 
         JLabel email = new JLabel("Enter Email Address: ");
-        JTextField email_field = new JTextField(20);
+        email_field = new JTextField(20);
         email.setForeground(Color.WHITE);
 
         constraints.gridx = 3;
@@ -73,7 +81,7 @@ public class SignUp extends JFrame implements ActionListener
 
 
         JLabel userName = new JLabel("Enter username: ");
-        JTextField userName_field = new JTextField(20);
+        userName_field = new JTextField(20);
         userName.setForeground(Color.WHITE);
 
         constraints.gridx = 3;
@@ -84,7 +92,7 @@ public class SignUp extends JFrame implements ActionListener
         signup_panel.add(userName_field, constraints);
 
         JLabel passWord = new JLabel("Enter password: ");
-        JPasswordField passwordField = new JPasswordField(20);
+        passwordField = new JPasswordField(20);
         passWord.setForeground(Color.WHITE);
 
         constraints.gridx = 3;
@@ -115,12 +123,38 @@ public class SignUp extends JFrame implements ActionListener
     {
         String btn_Selection = e.getActionCommand();
 
-        if(btn_Selection.equals("Back")){
+        if(btn_Selection.equals("Back"))
+        {
             signup_frame.setVisible(false);
             signup_frame.dispose();
-
             iCook_UI homepage = new iCook_UI();
         }
 
-    }
+        else if (btn_Selection.equals("Create Account"))
+        {
+            // get the username and password into a string
+            String username = userName_field.getText();
+            String password = new String(passwordField.getPassword());
+
+            // create a DAO object
+            UserDAO connectDB;
+
+            // try to initialize connection to DB
+            try
+            {
+                // initialize connection to DB
+                connectDB = new UserDAO();
+
+                // create an account with the given username and password
+                connectDB.createAccount(username, password);
+            }
+
+            // catch SQLException error
+            catch (SQLException throwables)
+            {
+                throwables.printStackTrace();
+            }
+        }
+    } // end of actionPerformed
+
 }

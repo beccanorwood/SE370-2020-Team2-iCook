@@ -49,4 +49,30 @@ public class UserDAO extends BaseDAO {
         // returns false otherwise
         return rs.next();
     }
+
+
+    /**
+     * Performs SQL statement to determine if a username is already taken
+     */
+    public boolean usernameIsTaken(String username) throws SQLException {
+        // perform the query
+        ResultSet rs = statement.executeQuery("SELECT * FROM users WHERE user_name = '"+username+"' LIMIT 1");
+
+        // returns true if a there is a result (username already taken)
+        // returns false otherwise (user name is free)
+        return rs.next();
+    }
+
+
+    public void createAccount(String username, String password) throws SQLException {
+        // determine if an account already exists with the given username
+        if ( usernameIsTaken(username) )
+            System.out.println("Username is already in use. Please enter a new one.");
+        else
+        {
+            // create a new account with the given username and password
+            statement.execute("INSERT INTO users (user_name, password) VALUE ('"+username+"', '"+password+"') ");
+            System.out.println("Account successfully made!");
+        }
+    }
 }
