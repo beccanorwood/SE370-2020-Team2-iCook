@@ -1,20 +1,20 @@
-package User_Interface;
+package iCook.View.Login;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import Database_Connection.*;
+import iCook.Model.DatabaseAccess.*;
 import java.sql.SQLException;
 
-public class Login extends JFrame implements ActionListener {
+public class LoginUI extends JFrame implements ActionListener {
     private JFrame login_frame;
     private JPanel login_panel;
     private JTextField userName_field;
     private JPasswordField passwordField;
 
 
-    public Login() {
+    public LoginUI() {
         //Need text fields for username & password
         login_frame = new JFrame("iCook");
         login_frame.setSize(500, 500);
@@ -91,7 +91,7 @@ public class Login extends JFrame implements ActionListener {
             login_frame.setVisible(false);
             login_frame.dispose();
 
-            iCook_UI ui = new iCook_UI();
+            WelcomeUI ui = new WelcomeUI();
 
         }
 

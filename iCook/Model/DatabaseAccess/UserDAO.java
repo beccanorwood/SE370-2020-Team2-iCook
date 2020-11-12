@@ -1,4 +1,4 @@
-package Database_Connection;
+package iCook.Model.DatabaseAccess;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

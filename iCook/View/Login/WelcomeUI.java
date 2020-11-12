@@ -1,4 +1,4 @@
-package User_Interface;
+package iCook.View.Login;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -8,13 +8,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class iCook_UI extends JFrame implements ActionListener
+public class WelcomeUI extends JFrame implements ActionListener
 {
     private JFrame frame;
     private JPanel panel;
     private BufferedImage img;
 
-    public iCook_UI() //Constructor will display initial login screen to user
+    public WelcomeUI() //Constructor will display initial login screen to user
     {
         frame = new JFrame("iCook");
         frame.setSize(500, 500);
@@ -89,7 +89,7 @@ public class iCook_UI extends JFrame implements ActionListener
             frame.dispose();
 
             //Instantiate Login Class to display login GUI
-            Login userLogin = new Login();
+            LoginUI userLoginUI = new LoginUI();
 
         }
         else if(buttonChosen.equals("Signup")){
@@ -99,7 +99,7 @@ public class iCook_UI extends JFrame implements ActionListener
             frame.dispose();
 
             //Sign Up class will display and user can create account
-            SignUp userSignUp = new SignUp();
+            SignUpUI userSignUpUI = new SignUpUI();
 
         }
         else{
