@@ -17,6 +17,8 @@ public class Driver
         WelcomeUI ucook = new WelcomeUI();
 
         System.out.println("HI JOEL");
+        System.out.println("IZZY WAS HERE");
+        System.out.println("IZZY WAS HERE 2");
 
         // create new database object
         //DatabaseConnection database = new DatabaseConnection();
