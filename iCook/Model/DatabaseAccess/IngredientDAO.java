@@ -5,8 +5,11 @@ import java.sql.SQLException;
 
 public class IngredientDAO extends BaseDAO {
 
+    /**
+     * Constructor
+     * @throws SQLException SQLException
+     */
     public IngredientDAO() throws SQLException {
-
     }
 
     /**
