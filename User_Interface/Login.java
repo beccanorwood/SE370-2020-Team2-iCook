@@ -18,6 +18,7 @@ public class Login extends JFrame implements ActionListener {
         //Need text fields for username & password
         login_frame = new JFrame("iCook");
         login_frame.setSize(500, 500);
+        login_frame.setLocationRelativeTo(null);
         login_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         login_frame.setLayout(new BorderLayout());
 

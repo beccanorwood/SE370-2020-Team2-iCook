@@ -25,6 +25,7 @@ public class SignUp extends JFrame implements ActionListener
 
         signup_frame = new JFrame("iCook");
         signup_frame.setSize(500, 500);
+        signup_frame.setLocationRelativeTo(null);
         signup_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         signup_frame.setLayout(new BorderLayout());
 

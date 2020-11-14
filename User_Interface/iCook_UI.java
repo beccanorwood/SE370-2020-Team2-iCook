@@ -18,6 +18,7 @@ public class iCook_UI extends JFrame implements ActionListener
     {
         frame = new JFrame("iCook");
         frame.setSize(500, 500);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
