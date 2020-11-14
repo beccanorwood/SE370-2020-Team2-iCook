@@ -1,3 +1,5 @@
+package iCook.Model.DatabaseAccess;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -23,8 +25,8 @@ public class DatabaseConnection {
     /**
      * Constructor
      */
-    DatabaseConnection() throws SQLException {
-        // Register the Driver
+    public DatabaseConnection() throws SQLException {
+        // Register the iCook.Controller.Driver
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 
         // Getting the connection

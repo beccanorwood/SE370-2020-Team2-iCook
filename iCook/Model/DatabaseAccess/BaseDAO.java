@@ -1,4 +1,4 @@
-package Database_Connection;
+package iCook.Model.DatabaseAccess;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,7 +25,7 @@ public class BaseDAO {
      * Constructor
      */
     BaseDAO() throws SQLException {
-        // Register the Driver
+        // Register the iCook.Controller.Driver
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 
         // Getting the connection

@@ -1,4 +1,4 @@
-package User_Interface;
+package iCook.View.Login;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,8 +1,11 @@
+package iCook.Controller;
+
 import java.sql.SQLException;
-import User_Interface.iCook_UI;
+import iCook.Model.DatabaseAccess.*;
+import iCook.View.Login.WelcomeUI;
 
 /**
- * Driver
+ * iCook.Controller.Driver
  *
  * @author Team 2
  * @version 11/7/2020
@@ -11,7 +14,10 @@ public class Driver
 {
     public static void main(String[] args) throws SQLException
     {
-        iCook_UI ucook = new iCook_UI();
+        WelcomeUI ucook = new WelcomeUI();
+
+        System.out.println("HI JOEL");
+        System.out.println("IZzy");
 
         // create new database object
         //DatabaseConnection database = new DatabaseConnection();

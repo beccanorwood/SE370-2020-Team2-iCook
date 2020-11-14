@@ -1,14 +1,14 @@
-package User_Interface;
+package iCook.View.Login;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import Database_Connection.*;
+import iCook.Model.DatabaseAccess.*;
 import java.sql.SQLException;
 
-public class SignUp extends JFrame implements ActionListener
+public class SignUpUI extends JFrame implements ActionListener
 {
     private JFrame signup_frame;
     private JPanel signup_panel;
@@ -18,7 +18,7 @@ public class SignUp extends JFrame implements ActionListener
     private JTextField userName_field;
     private JPasswordField passwordField;
 
-    public SignUp()
+    public SignUpUI()
     {
         //Need text fields for the following:
         //First Name, Last Name, Email, UserName, and Password
@@ -128,7 +128,7 @@ public class SignUp extends JFrame implements ActionListener
         {
             signup_frame.setVisible(false);
             signup_frame.dispose();
-            iCook_UI homepage = new iCook_UI();
+            WelcomeUI homepage = new WelcomeUI();
         }
 
         else if (btn_Selection.equals("Create Account"))
