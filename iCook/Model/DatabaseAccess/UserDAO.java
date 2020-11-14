@@ -17,24 +17,27 @@ public class UserDAO extends BaseDAO {
     public UserDAO() throws SQLException {
     }
 
+    /**
+     * Performs SQL statement to add an ingredient to the ingredients table
+     */
+    public void addUserIngredient(int userID, int ingredientID, int quantity) throws SQLException {
+        statement.execute("INSERT INTO user_ingredients (user_id, ingredient_id, quantity) VALUE ("+userID+", "+ingredientID+", "+quantity+") ");
+    }
+
 
     /**
-     * Performs SQL statement to nicely display all ingredients in the table
+     * Performs SQL statement to update an ingredient's quantity
      */
-    public void displayIngredientsTable() throws SQLException {
-        // Perform the query
-        ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
+    public void updateUserIngredient(int ID, int quantity) throws SQLException {
+        statement.execute("UPDATE user_ingredients SET quantity = '"+quantity+"' WHERE ID = "+ID+" ");
+    }
 
-        // read each row in the table
-        while (rs.next())
-        {
-            // read each column of the row
-            String name = rs.getString("name");
-            String unit_of_measure = rs.getString("unit_of_measure");
 
-            // print out the row
-            System.out.println(name + " measured in " + unit_of_measure );
-        }
+    /**
+     * Performs SQL statement to update an ingredient's quantity
+     */
+    public void deleteUserIngredient(int ID) throws SQLException {
+        statement.execute("DELETE FROM user_ingredients WHERE ID = "+ID+" ");
     }
 
 
