@@ -2,7 +2,8 @@ package iCook.Model;
 
 /**
  * UserIngredient class stores user ingredient ID, user ID, ingredient ID, and quantity of ingredient.
- * This class is responsible for storing ingredient information needed to create a recipe.
+ * This class is responsible for storing an ingredient for a user as well as the quantity they have
+ * of the ingredient.
  *
  * @author Team 2
  * @version 11/14/2020
