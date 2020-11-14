@@ -3,6 +3,9 @@ package iCook.Model;
 /**
  * RecipeIngredient creates ingredient objects that hold information about type, and quantity of ingredients required
  * for a given recipe
+ *
+ * @Author: Team 2
+ * @Date: 11/14/2020
  */
 public class RecipeIngredient {
 

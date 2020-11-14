@@ -4,6 +4,9 @@ import java.util.List;
 /**
  * Recipe creates an object that holds relevant information including the name, id number, a list of
  * RecipeIngredient objects, as well as the number of servings a given recipe will produce
+ *
+ * @Author: Team 2
+ * @date: 11/14/2020
  */
 public class Recipe {
 
