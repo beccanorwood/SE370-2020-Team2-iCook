@@ -14,7 +14,7 @@ public class UserIngredient {
     private int userIngredientID;
     private int userID;
     private int ingredientID;
-    private int quantity;
+    private double quantity;
 
     /**
      * Constructor
@@ -82,7 +82,7 @@ public class UserIngredient {
      * Get quantity of ingredient
      * @return int
      */
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 

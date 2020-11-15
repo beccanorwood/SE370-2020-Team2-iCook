@@ -1,35 +1,35 @@
 package iCook.Model;
 
 /**
- * RecipeIngredient creates ingredient objects that hold information about type, and quantity of ingredients required
- * for a given recipe
+ * RecipeIngredient represents an ingredient needed by a recipe and links a recipe and ingredient together via the quantity
+ * required of the ingredient for said recipe.
  *
  * @Author: Team 2
  * @Date: 11/14/2020
  */
 public class RecipeIngredient {
 
+        private int recipeIngredientID;// ID associated with given recipeIngredient within the database
         private int ingredientID;   // ID associated with given ingredient within the database
         private int recipeID;       // ID associated with given recipe within the database
-        private int rcpIngredientID;// ID associated with given recipeIngredient within the database
-        private float quantity;     // number of ingredient type necessary
+        private double quantity;     // number of ingredient type necessary
 
     /**
      * Constructor
      * @param ingredientID
      * @param recipeID
-     * @param rcpIngredientID
+     * @param recipeIngredientID
      * @param quantity
      */
-    public RecipeIngredient(int ingredientID,  int recipeID, int rcpIngredientID, float quantity) {
+    public RecipeIngredient(int ingredientID,  int recipeID, int recipeIngredientID, double quantity) {
         this.ingredientID = ingredientID;
         this.recipeID = recipeID;
-        this.rcpIngredientID = rcpIngredientID;
+        this.recipeIngredientID = recipeIngredientID;
         this.quantity = quantity;
     }
 
     public int getRecipeIngredientID() {
-        return ingredientID;
+        return recipeIngredientID;
     }
 
     public void setRecipeIngredientID(int ingredientID) {
@@ -44,19 +44,19 @@ public class RecipeIngredient {
         this.recipeID = recipeID;
     }
 
-    public int getRcpIngredientID() {
-        return rcpIngredientID;
+    public int getIngredientID() {
+        return ingredientID;
     }
 
-    public void setRcpIngredientID(int rcpIngredientID) {
-        this.rcpIngredientID = rcpIngredientID;
+    public void setIngredientID(int ingredientID) {
+        this.ingredientID = ingredientID;
     }
 
-    public float getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(float quantity) {
+    public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 }

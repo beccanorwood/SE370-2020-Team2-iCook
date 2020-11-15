@@ -1,46 +1,94 @@
 package iCook.Model;
+import java.util.List;
 
 /**
  * User class that stores a user's id, username, and password
  * Uses the Singleton Pattern - only 1 user should exists in runtime
  *
  * @author Team 2
- * @version 11/7/2020
+ * @version 11/14/2020
  */
 public class User {
 
     // instance variables
-    private int id;
-    private String userName;
-    private String password;
-    private static User userObject = null;
+    private int id;                                 // id that is stored in the database
+    private String userName;                        // the username of this user
+    private String password;                        // the password of this user
+    private static User userObject = null;          // the SINGLE object of this class
+    private List<UserIngredient> userIngredients;   // list of user's ingredients
 
 
     /**
-     * Constructor - 3 variables must be passed in
+     * Constructor - 4 variables must be passed in
      */
-    private User(int id, String userName, String password) {
+    private User(int id, String userName, String password, List<UserIngredient> userIngredients) {
         this.id = id;
         this.userName = userName;
         this.password = password;
+        this.userIngredients = userIngredients;
     }
 
 
     /**
-     * Determine if a user object has been made
+     * Returns the singleton user object
      *
-     * If a user object is already created, return that object
-     * else, create a new user object
+     * Determines if a user object is already created.
+     * If the singleton exists, return the object
+     * else, create a new user object and return it
      */
-    public static User getUser(int id, String userName, String password)
+    public static User getUser(int id, String userName, String password, List<UserIngredient> userIngredients)
     {
         if (userObject == null)
         {
-            userObject = new User(id, userName, password);
+            userObject = new User(id, userName, password, userIngredients);
             System.out.println("User created\n");
         }
 
         return userObject;
     }
 
+
+    /**
+     * Getter for the user's username
+     */
+    public String getUserName()
+    {
+        return userName;
+    }
+
+
+    /**
+     * Getter for the user's password
+     */
+    public String getPassword()
+    {
+        return password;
+    }
+
+
+    /**
+     * Getter for the user's id
+     */
+    public int getId()
+    {
+        return id;
+    }
+
+
+    /**
+     * Getter for the user's ingredients
+     */
+    public List<UserIngredient> getUserIngredients()
+    {
+        return userIngredients;
+    }
+
+
+    /**
+     * Adds a user ingredient to the user's list of ingredients
+     */
+    public void addUserIngredient(UserIngredient userIngredient)
+    {
+        userIngredients.add(userIngredient);
+    }
 }

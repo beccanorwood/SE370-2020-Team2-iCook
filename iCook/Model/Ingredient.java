@@ -2,7 +2,7 @@ package iCook.Model;
 
 /**
  * Ingredient class stores ingredient ID, ingredient name, and ingredient unit of measure.
- * This class is responsible for allowing a user to choose an ingredient.
+ * This class represents the system's ingredients that a user can choose from.
  *
  * @author Team 2
  * @version 11/14/2020
