@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import iCook.Model.DatabaseAccess.*;
+import iCook.Controller.ServiceDispatcher;
 import java.sql.SQLException;
 
 public class SignUpUI extends JFrame implements ActionListener
@@ -17,6 +17,8 @@ public class SignUpUI extends JFrame implements ActionListener
     private JTextField email_field;
     private JTextField userName_field;
     private JPasswordField passwordField;
+    private ServiceDispatcher serviceDispatcher;
+
 
     public SignUpUI()
     {
@@ -131,31 +133,31 @@ public class SignUpUI extends JFrame implements ActionListener
             WelcomeUI homepage = new WelcomeUI();
         }
 
-        else if (btn_Selection.equals("Create Account"))
-        {
+        // user click on "Create Account"
+        else if (btn_Selection.equals("Create Account")) {
             // get the username and password into a string
             String username = userName_field.getText();
             String password = new String(passwordField.getPassword());
 
-            // create a DAO object
-            UserDAO connectDB;
+            // Create ServiceDispatcher
+            serviceDispatcher = new ServiceDispatcher();
 
-            // try to initialize connection to DB
-            try
-            {
-                // initialize connection to DB
-                connectDB = new UserDAO();
-
+            try {
                 // create an account with the given username and password
-                connectDB.createAccount(username, password);
+                serviceDispatcher.signUp(username, password);
+
+                // if the user is logged in, go to next page
+                if (serviceDispatcher.isLoggedIn()) {
+                    serviceDispatcher.displayUser();
+                }
             }
 
             // catch SQLException error
-            catch (SQLException throwables)
-            {
+            catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
+
     } // end of actionPerformed
 
-}
+} // end of SignUpUI class

@@ -25,6 +25,11 @@ public class BaseDAO {
      * Constructor
      */
     BaseDAO() throws SQLException {
+        connect();
+    }
+
+    private void connect() throws SQLException
+    {
         // Register the iCook.Controller.Driver
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 

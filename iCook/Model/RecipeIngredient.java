@@ -9,10 +9,10 @@ package iCook.Model;
  */
 public class RecipeIngredient {
 
-        private int recipeIngredientID;// ID associated with given recipeIngredient within the database
-        private int ingredientID;   // ID associated with given ingredient within the database
-        private int recipeID;       // ID associated with given recipe within the database
-        private double quantity;     // number of ingredient type necessary
+        private int recipeIngredientID; // ID associated with given recipeIngredient within the database
+        private int ingredientID;       // ID associated with given ingredient within the database
+        private int recipeID;           // ID associated with given recipe within the database
+        private double quantity;        // number of ingredient type necessary
 
     /**
      * Constructor

@@ -3,15 +3,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import iCook.Model.DatabaseAccess.*;
 import java.sql.SQLException;
+
+import iCook.Controller.ServiceDispatcher;
 
 public class LoginUI extends JFrame implements ActionListener {
     private JFrame login_frame;
     private JPanel login_panel;
     private JTextField userName_field;
     private JPasswordField passwordField;
+    private ServiceDispatcher serviceDispatcher;
 
 
     public LoginUI() {
@@ -21,7 +22,6 @@ public class LoginUI extends JFrame implements ActionListener {
         login_frame.setLocationRelativeTo(null);
         login_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         login_frame.setLayout(new BorderLayout());
-
 
         login_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
         GridBagConstraints constraints = new GridBagConstraints();
@@ -63,17 +63,14 @@ public class LoginUI extends JFrame implements ActionListener {
         constraints.gridx = 4;
         login_panel.add(passwordField, constraints);
 
-
         //Back button position
         constraints.gridx = 3;
         constraints.gridy = 9;
         login_panel.add(back, constraints);
 
-
         //Login Button position
         constraints.gridx = 4;
         login_panel.add(login, constraints);
-
 
         login_panel.setBackground(Color.BLACK);
         login_frame.add(login_panel);
@@ -105,32 +102,34 @@ public class LoginUI extends JFrame implements ActionListener {
 
             // print them out on the console
             System.out.println("User name: " + username);
-            System.out.println("Password: "  + password);
+            System.out.println("Password: " + password);
 
-            // create a DAO object
-            UserDAO connectDB;
+            // Create ServiceDispatcher instance
+            serviceDispatcher = new ServiceDispatcher();
 
-            // try to initialize connection to DB
+            // try to login with given credentials
+            // if valid, send them to home page
             try
             {
-                // initialize connection to DB
-                connectDB = new UserDAO();
+                if ( serviceDispatcher.login(username, password) ) {
+                    System.out.println("Successfully logged in");
+                    serviceDispatcher.displayUser();
+                }
 
-                // determine if the user's login info is valid
-                if ( connectDB.validUserLogin(username, password) )
-                    System.out.println("Successfully logged in");     // if valid, send them to home page
-                else
-                    System.out.println("The user name or password you entered does not match an account");   // else, display an error
+                // else, display an error
+                else {
+                    System.out.println("The user name or password you entered does not match an account");
+                }
             }
 
-            // catch SQLException error
             catch (SQLException throwables)
             {
                 throwables.printStackTrace();
             }
         }
+
     } // end of actionPerformed
 
-}
+} // end of LoginUI class
 
 

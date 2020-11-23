@@ -2,12 +2,14 @@ package iCook.Model.DatabaseAccess;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import iCook.Model.User;
+
 
 /**
  * DAO for users table in DB
  *
  * @author Team 2
- * @version 11/7/2020
+ * @version 11/22/2020
  */
 public class UserDAO extends BaseDAO {
 
@@ -67,6 +69,9 @@ public class UserDAO extends BaseDAO {
     }
 
 
+    /**
+     * Performs SQL statement to create a new user
+     */
     public void createAccount(String username, String password) throws SQLException {
         // determine if an account already exists with the given username
         if ( usernameIsTaken(username) )
@@ -78,4 +83,23 @@ public class UserDAO extends BaseDAO {
             System.out.println("Account successfully made!");
         }
     }
+
+
+    /**
+     * Performs SQL statement to get the user id and creates the User Singleton object
+     */
+    public void getUser(String username, String password) throws SQLException {
+
+        // perform the query
+        ResultSet rs = statement.executeQuery("SELECT * FROM users WHERE user_name = '"+username+"' AND password = '"+password+"' LIMIT 1");
+
+        while (rs.next())
+        {
+            int id = rs.getInt("id");
+            User user = User.getUser(id, username, password);
+        }
+
+    }
+
+
 }

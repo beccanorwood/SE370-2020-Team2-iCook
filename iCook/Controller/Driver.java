@@ -1,7 +1,6 @@
 package iCook.Controller;
 
 import java.sql.SQLException;
-import iCook.Model.DatabaseAccess.*;
 import iCook.View.Login.WelcomeUI;
 
 /**

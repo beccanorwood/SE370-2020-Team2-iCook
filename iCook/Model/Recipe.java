@@ -12,13 +12,13 @@ public class Recipe {
 
     private int recipeID;                               // id number associated with given recipe in database
     private String recipeName;                          // name of recipe
-    private List<RecipeIngredient> recipeIngredients;   // a list of RecipeIngredient objects required for recipe
+    //private List<RecipeIngredient> recipeIngredients;   // a list of RecipeIngredient objects required for recipe
     private int numServings;                            // number of servings recipe will produce
 
-    public Recipe(int recipeID, String recipeName, List<RecipeIngredient> recipeIngredients, int numServings) {
+    public Recipe(int recipeID, String recipeName, int numServings) {
         this.recipeID = recipeID;
         this.recipeName = recipeName;
-        this.recipeIngredients = recipeIngredients;
+        //this.recipeIngredients = recipeIngredients;
         this.numServings = numServings;
     }
 
@@ -38,11 +38,13 @@ public class Recipe {
         this.recipeName = recipeName;
     }
 
+    /*
     public List<RecipeIngredient> getRecipeIngredients() {
         return recipeIngredients;
     }
 
     public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) { this.recipeIngredients = recipeIngredients; }
+    */
 
     public int getNumServings() {
         return numServings;

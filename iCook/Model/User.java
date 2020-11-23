@@ -15,17 +15,17 @@ public class User {
     private String userName;                        // the username of this user
     private String password;                        // the password of this user
     private static User userObject = null;          // the SINGLE object of this class
-    private List<UserIngredient> userIngredients;   // list of user's ingredients
+    //private List<UserIngredient> userIngredients;   // list of user's ingredients
 
 
     /**
      * Constructor - 4 variables must be passed in
      */
-    private User(int id, String userName, String password, List<UserIngredient> userIngredients) {
+    private User(int id, String userName, String password) {
         this.id = id;
         this.userName = userName;
         this.password = password;
-        this.userIngredients = userIngredients;
+        //this.userIngredients = userIngredients;
     }
 
 
@@ -36,15 +36,31 @@ public class User {
      * If the singleton exists, return the object
      * else, create a new user object and return it
      */
-    public static User getUser(int id, String userName, String password, List<UserIngredient> userIngredients)
+    public static User getUser(int id, String userName, String password)
     {
         if (userObject == null)
         {
-            userObject = new User(id, userName, password, userIngredients);
+            userObject = new User(id, userName, password);
             System.out.println("User created\n");
         }
 
         return userObject;
+    }
+
+
+    /**
+     * Returns the singleton user object - no parameters needed here
+     *
+     * Determines if a user object is already created.
+     * If the singleton exists, return the object
+     * else, return null
+     */
+    public static User getUser()
+    {
+        if (userObject != null)
+            return userObject;
+        else
+            return null;
     }
 
 
@@ -75,20 +91,21 @@ public class User {
     }
 
 
-    /**
-     * Getter for the user's ingredients
-     */
-    public List<UserIngredient> getUserIngredients()
-    {
-        return userIngredients;
-    }
+//    /**
+//     * Getter for the user's ingredients
+//     */
+//    public List<UserIngredient> getUserIngredients()
+//    {
+//        return userIngredients;
+//    }
 
 
-    /**
-     * Adds a user ingredient to the user's list of ingredients
-     */
-    public void addUserIngredient(UserIngredient userIngredient)
-    {
-        userIngredients.add(userIngredient);
-    }
+//    /**
+//     * Adds a user ingredient to the user's list of ingredients
+//     */
+//    public void addUserIngredient(UserIngredient userIngredient)
+//    {
+//        userIngredients.add(userIngredient);
+//    }
+
 }
