@@ -6,8 +6,10 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.Operations.HomeUI;
 
 public class LoginUI extends JFrame implements ActionListener {
+
     private JFrame login_frame;
     private JPanel login_panel;
     private JTextField userName_field;
@@ -122,6 +124,11 @@ public class LoginUI extends JFrame implements ActionListener {
                 if ( serviceDispatcher.login(username, password) ) {
                     System.out.println("Successfully logged in");
                     serviceDispatcher.displayUser();
+
+                    login_frame.setVisible(false);
+                    login_frame.dispose();
+                    HomeUI userHomePage = new HomeUI(username);
+
                 }
 
                 // else, display an error

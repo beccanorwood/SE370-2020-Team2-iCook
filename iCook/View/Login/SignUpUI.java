@@ -70,10 +70,10 @@ public class SignUpUI extends JFrame implements ActionListener
         constraints.gridy = 10;
         signup_panel.add(back, constraints);
 
+
         //Sign Up Button position
         constraints.gridx = 4;
         signup_panel.add(create, constraints);
-
         signup_panel.setBackground(Color.BLACK);
         signup_frame.add(signup_panel);
         signup_frame.setVisible(true);
