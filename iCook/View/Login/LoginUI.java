@@ -13,7 +13,7 @@ public class LoginUI extends JFrame implements ActionListener {
     private JTextField userName_field;
     private JPasswordField passwordField;
     private ServiceDispatcher serviceDispatcher;
-
+    private GridBagConstraints constraints;
 
     public LoginUI() {
         //Need text fields for username & password
@@ -24,9 +24,9 @@ public class LoginUI extends JFrame implements ActionListener {
         login_frame.setLayout(new BorderLayout());
 
         login_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
-        GridBagConstraints constraints = new GridBagConstraints();
+        constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.insets = new Insets(15, 10, 15, 10);
 
         JLabel iCook_login = new JLabel("Login!");
         iCook_login.setFont(new Font("ARIAL", Font.BOLD, 30));
@@ -83,6 +83,14 @@ public class LoginUI extends JFrame implements ActionListener {
 
         String btn_Selection = e.getActionCommand();
 
+        JPanel southPanel = new JPanel();
+        southPanel.setBackground(Color.BLACK);
+        JLabel emptyFields = new JLabel("ERROR! The user name or password cannot be empty");
+        emptyFields.setForeground(Color.WHITE);
+        JLabel noAccountFound = new JLabel("ERROR! The user name or password you entered does not match an account");
+        noAccountFound.setForeground(Color.WHITE);
+
+
         // user clicks on "Back"
         if (btn_Selection.equals("Back")) {
 
@@ -118,7 +126,17 @@ public class LoginUI extends JFrame implements ActionListener {
 
                 // else, display an error
                 else {
-                    System.out.println("The user name or password you entered does not match an account");
+                    if(username.isBlank() || password.isBlank()){
+                        southPanel.add(emptyFields);
+                        login_frame.add(southPanel, BorderLayout.SOUTH);
+                        login_frame.setVisible(true);
+                    }
+                    else {
+                        southPanel.add(noAccountFound);
+                        login_frame.add(southPanel, BorderLayout.SOUTH);
+                        login_frame.setVisible(true);
+                        System.out.println("The user name or password you entered does not match an account");
+                    }
                 }
             }
 

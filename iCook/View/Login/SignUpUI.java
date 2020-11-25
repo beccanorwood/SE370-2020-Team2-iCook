@@ -12,19 +12,13 @@ public class SignUpUI extends JFrame implements ActionListener
 {
     private JFrame signup_frame;
     private JPanel signup_panel;
-    private JTextField firstName_field;
-    private JTextField lastName_field;
-    private JTextField email_field;
     private JTextField userName_field;
     private JPasswordField passwordField;
     private ServiceDispatcher serviceDispatcher;
-
+    private GridBagConstraints constraints;
 
     public SignUpUI()
     {
-        //Need text fields for the following:
-        //First Name, Last Name, Email, UserName, and Password
-
         signup_frame = new JFrame("iCook");
         signup_frame.setSize(500, 500);
         signup_frame.setLocationRelativeTo(null);
@@ -32,9 +26,9 @@ public class SignUpUI extends JFrame implements ActionListener
         signup_frame.setLayout(new BorderLayout());
 
         signup_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
-        GridBagConstraints constraints = new GridBagConstraints();
+        constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.insets = new Insets(15, 10, 15, 10);
 
         JLabel iCook_signUP = new JLabel("Sign Up");
         iCook_signUP.setFont(new Font("ARIAL", Font.BOLD, 20));
@@ -48,40 +42,6 @@ public class SignUpUI extends JFrame implements ActionListener
         JButton back = new JButton("Back");
         back.addActionListener(this);
         create.addActionListener(this);
-
-        JLabel firstName = new JLabel("Enter First Name: ");
-        firstName_field = new JTextField(20);
-        firstName.setForeground(Color.WHITE);
-
-        constraints.gridx = 3;
-        constraints.gridy = 1;
-        signup_panel.add(firstName, constraints);
-
-        constraints.gridx = 4;
-        signup_panel.add(firstName_field, constraints);
-
-        JLabel lastName = new JLabel("Enter Last Name: ");
-        lastName_field = new JTextField(20);
-        lastName.setForeground(Color.WHITE);
-
-        constraints.gridx = 3;
-        constraints.gridy = 3;
-        signup_panel.add(lastName, constraints);
-
-        constraints.gridx = 4;
-        signup_panel.add(lastName_field, constraints);
-
-        JLabel email = new JLabel("Enter Email Address: ");
-        email_field = new JTextField(20);
-        email.setForeground(Color.WHITE);
-
-        constraints.gridx = 3;
-        constraints.gridy = 5;
-        signup_panel.add(email, constraints);
-
-        constraints.gridx = 4;
-        signup_panel.add(email_field, constraints);
-
 
         JLabel userName = new JLabel("Enter username: ");
         userName_field = new JTextField(20);
@@ -110,11 +70,9 @@ public class SignUpUI extends JFrame implements ActionListener
         constraints.gridy = 10;
         signup_panel.add(back, constraints);
 
-
         //Sign Up Button position
         constraints.gridx = 4;
         signup_panel.add(create, constraints);
-
 
         signup_panel.setBackground(Color.BLACK);
         signup_frame.add(signup_panel);
@@ -134,27 +92,45 @@ public class SignUpUI extends JFrame implements ActionListener
         }
 
         // user click on "Create Account"
-        else if (btn_Selection.equals("Create Account")) {
+        else if (btn_Selection.equals("Create Account"))
+        {
             // get the username and password into a string
             String username = userName_field.getText();
             String password = new String(passwordField.getPassword());
 
-            // Create ServiceDispatcher
-            serviceDispatcher = new ServiceDispatcher();
-
-            try {
-                // create an account with the given username and password
-                serviceDispatcher.signUp(username, password);
-
-                // if the user is logged in, go to next page
-                if (serviceDispatcher.isLoggedIn()) {
-                    serviceDispatcher.displayUser();
-                }
+            // make sure the username OR password are not blank
+            if(username.isBlank() || password.isBlank())
+            {
+                //Error message
+                System.out.println("Error!");
+                JLabel blank_error = new JLabel("Error: Username or Password cannot be blank");
+                blank_error.setForeground(Color.WHITE);
+                JPanel blank_error_p = new JPanel();
+                blank_error_p.add(blank_error);
+                blank_error_p.setBackground(Color.BLACK);
+                signup_frame.add(blank_error_p, BorderLayout.SOUTH);
+                signup_frame.setVisible(true);
             }
 
-            // catch SQLException error
-            catch (SQLException throwables) {
-                throwables.printStackTrace();
+            else
+            {
+                // Create ServiceDispatcher
+                serviceDispatcher = new ServiceDispatcher();
+
+                try {
+                    // create an account with the given username and password
+                    serviceDispatcher.signUp(username, password);
+
+                    // if the user is logged in, go to next page
+                    if (serviceDispatcher.isLoggedIn()) {
+                        serviceDispatcher.displayUser();
+                    }
+                }
+
+                // catch SQLException error
+                catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         }
 

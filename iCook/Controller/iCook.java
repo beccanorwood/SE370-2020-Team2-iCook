@@ -9,7 +9,7 @@ import iCook.View.Login.WelcomeUI;
  * @author Team 2
  * @version 11/7/2020
  */
-public class Driver
+public class iCook
 {
     public static void main(String[] args) throws SQLException
     {
