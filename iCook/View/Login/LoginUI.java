@@ -3,7 +3,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.Operations.HomeUI;
@@ -119,37 +118,30 @@ public class LoginUI extends JFrame implements ActionListener {
 
             // try to login with given credentials
             // if valid, send them to home page
-            try
-            {
-                if ( serviceDispatcher.login(username, password) ) {
-                    System.out.println("Successfully logged in");
-                    serviceDispatcher.displayUser();
 
-                    login_frame.setVisible(false);
-                    login_frame.dispose();
-                    HomeUI userHomePage = new HomeUI(username);
+            if ( serviceDispatcher.login(username, password) ) {
+                System.out.println("Successfully logged in");
+                serviceDispatcher.displayUser();
 
-                }
+                login_frame.setVisible(false);
+                login_frame.dispose();
+                HomeUI userHomePage = new HomeUI(username);
 
-                // else, display an error
-                else {
-                    if(username.isBlank() || password.isBlank()){
-                        southPanel.add(emptyFields);
-                        login_frame.add(southPanel, BorderLayout.SOUTH);
-                        login_frame.setVisible(true);
-                    }
-                    else {
-                        southPanel.add(noAccountFound);
-                        login_frame.add(southPanel, BorderLayout.SOUTH);
-                        login_frame.setVisible(true);
-                        System.out.println("The user name or password you entered does not match an account");
-                    }
-                }
             }
 
-            catch (SQLException throwables)
-            {
-                throwables.printStackTrace();
+            // else, display an error
+            else {
+                if(username.isBlank() || password.isBlank()){
+                    southPanel.add(emptyFields);
+                    login_frame.add(southPanel, BorderLayout.SOUTH);
+                    login_frame.setVisible(true);
+                }
+                else {
+                    southPanel.add(noAccountFound);
+                    login_frame.add(southPanel, BorderLayout.SOUTH);
+                    login_frame.setVisible(true);
+                    System.out.println("The user name or password you entered does not match an account");
+                }
             }
         }
 

@@ -22,12 +22,21 @@ public class BaseDAO {
 
 
     /**
-     * Constructor
+     * Constructor that connects to the iCook database
      */
-    BaseDAO() throws SQLException {
-        connect();
+    BaseDAO() {
+        try {
+            connect();
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
+
+    /**
+     * Establishes a connection to the iCook database and throws a SQLException
+     */
     private void connect() throws SQLException
     {
         // Register the iCook.Controller.Driver

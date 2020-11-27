@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import iCook.Controller.ServiceDispatcher;
-import java.sql.SQLException;
 
 public class SignUpUI extends JFrame implements ActionListener
 {
@@ -117,20 +116,14 @@ public class SignUpUI extends JFrame implements ActionListener
                 // Create ServiceDispatcher
                 serviceDispatcher = new ServiceDispatcher();
 
-                try {
-                    // create an account with the given username and password
-                    serviceDispatcher.signUp(username, password);
+                // create an account with the given username and password
+                serviceDispatcher.signUp(username, password);
 
-                    // if the user is logged in, go to next page
-                    if (serviceDispatcher.isLoggedIn()) {
-                        serviceDispatcher.displayUser();
-                    }
+                // if the user is logged in, go to next page
+                if (serviceDispatcher.isLoggedIn()) {
+                    serviceDispatcher.displayUser();
                 }
 
-                // catch SQLException error
-                catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
             }
         }
 

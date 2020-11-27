@@ -7,39 +7,52 @@ public class IngredientDAO extends BaseDAO {
 
     /**
      * Constructor
-     * @throws SQLException SQLException
      */
-    public IngredientDAO() throws SQLException {
+    public IngredientDAO() {
     }
 
     /**
      * Performs SQL statement to nicely display all ingredients in the table
      */
-    public void displayIngredientsTable() throws SQLException {
-        // Perform the query
-        ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
+    public void displayIngredientsTable() {
+        try {
+            // Perform the query
+            ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
 
-        // read each row in the table
-        while (rs.next())
+            // read each row in the table
+            while (rs.next()) {
+                // read each column of the row
+                String name = rs.getString("name");
+                String unit_of_measure = rs.getString("unit_of_measure");
+
+                // print out the row
+                System.out.println(name + " measured in " + unit_of_measure);
+            }
+        }
+
+        catch (SQLException throwables)
         {
-            // read each column of the row
-            String name = rs.getString("name");
-            String unit_of_measure = rs.getString("unit_of_measure");
-
-            // print out the row
-            System.out.println(name + " measured in " + unit_of_measure );
+            throwables.printStackTrace();;
         }
     }
 
     /**
      * Performs SQL statement to return the quantity field of an ingredient
      */
-    public String getIngredientMeasurement(int ID) throws SQLException {
-        // perform the query
-        ResultSet rs = statement.executeQuery("SELECT unit_of_measure FROM ingredients WHERE ID = "+ID+" ");
-        rs.next();  // move the 'cursor' to the first row (ALWAYS NEED THIS WHEN QUERYING)
+    public String getIngredientMeasurement(int ID) {
+        try {
+            // perform the query
+            ResultSet rs = statement.executeQuery("SELECT unit_of_measure FROM ingredients WHERE ID = " + ID + " ");
+            rs.next();  // move the 'cursor' to the first row (ALWAYS NEED THIS WHEN QUERYING)
 
-        // return the quantity field of the specified ingredient
-        return rs.getString("unit_of_measure");
+            // return the quantity field of the specified ingredient
+            return rs.getString("unit_of_measure");
+        }
+
+        catch (SQLException throwables)
+        {
+            throwables.printStackTrace();
+            return null;
+        }
     }
 }

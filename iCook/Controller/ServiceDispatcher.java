@@ -1,8 +1,6 @@
 package iCook.Controller;
 import iCook.Model.*;
 
-import java.sql.SQLException;
-
 public class ServiceDispatcher {
 
     // instance variables
@@ -21,7 +19,7 @@ public class ServiceDispatcher {
     /**
      * Returns true if the user's credentials are valid, false otherwise
      */
-    public boolean login(String username, String password) throws SQLException
+    public boolean login(String username, String password)
     {
         if ( facade.login(username, password) ) {
             user = User.getUser();
@@ -35,7 +33,7 @@ public class ServiceDispatcher {
     /**
      * Creates a new user with the given username and password
      */
-    public void signUp(String username, String password) throws SQLException
+    public void signUp(String username, String password)
     {
         facade.signUp(username, password);
         user = User.getUser();
