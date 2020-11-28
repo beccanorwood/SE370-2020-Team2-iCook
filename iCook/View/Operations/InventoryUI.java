@@ -1,5 +1,7 @@
 package iCook.View.Operations;
 
+import iCook.Controller.ServiceDispatcher;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,13 +27,13 @@ public class InventoryUI extends JFrame implements ActionListener {
     private JButton add;
     private JButton remove;
     private JLabel title;
-    private String[] ingredients;
     private Checkbox name;
     private JComboBox userIngredients;
     private Box box;
     private Box button_box;
     private HashMap<JButton, Box> delete = new HashMap<JButton, Box>();
-    private ArrayList<String> iCookIngredients = new ArrayList<>();
+    private ArrayList<String> ingredientList = new ArrayList<>();
+    private ServiceDispatcher serviceDispatcher;
 
 
     public InventoryUI(){
@@ -41,20 +43,14 @@ public class InventoryUI extends JFrame implements ActionListener {
         userInventory.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         userInventory.setLayout(new BorderLayout());
 
-        //Current ingredients
-         ingredients = new String[]{"sugar", "milk", "salt", "chicken", "bacon",
-         "pepper", "butter", "sunflower oil", "onion", "carrot", "mined beef",
-         "mushrooms", "flour", "beef stock cube", "mashed potato", "tomatoes",
-          "eggs", "milk", "potatoes"};
+        // create a new controller object
+        serviceDispatcher = new ServiceDispatcher();
 
-         for(int i = 0; i < ingredients.length; i++){
-             iCookIngredients.add(ingredients[i]);
-         }
+        // get all the ingredients from the system (NAMES ONLY)
+        ingredientList = serviceDispatcher.getAllSystemIngredients();
 
-         Collections.sort(iCookIngredients);
-
-         userIngredients = new JComboBox(iCookIngredients.toArray());
-         userIngredients.addActionListener(this);
+        userIngredients = new JComboBox(ingredientList.toArray());
+        userIngredients.addActionListener(this);
 
          title = new JLabel("Your Ingredient Inventory");
          title.setFont(new Font("ARIAL", Font.BOLD, 30));
@@ -128,12 +124,12 @@ public class InventoryUI extends JFrame implements ActionListener {
 
         //Loop to check through list of ingredients
         //If ingredient is selected, it will be added to center panel
-        for(int i = 0; i < ingredients.length; i++){
-            if(src2.getSelectedItem() == (ingredients[i])){
+        for(int i = 0; i < ingredientList.size(); i++){
+            if(src2.getSelectedItem() == (ingredientList.get(i))){
 
-                System.out.println("Selected Item: " + ingredients[i]);
+                System.out.println("Selected Item: " + ingredientList.get(i));
 
-                name = new Checkbox((String) ingredients[i]);
+                name = new Checkbox((String) ingredientList.get(i));
                 name.setForeground(Color.WHITE);
                 box.add(name);
 

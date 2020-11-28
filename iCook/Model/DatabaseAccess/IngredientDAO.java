@@ -2,6 +2,8 @@ package iCook.Model.DatabaseAccess;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import iCook.Model.Ingredient;
+import java.util.ArrayList;
 
 public class IngredientDAO extends BaseDAO {
 
@@ -55,4 +57,37 @@ public class IngredientDAO extends BaseDAO {
             return null;
         }
     }
+
+
+    /**
+     * Performs SQL statement to return an ArrayList of Ingredient Objects
+     */
+    public ArrayList<Ingredient> getAllIngredients() {
+        try {
+            // perform the query
+            ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
+            ArrayList<Ingredient> ingList = new ArrayList<>();
+
+            // read each row in the table
+            while (rs.next())
+            {
+                // read each column of the row
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String unit_of_measure = rs.getString("unit_of_measure");
+                ingList.add(new Ingredient(id, name, unit_of_measure));
+            }
+
+            return ingList;
+        }
+
+        catch (SQLException throwables)
+        {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+
+
 }
