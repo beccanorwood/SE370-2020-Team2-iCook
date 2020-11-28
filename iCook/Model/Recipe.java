@@ -43,7 +43,9 @@ public class Recipe {
         return recipeIngredients;
     }
 
-    public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) { this.recipeIngredients = recipeIngredients; }
+    public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
+    }
     */
 
     public int getNumServings() {
