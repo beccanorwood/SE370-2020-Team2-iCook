@@ -1,6 +1,9 @@
 package iCook.Model;
 import iCook.Model.*;
+import iCook.Model.DatabaseAccess.IngredientDAO;
 import iCook.Model.DatabaseAccess.UserDAO;
+
+import java.util.ArrayList;
 
 public class Facade {
 
@@ -42,7 +45,6 @@ public class Facade {
         // create a UserDAO object
         UserDAO userDAO;
 
-
         // initialize connection to DB
         userDAO = new UserDAO();
 
@@ -56,6 +58,15 @@ public class Facade {
             userDAO.createAccount(username, password);
             userDAO.getUser(username, password);
         }
+    }
+
+
+    public ArrayList<Ingredient> getSystemIngredients()
+    {
+        IngredientDAO ingDAO;
+        ingDAO = new IngredientDAO();
+
+        return ingDAO.getAllIngredients();
     }
 
 } // end of Facade class

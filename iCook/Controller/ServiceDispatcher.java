@@ -1,11 +1,15 @@
 package iCook.Controller;
 import iCook.Model.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class ServiceDispatcher {
 
     // instance variables
-    Facade facade;
-    User user = null;
+    private Facade facade;
+    private User user = null;
+    private ArrayList<Ingredient> systemIngredients = new ArrayList<>();
 
     /**
      * Constructor. Does nothing.
@@ -13,6 +17,7 @@ public class ServiceDispatcher {
     public ServiceDispatcher()
     {
         facade = new Facade();
+        getSystemIngredients();
     }
 
 
@@ -56,6 +61,33 @@ public class ServiceDispatcher {
     public boolean isLoggedIn()
     {
         return ( user == null ) ? false : true;
+    }
+
+
+    /**
+     * Returns a SORTED ArrayList of all system ingredient's names
+     */
+    public ArrayList<String> getAllSystemIngredients()
+    {
+        ArrayList<String> nameList = new ArrayList<>();
+
+        for(int i = 0; i < systemIngredients.size(); i++)
+        {
+            nameList.add(systemIngredients.get(i).getIngredientName());
+        }
+
+        // sort the list of ingredient names
+        Collections.sort(nameList);
+        return nameList;
+    }
+
+
+    /**
+     * Initializes SystemIngredients with an ArrayList containing Ingredient objects from the system
+     */
+    private void getSystemIngredients()
+    {
+        systemIngredients = facade.getSystemIngredients();
     }
 
 }
