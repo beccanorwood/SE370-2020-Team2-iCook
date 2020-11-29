@@ -20,6 +20,7 @@ public class HomeUI extends JFrame implements ActionListener {
     private JButton myInventory;
     private GridBagConstraints constraints;
 
+
     public HomeUI(String userName){
 
         homeframe = new JFrame("iCook");

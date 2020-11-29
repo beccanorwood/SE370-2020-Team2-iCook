@@ -1,5 +1,7 @@
 package iCook.View.Operations;
 
+import iCook.Controller.ServiceDispatcher;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,6 +10,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+
 
 public class RecipeUI  extends JFrame implements ActionListener {
 
@@ -22,9 +25,9 @@ public class RecipeUI  extends JFrame implements ActionListener {
     private JPanel ingredientPanel;
     private JPanel chosenIngredients;
     private JPanel rightPanel;
-    private JButton search;
-    private JButton searchAll;
-    private JButton add;
+    private JButton modServings;
+    private JButton Ingredients;
+    private JButton execute;
     private JButton remove;
     private JLabel title;
     private String[] ingredients;
@@ -35,12 +38,15 @@ public class RecipeUI  extends JFrame implements ActionListener {
     private HashMap<JButton, Box> delete = new HashMap<JButton, Box>();
     private ArrayList<String> iCookIngredients = new ArrayList<>();
 
+
     public RecipeUI(){
         Recipe = new JFrame("iCook");
         Recipe.setSize(500, 500);
         Recipe.setLocationRelativeTo(null);
         Recipe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Recipe.setLayout(new BorderLayout());
+
+
 
         //Current ingredients
         ingredients = new String[]{"sugar", "milk", "salt", "chicken", "bacon",
@@ -61,13 +67,13 @@ public class RecipeUI  extends JFrame implements ActionListener {
         title.setFont(new Font("ARIAL", Font.BOLD, 30));
         title.setForeground(Color.WHITE);
 
-        add = new JButton("Execute Recipe");
+        execute = new JButton("Execute Recipe");
         //remove = new JButton("Remove");
-        search = new JButton("Modify Servings");
-        searchAll = new JButton("Exit to Home");
-        add.addActionListener(this);
-        search.addActionListener(this);
-        searchAll.addActionListener(this);
+        modServings = new JButton("Modify Servings");
+        Ingredients = new JButton("Ingredients");
+        execute.addActionListener(this);
+        modServings.addActionListener(this);
+        Ingredients.addActionListener(this);
 
         topPanel = new JPanel();
         topPanel.add(title);
@@ -88,8 +94,8 @@ public class RecipeUI  extends JFrame implements ActionListener {
         rightPanel.setBackground(Color.BLACK);
 
         bottomPanel = new JPanel();
-        bottomPanel.add(search);
-        bottomPanel.add(searchAll);
+        bottomPanel.add(modServings);
+        bottomPanel.add(Ingredients);
         bottomPanel.setBackground(Color.BLACK);
 
         Recipe.add(topPanel, BorderLayout.NORTH);
@@ -139,7 +145,7 @@ public class RecipeUI  extends JFrame implements ActionListener {
 
             Recipe.setVisible(false);
             Recipe.dispose();
-            HomeUI homeframe = new HomeUI();
+            InventoryUI inventory = new InventoryUI();
         }
 
     }
