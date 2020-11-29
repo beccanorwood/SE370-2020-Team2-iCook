@@ -4,6 +4,12 @@ import iCook.Model.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * The main controller class for iCook's MVC design pattern. Connects the View with the Model.
+ *
+ * @author Team 2
+ * @version 11/28/2020
+ */
 public class ServiceDispatcher {
 
     // instance variables
@@ -11,8 +17,9 @@ public class ServiceDispatcher {
     private User user = null;
     private ArrayList<Ingredient> systemIngredients = new ArrayList<>();
 
+
     /**
-     * Constructor. Does nothing.
+     * Constructor - initializes instance variables (except for the user singleton)
      */
     public ServiceDispatcher()
     {
@@ -22,7 +29,10 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns true if the user's credentials are valid, false otherwise
+     * Returns true if the user's credentials are valid, false otherwise.
+     * Requests the facade to try to log the user in.
+     *
+     * If the facade successfully logs the user in, initialize the user singleton.
      */
     public boolean login(String username, String password)
     {
@@ -36,7 +46,8 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new user with the given username and password
+     * Requests the facade to create a new user with the given username and password.
+     * Initializes the user singleton with the newly created account.
      */
     public void signUp(String username, String password)
     {
@@ -54,6 +65,7 @@ public class ServiceDispatcher {
         System.out.println(user.getUserName());
         System.out.println(user.getPassword());
     }
+
 
     /**
      * Returns true if the singleton object is not null
@@ -83,11 +95,12 @@ public class ServiceDispatcher {
 
 
     /**
-     * Initializes SystemIngredients with an ArrayList containing Ingredient objects from the system
+     * Initializes systemIngredients with an ArrayList containing Ingredient objects
      */
     private void getSystemIngredients()
     {
         systemIngredients = facade.getSystemIngredients();
     }
 
-}
+
+} // end of ServiceDispatcher class

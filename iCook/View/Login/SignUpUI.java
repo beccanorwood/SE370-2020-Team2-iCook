@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.UsernameTakenException;
 
 public class SignUpUI extends JFrame implements ActionListener
 {
@@ -116,12 +117,25 @@ public class SignUpUI extends JFrame implements ActionListener
                 // Create ServiceDispatcher
                 serviceDispatcher = new ServiceDispatcher();
 
-                // create an account with the given username and password
-                serviceDispatcher.signUp(username, password);
+                try {
+                    // create an account with the given username and password
+                    serviceDispatcher.signUp(username, password);
 
-                // if the user is logged in, go to next page
-                if (serviceDispatcher.isLoggedIn()) {
-                    serviceDispatcher.displayUser();
+                    // if the user is logged in, go to next page
+                    if (serviceDispatcher.isLoggedIn()) {
+                        serviceDispatcher.displayUser();
+                    }
+                }
+
+                catch (UsernameTakenException error) {
+                    //Error message
+                    JLabel blank_error = new JLabel(error.toString());
+                    blank_error.setForeground(Color.WHITE);
+                    JPanel blank_error_p = new JPanel();
+                    blank_error_p.add(blank_error);
+                    blank_error_p.setBackground(Color.BLACK);
+                    signup_frame.add(blank_error_p, BorderLayout.SOUTH);
+                    signup_frame.setVisible(true);
                 }
 
             }

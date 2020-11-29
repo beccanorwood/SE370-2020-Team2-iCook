@@ -36,7 +36,7 @@ public class WelcomeUI extends JFrame implements ActionListener
         panel.add(iCook, constraints);
 
         try{
-            img = ImageIO.read(new File("iCook_Logo(125).png"));
+            img = ImageIO.read(new File("iCook_Logo.png"));
         }
         catch(IOException e){
             e.printStackTrace();

@@ -5,16 +5,24 @@ import java.sql.SQLException;
 import iCook.Model.Ingredient;
 import java.util.ArrayList;
 
+/**
+ * DAO class for the Ingredient table in iCook's database.
+ *
+ * @author Team 2
+ * @version 11/28/2020
+ */
 public class IngredientDAO extends BaseDAO {
 
     /**
-     * Constructor
+     * Constructor for the IngredientDAO
      */
     public IngredientDAO() {
+
     }
 
+
     /**
-     * Performs SQL statement to nicely display all ingredients in the table
+     * Performs a SQL statement to nicely display all system ingredients
      */
     public void displayIngredientsTable() {
         try {
@@ -38,8 +46,9 @@ public class IngredientDAO extends BaseDAO {
         }
     }
 
+
     /**
-     * Performs SQL statement to return the quantity field of an ingredient
+     * Performs a SQL statement to return the quantity field of an ingredient
      */
     public String getIngredientMeasurement(int ID) {
         try {
@@ -60,13 +69,14 @@ public class IngredientDAO extends BaseDAO {
 
 
     /**
-     * Performs SQL statement to return an ArrayList of Ingredient Objects
+     * Performs a SQL statement to return an ArrayList of Ingredient Objects
+     * (all system ingredients will be in this list).
      */
     public ArrayList<Ingredient> getAllIngredients() {
         try {
             // perform the query
             ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
-            ArrayList<Ingredient> ingList = new ArrayList<>();
+            ArrayList<Ingredient> ingList = new ArrayList<>();  // array list we are going to return
 
             // read each row in the table
             while (rs.next())
@@ -75,7 +85,7 @@ public class IngredientDAO extends BaseDAO {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
                 String unit_of_measure = rs.getString("unit_of_measure");
-                ingList.add(new Ingredient(id, name, unit_of_measure));
+                ingList.add(new Ingredient(id, name, unit_of_measure)); // add the ingredient to the array list
             }
 
             return ingList;
@@ -89,5 +99,4 @@ public class IngredientDAO extends BaseDAO {
     }
 
 
-
-}
+} // end of IngredientDAO class
