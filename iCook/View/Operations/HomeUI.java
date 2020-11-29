@@ -13,24 +13,19 @@ public class HomeUI extends JFrame implements ActionListener {
     //User Home Page with two buttons
     //Search and My Inventory
     private BufferedImage img;
-    private JFrame homeframe;
-    private JPanel homepanel;
-    private JPanel buttonPanel;
-    private JButton search;
-    private JButton myInventory;
-    private GridBagConstraints constraints;
+    private final JFrame homeframe;
 
     public HomeUI(String userName){
 
         homeframe = new JFrame("iCook");
-        homepanel = new JPanel(new GridBagLayout());
-        buttonPanel = new JPanel();
+        JPanel homepanel = new JPanel(new GridBagLayout());
+        JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.BLACK);
         homeframe.setSize(500, 500);
         homeframe.setLocationRelativeTo(null);
         homeframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         homeframe.setLayout(new BorderLayout());
-        constraints = new GridBagConstraints();
+        GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(10, 10, 10, 10);
 
@@ -52,8 +47,8 @@ public class HomeUI extends JFrame implements ActionListener {
         welcome.setForeground(Color.WHITE);
 
         //Search & Inventory Buttons
-        search = new JButton("Search All");
-        myInventory = new JButton("My Inventory");
+        JButton search = new JButton("Search All");
+        JButton myInventory = new JButton("My Inventory");
         search.addActionListener(this);
         myInventory.addActionListener(this);
 

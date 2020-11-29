@@ -1,47 +1,45 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 
 /**
- * iCook.Controller.Driver
  *
  * @author Team 2
- * @version 11/28/2020
+ * @version 11/29/2020
  */
 
 
-public class InventoryUI extends JFrame{
+public class InventoryUI{
 
     //Display dropbox containing list of available ingredients
     //User selects and it gets added to their inventory
+    //Swing attributes
     private JFrame userInventory;
     private JPanel centerPanel;  //Selected ingredients that are displayed in center
     private JPanel rightPanel;
     private JButton search;
     private JButton searchAll;
     private JButton add;
-    private JLabel title;
     private Box box, button_box; //Organizes ingredients & delete buttons in vertical format
     private final JComboBox userIngredients;
-    private final HashMap<JButton, String> hmap = new HashMap<>();
-    private ArrayList<String> ingredientList;
+    private final ArrayList<String> ingredientList;
     private Checkbox[] selectedIng;
     private JButton[] deleteBtns;
-    private ServiceDispatcher serviceDispatcher;
+    private int deleteButtonPressedCount = 0;
 
+    //
     ButtonListener bl = new ButtonListener();
 
     public InventoryUI(){
 
         // create a new controller object
-        serviceDispatcher = new ServiceDispatcher();
+        ServiceDispatcher serviceDispatcher = new ServiceDispatcher();
 
         // get all the ingredients from the system (NAMES ONLY)
         ingredientList = serviceDispatcher.getAllSystemIngredients();
@@ -49,13 +47,13 @@ public class InventoryUI extends JFrame{
         //Drop down box containing iCook ingredient inventory
         userIngredients = new JComboBox(ingredientList.toArray());
 
+        //Drop down menu action listener class
         DropDownListener dl = new DropDownListener();
         userIngredients.addActionListener(dl);
 
         DeleteButtons(ingredientList);
 
-        DisplayPanel();
-
+        DisplayPanel(); //Initial with empty user inventory
     }
 
     private void DisplayPanel()
@@ -66,7 +64,7 @@ public class InventoryUI extends JFrame{
         userInventory.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         userInventory.setLayout(new BorderLayout());
 
-        title = new JLabel("Your Ingredient Inventory");
+        JLabel title = new JLabel("Your Ingredient Inventory");
         title.setFont(new Font("ARIAL", Font.BOLD, 30));
         title.setForeground(Color.WHITE);
 
@@ -109,9 +107,7 @@ public class InventoryUI extends JFrame{
 
 
     /*Method that creates separate arrays of the same size
-    One containing JButtons & the other containing Checkboxes of user selected ingredients
-    And will be put into a hashmap so the ingredients has a correlating remove button
-     */
+    One containing JButtons & the other containing Checkboxes of user selected ingredients*/
     private void DeleteButtons(ArrayList<String> ingredientList)
     {
         deleteBtns = new JButton[ingredientList.size()];
@@ -129,22 +125,6 @@ public class InventoryUI extends JFrame{
         for(int j = 0; j < ingredientList.size(); j++){
             selectedIng[j] = new Checkbox(ingredientList.get(j));
         }
-
-        CreateMap(ingredientList, deleteBtns);
-    }
-
-
-    private void CreateMap(ArrayList<String> ingredients, JButton[] deleteBtns)
-    {
-        //Everytime a user selects an ingredient from the dropdown list
-        //A new remove button will be added to the rightmost panel
-
-        //Initialize hashmap
-        //Key = JButton
-        //Value = String of Ingredient Name
-        for(int i = 0; i < ingredientList.size(); i++){
-            hmap.put(deleteBtns[i], ingredients.get(i));
-        }
     }
 
     private void DisplayInventoryandDeleteButtons(int position)
@@ -158,7 +138,17 @@ public class InventoryUI extends JFrame{
         rightPanel.add(button_box);
         userInventory.add(rightPanel, BorderLayout.EAST);
         userInventory.setVisible(true);
+
     }
+
+    /*Method that displays an ingredient that user has previously removed*/
+
+    private void AddRemovedIng(int index)
+    {
+        selectedIng[index].setVisible(true);
+        deleteBtns[index].setVisible(true);
+    }
+
 
     //DropDownMenu Action Listener
     private class DropDownListener implements ActionListener
@@ -173,7 +163,9 @@ public class InventoryUI extends JFrame{
             //If ingredient is selected, it will be added to center panel
             for(int i = 0; i < ingredientList.size(); i++){
                 if(src1.getSelectedItem() == (ingredientList.get(i))){
-
+                    if(deleteButtonPressedCount >= 1){
+                        AddRemovedIng(i);
+                    }
                     System.out.println("Selected Item: " + ingredientList.get(i));
                     DisplayInventoryandDeleteButtons(i);
                 }
@@ -181,6 +173,7 @@ public class InventoryUI extends JFrame{
         }
 
     }
+
 
     //ActionListeners for delete buttons and soon to be search, add, and remove
     private class ButtonListener implements ActionListener
@@ -192,11 +185,11 @@ public class InventoryUI extends JFrame{
 
             for(int i = 0; i < deleteBtns.length; i++){
                 if(src2 == deleteBtns[i]){
+                    deleteButtonPressedCount++;
                     System.out.println("Delete Button " + i + " Pressed: "); //DEBUG
-                        System.out.println("Selected Ingredient: " + selectedIng[i]); //DEBUG
-                        selectedIng[i].setVisible(false);
-                        deleteBtns[i].setVisible(false);
-                        userInventory.setVisible(true);
+                        System.out.println("Selected Ingredient: " + selectedIng[i]);//DEBUG
+                        selectedIng[i].setVisible(false); //Checkbox
+                        deleteBtns[i].setVisible(false); //Delete box
                 }
             }
 
@@ -205,6 +198,13 @@ public class InventoryUI extends JFrame{
             }
             else if(src2 == search){
                 System.out.println("Search Button Pressed");
+                for(int j = 0; j < selectedIng.length; j++){
+                    if(selectedIng[j].isShowing() && selectedIng[j].getState()){
+                        //Open list of available ingredients
+                        System.out.println("Ingredient Selected: " + ingredientList.get(j));
+                    }
+                }
+
             }
             else if(src2 == searchAll){
                 System.out.println("Search All Button Pressed");
