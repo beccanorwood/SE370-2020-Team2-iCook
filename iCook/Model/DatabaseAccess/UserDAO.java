@@ -1,8 +1,10 @@
 package iCook.Model.DatabaseAccess;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import iCook.Model.User;
+import iCook.Model.UserIngredient;
 
 /**
  * DAO class for the User table in iCook's database.
@@ -127,7 +129,7 @@ public class UserDAO extends BaseDAO {
 
 
     /**
-     * Performs SQL statement to get the user id and creates the User Singleton object
+     * Performs a SQL statement to get the user id and creates the User Singleton object
      */
     public void getUser(String username, String password) {
         try {
@@ -145,6 +147,35 @@ public class UserDAO extends BaseDAO {
         catch (SQLException throwables)
         {
             throwables.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Performs a SQL statement to return an Arraylist of the user's ingredients
+     */
+    public ArrayList<UserIngredient> getUserIngredients(int userID) {
+        try {
+            // perform the query
+            ResultSet rs = statement.executeQuery("SELECT * FROM user_ingredients WHERE user_id = '" + userID + "' ");
+            ArrayList<UserIngredient> userIngredients = new ArrayList<>();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int ingredientID = rs.getInt("ingredient_id");
+                int quantity = rs.getInt("quantity");
+
+                // add the user ingredient to the array list
+                userIngredients.add(new UserIngredient(id, userID, ingredientID, quantity));
+            }
+
+            return userIngredients;
+        }
+
+        catch (SQLException throwables)
+        {
+            throwables.printStackTrace();
+            return null;
         }
     }
 

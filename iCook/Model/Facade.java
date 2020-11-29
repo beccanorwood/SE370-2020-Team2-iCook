@@ -84,4 +84,15 @@ public class Facade {
     }
 
 
+    /**
+     * Calls the UserDAO to return an ArrayList of UserIngredient objects (all user's ingredients)
+     */
+    public ArrayList<UserIngredient> getUserIngredients(int userID)
+    {
+        UserDAO userDAO;
+        userDAO = new UserDAO();
+
+        return userDAO.getUserIngredients(userID);
+    }
+
 } // end of Facade class
