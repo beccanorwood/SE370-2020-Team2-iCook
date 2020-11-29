@@ -105,7 +105,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns a SORTED ArrayList of all system ingredient's names
+     * Returns a SORTED ArrayList of all user ingredient names
      */
     public ArrayList<String> getAllUserIngredients()
     {
@@ -123,7 +123,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Initializes systemIngredients with an ArrayList containing Ingredient objects
+     * Initializes userIngredients with an ArrayList containing UserIngredient objects
      */
     private void getUserIngredients()
     {
