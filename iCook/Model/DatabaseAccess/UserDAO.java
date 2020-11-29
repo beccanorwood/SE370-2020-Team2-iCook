@@ -4,12 +4,11 @@ import java.sql.SQLException;
 
 import iCook.Model.User;
 
-
 /**
- * DAO for users table in DB
+ * DAO class for the User table in iCook's database.
  *
  * @author Team 2
- * @version 11/22/2020
+ * @version 11/28/2020
  */
 public class UserDAO extends BaseDAO {
 
@@ -19,8 +18,9 @@ public class UserDAO extends BaseDAO {
     public UserDAO() {
     }
 
+
     /**
-     * Performs SQL statement to add an ingredient to the ingredients table
+     * Performs a SQL statement to add an ingredient to the user_ingredient table
      */
     public void addUserIngredient(int userID, int ingredientID, int quantity) {
         try {
@@ -35,7 +35,7 @@ public class UserDAO extends BaseDAO {
 
 
     /**
-     * Performs SQL statement to update an ingredient's quantity
+     * Performs a SQL statement to update a user ingredient's quantity
      */
     public void updateUserIngredient(int ID, int quantity) {
         try {
@@ -50,7 +50,7 @@ public class UserDAO extends BaseDAO {
 
 
     /**
-     * Performs SQL statement to update an ingredient's quantity
+     * Performs a SQL statement to remove a user ingredient
      */
     public void deleteUserIngredient(int ID) {
         try {
@@ -65,7 +65,7 @@ public class UserDAO extends BaseDAO {
 
 
     /**
-     * Performs SQL statement to determine if a user exists with given login information
+     * Performs a SQL statement to determine if a user exists with the given login information
      */
     public boolean validUserLogin(String username, String password) {
         try {
@@ -107,14 +107,12 @@ public class UserDAO extends BaseDAO {
 
 
     /**
-     * Performs SQL statement to create a new user
+     * Performs a SQL statement to create a new user in the user table
      */
-    public void createAccount(String username, String password) {
+    public void addUser(String username, String password) {
         try {
-            // determine if an account already exists with the given username
-            if (usernameIsTaken(username))
-                System.out.println("Username is already in use. Please enter a new one.");
-            else {
+            // if an account does not already exists with the given username
+            if ( !usernameIsTaken(username) ) {
                 // create a new account with the given username and password
                 statement.execute("INSERT INTO users (user_name, password) VALUE ('" + username + "', '" + password + "') ");
                 System.out.println("Account successfully made!");
@@ -139,7 +137,7 @@ public class UserDAO extends BaseDAO {
             while (rs.next()) {
                 int id = rs.getInt("id");
 
-                // establish the user singleton
+                // create the user singleton (SHOULD BE THE ONLY PLACE THIS HAPPENS)
                 User user = User.getUser(id, username, password);
             }
         }
@@ -150,4 +148,5 @@ public class UserDAO extends BaseDAO {
         }
     }
 
-}
+
+} // end of UserDAO class

@@ -6,23 +6,26 @@ import java.sql.Statement;
 import java.sql.SQLException;
 
 /**
- * Superclass for DAO connections
+ * Superclass for DAO classes that establishes the connection to iCook's database
  *
  * @author Team 2
- * @version 11/7/2020
+ * @version 11/28/2020
  */
 public class BaseDAO {
+
+    // initialize instance variables
     private static final String username = "se370";
     private static final String password = "Team2!";
     private static final String database = "icook";
     private static final String url = "jdbc:mysql://izzy-se370.ca3u8x8hrfhy.us-west-1.rds.amazonaws.com:3306/" + database;
 
-    public static Connection connection = null;
-    public Statement statement;
+    // variables available to classes that extend BaseDAO
+    protected static Connection connection = null;
+    protected Statement statement;
 
 
     /**
-     * Constructor that connects to the iCook database
+     * Constructor that establishes a connection to iCook's database
      */
     BaseDAO() {
         try {
@@ -36,6 +39,7 @@ public class BaseDAO {
 
     /**
      * Establishes a connection to the iCook database and throws a SQLException
+     * if there is a problem getting the connection
      */
     private void connect() throws SQLException
     {
@@ -50,4 +54,5 @@ public class BaseDAO {
         statement = connection.createStatement();
     }
 
-}
+
+} // end of BaseDAO class
