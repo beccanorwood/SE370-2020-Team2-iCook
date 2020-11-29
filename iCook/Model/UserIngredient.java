@@ -1,5 +1,7 @@
 package iCook.Model;
 
+import iCook.Model.DatabaseAccess.UserDAO;
+
 /**
  * UserIngredient class stores user ingredient ID, user ID, ingredient ID, and quantity of ingredient.
  * This class is responsible for storing an ingredient for a user as well as the quantity they have
@@ -92,5 +94,12 @@ public class UserIngredient {
      */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getUserIngredientName() {
+
+        UserDAO userDAO = new UserDAO();
+
+        return  userDAO.getUserIngredientName();
     }
 }

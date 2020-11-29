@@ -16,6 +16,7 @@ public class ServiceDispatcher {
     private Facade facade;
     private User user = null;
     private ArrayList<Ingredient> systemIngredients = new ArrayList<>();
+    private ArrayList<UserIngredient> userIngredients = new ArrayList<>();
 
 
     /**
@@ -100,6 +101,33 @@ public class ServiceDispatcher {
     private void getSystemIngredients()
     {
         systemIngredients = facade.getSystemIngredients();
+    }
+
+
+    /**
+     * Returns a SORTED ArrayList of all system ingredient's names
+     */
+    public ArrayList<String> getAllUserIngredients()
+    {
+        ArrayList<String> userIngredientList = new ArrayList<>();
+
+        for(int i = 0; i < userIngredients.size(); i++)
+        {
+            userIngredientList.add(userIngredients.get(i).getUserIngredientName());
+        }
+
+        // sort the list of ingredient names
+        Collections.sort(userIngredientList);
+        return userIngredientList;
+    }
+
+
+    /**
+     * Initializes systemIngredients with an ArrayList containing Ingredient objects
+     */
+    private void getUserIngredients()
+    {
+        userIngredients = facade.getUserIngredients(user.getId());
     }
 
 
