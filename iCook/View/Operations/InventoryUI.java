@@ -1,8 +1,11 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.Model.UserIngredient;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,9 +38,15 @@ public class InventoryUI extends JFrame{
     private JButton amount;
     private JButton decrement;
     private JRadioButton unitOfMeasure;
-    private final ArrayList<HashMap<String, String>> ingredientList;
-    private ArrayList<String> ingredientNames;
-    private ArrayList<String> unitsOfMeasure;
+
+    private final ArrayList<HashMap<String, String>> ingredientList;    // stores the system ingredients
+    private ArrayList<String> ingredientNames;      // stores the name of system ingredients (stored in the dropdown menu)
+    private ArrayList<String> unitsOfMeasure;       // stores the unit of measure of the system ingredients
+
+    private ArrayList<HashMap<String, String>> userIngredientList;      // stores the user's ingredients
+    private ArrayList<String> userIngredientName;       // ArrayList of user ingredient names
+    private ArrayList<String> userIngredientQuantity;   // ArrayList of user ingredient quantities
+    private ArrayList<String> userIngredientUnit;       // ArrayList of user ingredient units
 
 
     //InitialSize of each panel's row & col
@@ -67,6 +76,28 @@ public class InventoryUI extends JFrame{
 
         // sort the list of ingredient names
         Collections.sort(ingredientNames);
+
+        // get the user's inventory and store the name, quantity, and unit of measure in their own separate ArrayList
+        userIngredientList = serviceDispatcher.getUserInventory();
+        userIngredientName = new ArrayList<>();
+        userIngredientQuantity = new ArrayList<>();
+        userIngredientUnit = new ArrayList<>();
+
+        for (HashMap<String, String> map : userIngredientList)
+        {
+            userIngredientName.add(map.get("name"));
+            userIngredientQuantity.add(map.get("quantity"));
+            userIngredientUnit.add(map.get("unit_of_measure"));
+        }
+
+        System.out.println("\n\nTESTING:");
+
+        for (int i = 0; i < userIngredientList.size(); i ++)
+        {
+            System.out.println(userIngredientName.get(i));
+            System.out.println(userIngredientQuantity.get(i));
+            System.out.println(userIngredientUnit.get(i));
+        }
 
         topPanel = new JPanel();
         leftPanel = new JPanel();
@@ -128,6 +159,11 @@ public class InventoryUI extends JFrame{
         Box box = Box.createVerticalBox();
         //add = new JButton("Add");
         //add.addActionListener(bl);
+
+        // ** TESTING TO ADD COLOR FOR BORDER **
+        // Border border = new LineBorder(Color.GRAY, 1, true);
+        // leftPanel.setBorder(border);
+
         leftPanel.setLayout(new GridLayout(row +1, col));
         leftPanel.setBackground(Color.BLACK);
         leftPanel.setBorder(BorderFactory.createTitledBorder("Name"));
