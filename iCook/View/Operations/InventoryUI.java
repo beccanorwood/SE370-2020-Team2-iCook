@@ -146,8 +146,8 @@ public class InventoryUI extends JFrame{
         decrement = new JButton("-");
         decrement.addActionListener(bl);
         amount = new JButton(String.valueOf(count));
-        amount.setBackground(Color.BLACK);
-        amount.setForeground(Color.WHITE);
+        amount.setBackground(Color.WHITE);
+        amount.setForeground(Color.BLACK);
         center_box.add(decrement);
         center_box.add(Box.createHorizontalStrut(10));
         center_box.add(amount);
