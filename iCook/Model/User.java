@@ -6,16 +6,18 @@ import java.util.List;
  * Uses the Singleton Pattern - only 1 user should exists in runtime
  *
  * @author Team 2
- * @version 11/14/2020
+ * @version 11/29/2020
  */
 public class User {
 
+    // the SINGLETON object of this class
+    private static User userObject = null;
+
+
     // instance variables
-    private int id;                                 // id that is stored in the database
-    private String userName;                        // the username of this user
-    private String password;                        // the password of this user
-    private static User userObject = null;          // the SINGLE object of this class
-    //private List<UserIngredient> userIngredients;   // list of user's ingredients
+    private int id;             // id that is stored in the database
+    private String userName;    // the username of this user
+    private String password;    // the password of this user
 
 
     /**
@@ -91,21 +93,4 @@ public class User {
     }
 
 
-//    /**
-//     * Getter for the user's ingredients
-//     */
-//    public List<UserIngredient> getUserIngredients()
-//    {
-//        return userIngredients;
-//    }
-
-
-//    /**
-//     * Adds a user ingredient to the user's list of ingredients
-//     */
-//    public void addUserIngredient(UserIngredient userIngredient)
-//    {
-//        userIngredients.add(userIngredient);
-//    }
-
-}
+} // end of User class

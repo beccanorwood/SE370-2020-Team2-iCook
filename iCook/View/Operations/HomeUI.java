@@ -1,5 +1,8 @@
 package iCook.View.Operations;
 
+import iCook.Controller.ServiceDispatcher;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class HomeUI extends JFrame implements ActionListener {
     //User Home Page with two buttons
@@ -48,10 +52,12 @@ public class HomeUI extends JFrame implements ActionListener {
         welcome.setForeground(Color.WHITE);
 
         //Search & Inventory Buttons
-        JButton search = new JButton("Search All");
+        JButton recipes = new JButton("Recipes");
         JButton myInventory = new JButton("My Inventory");
-        search.addActionListener(this);
+        JButton myRecipes = new JButton("My Recipes");
+        recipes.addActionListener(this);
         myInventory.addActionListener(this);
+        myRecipes.addActionListener(this);
 
         //Component Positions
         constraints.gridx = 3;
@@ -61,13 +67,30 @@ public class HomeUI extends JFrame implements ActionListener {
         constraints.gridx = 4;
         homepanel.add(pic, constraints);
 
-        buttonPanel.add(search);
+        buttonPanel.add(recipes);
         buttonPanel.add(myInventory);
+        buttonPanel.add(myRecipes);
 
         homepanel.setBackground(Color.BLACK);
         homeframe.add(homepanel, BorderLayout.CENTER);
         homeframe.add(buttonPanel, BorderLayout.SOUTH);
         homeframe.setVisible(true);
+
+        // ********************************************
+        // *** FOR TESTING PURPOSES, CAN BE DELETED ***
+        System.out.println("\nUser Inventory");
+        System.out.println("--------------");
+
+        ServiceDispatcher controller = new ServiceDispatcher();
+        ArrayList<HashMap<String, String>> userInventory = controller.getUserInventory();
+
+        if (!userInventory.isEmpty()) {
+            for (HashMap<String, String> map : userInventory)
+                System.out.println(map.get("name"));
+        }
+        else
+            System.out.println("Your inventory is empty");
+        // ********************************************
 
     }
 
@@ -93,6 +116,7 @@ public class HomeUI extends JFrame implements ActionListener {
             homeframe.dispose();
             InventoryUI inventory = new InventoryUI();
         }
+
 
     }
 }

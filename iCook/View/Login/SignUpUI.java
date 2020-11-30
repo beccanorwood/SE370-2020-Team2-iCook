@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import iCook.Controller.ServiceDispatcher;
 import iCook.UsernameTakenException;
+import iCook.View.Operations.HomeUI;
 
 public class SignUpUI extends JFrame implements ActionListener
 {
@@ -124,6 +125,7 @@ public class SignUpUI extends JFrame implements ActionListener
                     // if the user is logged in, go to next page
                     if (serviceDispatcher.isLoggedIn()) {
                         serviceDispatcher.displayUser();
+                        HomeUI userHomePage = new HomeUI(username);
                     }
                 }
 

@@ -1,6 +1,7 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,25 +16,32 @@ import java.util.ArrayList;
  */
 
 
-public class InventoryUI{
+public class InventoryUI extends JFrame{
 
     //Display dropbox containing list of available ingredients
     //User selects and it gets added to their inventory
     //Swing attributes
-    private JFrame userInventory;
+    private JPanel topPanel;
     private JPanel centerPanel;  //Selected ingredients that are displayed in center
     private JPanel rightPanel;
-    private JButton search;
-    private JButton searchAll;
+    private JPanel leftPanel;
+    private JPanel bottomPanel;
     private JButton add;
+    private JButton search;
+    private JButton update;
+    private JButton increment;
+    private JButton decrement;
+    private JRadioButton ounces;
+    private JRadioButton gallons;
+    private JRadioButton cups;
     private Box box, button_box; //Organizes ingredients & delete buttons in vertical format
-    private final JComboBox userIngredients;
+    private JComboBox userIngredients;
+    private JRadioButton availableIngredients;
     private final ArrayList<String> ingredientList;
     private Checkbox[] selectedIng;
-    private JButton[] deleteBtns;
-    private int deleteButtonPressedCount = 0;
+    private int row = 1; //InitialSize
+    private int col = 1; //InitialSize
 
-    //
     ButtonListener bl = new ButtonListener();
 
     public InventoryUI(){
@@ -44,110 +52,143 @@ public class InventoryUI{
         // get all the ingredients from the system (NAMES ONLY)
         ingredientList = serviceDispatcher.getAllSystemIngredients();
 
-        //Drop down box containing iCook ingredient inventory
-        userIngredients = new JComboBox(ingredientList.toArray());
+        topPanel = new JPanel();
+        leftPanel = new JPanel();
+        centerPanel = new JPanel();
+        rightPanel = new JPanel();
+        bottomPanel = new JPanel();
 
-        //Drop down menu action listener class
-        DropDownListener dl = new DropDownListener();
-        userIngredients.addActionListener(dl);
-
-        DeleteButtons(ingredientList);
-
-        DisplayPanel(); //Initial with empty user inventory
+        TopPanel(); //Top Panel isn't modular, just displays title
+        CreatePanels(row, col);
+        DisplayPanel();
     }
 
     private void DisplayPanel()
     {
-        userInventory = new JFrame("iCook");
-        userInventory.setSize(800, 800);
-        userInventory.setLocationRelativeTo(null);
-        userInventory.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        userInventory.setLayout(new BorderLayout());
+        setTitle("iCook");
+        setSize(500, 500);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
+        add(topPanel, BorderLayout.NORTH);
+        add(leftPanel, BorderLayout.WEST);
+        add(centerPanel, BorderLayout.CENTER);
+        add(rightPanel, BorderLayout.EAST);
+        add(bottomPanel, BorderLayout.SOUTH);
+        pack();
+        setVisible(true);
+
+    }
+
+    private void CreatePanels(int row, int col)
+    {
+        LeftPanel(row, col);
+        CenterPanel(row, col);
+        RightPanel(row, col);
+        BottomPanel();
+    }
+
+
+    private void TopPanel()
+    {
+        //Top Panel displaying Title
         JLabel title = new JLabel("Your Ingredient Inventory");
         title.setFont(new Font("ARIAL", Font.BOLD, 30));
         title.setForeground(Color.WHITE);
 
-        add = new JButton("Add");
-        search = new JButton("Search Checked Ingredients");
-        searchAll = new JButton("Search All");
-        search.addActionListener(bl);
-        searchAll.addActionListener(bl);
-
-        JPanel topPanel = new JPanel();
-        topPanel.add(title);
         topPanel.setBackground(Color.BLACK);
+        topPanel.add(title);
+    }
 
-        //Drop down menu of ingredients
-        JPanel ingredientPanel = new JPanel();
-        ingredientPanel.add(userIngredients);
-        ingredientPanel.setBackground(Color.BLACK);
+    private void LeftPanel(int row, int col)
+    {
+        //Left Panel displaying name of ingredient & dropdown menu
+        userIngredients = new JComboBox(ingredientList.toArray());
+
+        DropDownListener dl = new DropDownListener();
+        userIngredients.addActionListener(dl);
 
         box = Box.createVerticalBox();
-        button_box = Box.createVerticalBox();
+        //add = new JButton("Add");
+        //add.addActionListener(bl);
+        userIngredients.addActionListener(dl);
+        leftPanel.setLayout(new GridLayout(row +1, col));
+        leftPanel.setBackground(Color.BLACK);
+        leftPanel.setBorder(BorderFactory.createTitledBorder("Name"));
+        box.add(userIngredients);
+        box.add(Box.createVerticalStrut(10));
+        //box.add(add);
+        leftPanel.add(box);
+    }
 
-        centerPanel = new JPanel();
+    private void CenterPanel(int row, int col)
+    {
+        //Center Panel displaying amount of ingredient
+        Box center_box = Box.createHorizontalBox();
+        Box vertical_box = Box.createVerticalBox();
+        centerPanel.setLayout(new GridLayout(row +1, col));
         centerPanel.setBackground(Color.BLACK);
+        centerPanel.setBorder(BorderFactory.createTitledBorder("Quantity"));
+        increment = new JButton("+");
+        increment.addActionListener(bl);
+        decrement = new JButton("-");
+        decrement.addActionListener(bl);
+        JLabel amount = new JLabel("0");
+        amount.setForeground(Color.WHITE);
+        center_box.add(decrement);
+        center_box.add(Box.createHorizontalStrut(10));
+        center_box.add(amount);
+        center_box.add(Box.createHorizontalStrut(10));
+        center_box.add(increment);
+        vertical_box.add(center_box);
+        centerPanel.add(vertical_box);
+    }
 
-        rightPanel = new JPanel();
+    private void RightPanel(int row, int col)
+    {
+        //RightPanel displaying measurement
+        Box measure_Box = Box.createVerticalBox();
+        ButtonGroup bg = new ButtonGroup(); //Groups buttons together, if one is selected no others can be selected
+
         rightPanel.setBackground(Color.BLACK);
+        rightPanel.setLayout(new GridLayout(row +1, col));
+        rightPanel.setBorder(BorderFactory.createTitledBorder("Unit"));
+        ounces = new JRadioButton("ounces");
+        ounces.setBackground(Color.BLACK);
+        ounces.setForeground(Color.WHITE);
+        gallons = new JRadioButton("gallons");
+        gallons.setBackground(Color.BLACK);
+        gallons.setForeground(Color.WHITE);
+        cups = new JRadioButton("cups");
+        cups.setBackground(Color.BLACK);
+        cups.setForeground(Color.WHITE);
+        bg.add(ounces);
+        bg.add(gallons);
+        bg.add(cups);
+        measure_Box.add(ounces);
+        measure_Box.add(gallons);
+        measure_Box.add(cups);
+        measure_Box.add(Box.createVerticalStrut(10));
+        rightPanel.add(measure_Box);
+    }
 
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.add(search);
-        bottomPanel.add(searchAll);
+    private void BottomPanel()
+    {
+        //Bottom Panel displaying Buttons
+        bottomPanel = new JPanel();
         bottomPanel.setBackground(Color.BLACK);
-
-        userInventory.add(topPanel, BorderLayout.NORTH);
-        userInventory.add(ingredientPanel, BorderLayout.WEST);
-        userInventory.add(centerPanel, BorderLayout.CENTER);
-        userInventory.add(rightPanel, BorderLayout.EAST);
-        userInventory.add(bottomPanel, BorderLayout.SOUTH);
-        userInventory.setVisible(true);
+        add = new JButton("Add");
+        search = new JButton("Search");
+        update = new JButton("Update");
+        add.addActionListener(bl);
+        search.addActionListener(bl);
+        update.addActionListener(bl);
+        bottomPanel.add(add);
+        bottomPanel.add(search);
+        bottomPanel.add(update);
     }
 
-
-    /*Method that creates separate arrays of the same size
-    One containing JButtons & the other containing Checkboxes of user selected ingredients*/
-    private void DeleteButtons(ArrayList<String> ingredientList)
-    {
-        deleteBtns = new JButton[ingredientList.size()];
-
-        //Initialize JButton array (Not visible until user selects and ingredient from drop down menu)
-        for(int i = 0; i < ingredientList.size(); i++){
-            deleteBtns[i] = new JButton("Delete");
-            deleteBtns[i].addActionListener(bl);
-        }
-
-        //Initialization of Checkbox array same size as ingredients & delete buttons
-        // (Not visible until user selects an ingredient)
-        selectedIng = new Checkbox[ingredientList.size()];
-
-        for(int j = 0; j < ingredientList.size(); j++){
-            selectedIng[j] = new Checkbox(ingredientList.get(j));
-        }
-    }
-
-    private void DisplayInventoryandDeleteButtons(int position)
-    {
-        selectedIng[position].setForeground(Color.WHITE);
-        box.add(selectedIng[position]);
-        centerPanel.add(box);
-        userInventory.add(centerPanel, BorderLayout.CENTER);
-
-        button_box.add(deleteBtns[position]);
-        rightPanel.add(button_box);
-        userInventory.add(rightPanel, BorderLayout.EAST);
-        userInventory.setVisible(true);
-
-    }
-
-    /*Method that displays an ingredient that user has previously removed*/
-
-    private void AddRemovedIng(int index)
-    {
-        selectedIng[index].setVisible(true);
-        deleteBtns[index].setVisible(true);
-    }
 
 
     //DropDownMenu Action Listener
@@ -163,11 +204,9 @@ public class InventoryUI{
             //If ingredient is selected, it will be added to center panel
             for(int i = 0; i < ingredientList.size(); i++){
                 if(src1.getSelectedItem() == (ingredientList.get(i))){
-                    if(deleteButtonPressedCount >= 1){
-                        AddRemovedIng(i);
-                    }
+
                     System.out.println("Selected Item: " + ingredientList.get(i));
-                    DisplayInventoryandDeleteButtons(i);
+
                 }
             }
         }
@@ -183,31 +222,26 @@ public class InventoryUI{
         public void actionPerformed(ActionEvent e) {
             JButton src2 = (JButton) e.getSource();
 
-            for(int i = 0; i < deleteBtns.length; i++){
-                if(src2 == deleteBtns[i]){
-                    deleteButtonPressedCount++;
-                    System.out.println("Delete Button " + i + " Pressed: "); //DEBUG
-                        System.out.println("Selected Ingredient: " + selectedIng[i]);//DEBUG
-                        selectedIng[i].setVisible(false); //Checkbox
-                        deleteBtns[i].setVisible(false); //Delete box
-                }
+            if(src2 == search){
+                System.out.println("Search button pressed");
             }
-
-            if(src2 == add){
+            else if(src2 == update){
+                System.out.println("Update Button Pressed");
+            }
+            else if(src2 == add){
                 System.out.println("Add Button Pressed");
+                row++;
+                CreatePanels(row, col);
+                pack();
+                setVisible(true);
             }
-            else if(src2 == search){
-                System.out.println("Search Button Pressed");
-                for(int j = 0; j < selectedIng.length; j++){
-                    if(selectedIng[j].isShowing() && selectedIng[j].getState()){
-                        //Open list of available ingredients
-                        System.out.println("Ingredient Selected: " + ingredientList.get(j));
-                    }
-                }
+            else if(src2 == increment){
+                System.out.println("Increment Button Pressed");
+                CenterPanel(row, col);
 
             }
-            else if(src2 == searchAll){
-                System.out.println("Search All Button Pressed");
+            else if(src2 == decrement){
+                System.out.println("Decrement Button Pressed");
             }
         }
     }

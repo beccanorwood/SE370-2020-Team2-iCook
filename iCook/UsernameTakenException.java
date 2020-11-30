@@ -11,6 +11,7 @@ public class UsernameTakenException extends RuntimeException {
     // instance variables
     String message;
 
+
     /**
      * Constructor - adds the error message to the super exception
      * and keeps the passed in error message

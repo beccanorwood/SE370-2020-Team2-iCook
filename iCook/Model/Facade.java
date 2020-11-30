@@ -1,22 +1,32 @@
 package iCook.Model;
 import iCook.Model.DatabaseAccess.IngredientDAO;
+import iCook.Model.DatabaseAccess.RecipeDAO;
 import iCook.Model.DatabaseAccess.UserDAO;
 import iCook.UsernameTakenException;
 
 import java.util.ArrayList;
 
 /**
- * Central class for all DAO objects. Has access to all DAO objects.
+ * Central class for all DAO classes. Has access to all DAO classes.
  *
  * @author Team 2
- * @version 11/28/2020
+ * @version 11/29/2020
  */
 public class Facade {
 
+    // instance variables
+    private UserDAO userDAO;
+    private IngredientDAO ingredientDAO;
+    private RecipeDAO recipeDAO;
+
+
     /**
-     * Constructor. Does nothing.
+     * Constructor - initializes instance variables
      */
     public Facade() {
+        userDAO = new UserDAO();
+        ingredientDAO = new IngredientDAO();
+        recipeDAO = new RecipeDAO();
     }
 
 
@@ -28,12 +38,6 @@ public class Facade {
      */
     public boolean login(String username, String password)
     {
-        // create a UserDAO object
-        UserDAO userDAO;
-
-        // initialize connection to DB
-        userDAO = new UserDAO();
-
         // determine if the user's login info is valid, if so return true, false otherwise
         if ( userDAO.validUserLogin(username, password) )
         {
@@ -52,12 +56,6 @@ public class Facade {
      */
     public void signUp(String username, String password)
     {
-        // create a UserDAO object
-        UserDAO userDAO;
-
-        // initialize connection to DB
-        userDAO = new UserDAO();
-
         // make sure the username isn't taken
         // NEED TO THROW AN EXCEPTION HERE
         if ( userDAO.usernameIsTaken(username) ) {
@@ -77,10 +75,16 @@ public class Facade {
      */
     public ArrayList<Ingredient> getSystemIngredients()
     {
-        IngredientDAO ingDAO;
-        ingDAO = new IngredientDAO();
+        return ingredientDAO.getAllIngredients();
+    }
 
-        return ingDAO.getAllIngredients();
+
+    /**
+     * Calls the UserDAO to return an ArrayList of UserIngredient objects (all user's ingredients)
+     */
+    public ArrayList<UserIngredient> getUserIngredients(int userID)
+    {
+        return userDAO.getUserIngredients(userID);
     }
 
 

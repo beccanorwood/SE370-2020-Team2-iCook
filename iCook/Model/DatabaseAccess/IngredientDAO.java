@@ -6,7 +6,8 @@ import iCook.Model.Ingredient;
 import java.util.ArrayList;
 
 /**
- * DAO class for the Ingredient table in iCook's database.
+ * DAO class for the ingredients table in iCook's database.
+ * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
  * @version 11/28/2020
