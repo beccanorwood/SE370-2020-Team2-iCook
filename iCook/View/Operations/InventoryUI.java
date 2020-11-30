@@ -147,28 +147,18 @@ public class InventoryUI extends JFrame{
 
     private void RightPanel(int row, int col)
     {
-        //RightPanel displaying measurement
+        //RightPanel displaying measurement of ingredient selected
         Box measure_Box = Box.createVerticalBox();
-        ButtonGroup bg = new ButtonGroup(); //Groups buttons together, if one is selected no others can be selected
+
+        String unit_of_measure = "Strips";
 
         rightPanel.setBackground(Color.BLACK);
         rightPanel.setLayout(new GridLayout(row +1, col));
         rightPanel.setBorder(BorderFactory.createTitledBorder("Unit"));
-        JRadioButton ounces = new JRadioButton("ounces");
+        JRadioButton ounces = new JRadioButton(unit_of_measure);
         ounces.setBackground(Color.BLACK);
         ounces.setForeground(Color.WHITE);
-        //JRadioButton gallons = new JRadioButton("gallons");
-        //gallons.setBackground(Color.BLACK);
-        //gallons.setForeground(Color.WHITE);
-        //JRadioButton cups = new JRadioButton("cups");
-        //cups.setBackground(Color.BLACK);
-        //cups.setForeground(Color.WHITE);
-        bg.add(ounces);
-        //bg.add(gallons);
-        //bg.add(cups);
         measure_Box.add(ounces);
-        //measure_Box.add(gallons);
-        //measure_Box.add(cups);
         measure_Box.add(Box.createVerticalStrut(10));
         rightPanel.add(measure_Box);
     }
@@ -243,7 +233,10 @@ public class InventoryUI extends JFrame{
             else if(src2 == decrement){
                 ingCount--;
                 if(ingCount < 0){
-                    System.out.println("Error: Ingredient Quantity Cannot be Negative!");
+                    JLabel negativeAmount = new JLabel("Amount can't be negative!");
+                    negativeAmount.setForeground(Color.RED);
+                    centerPanel.add(negativeAmount);
+                    centerPanel.updateUI();
                 }
                 else {
                     System.out.println("Decrement Button Pressed");
