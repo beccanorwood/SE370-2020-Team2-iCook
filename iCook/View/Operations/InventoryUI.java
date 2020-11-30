@@ -34,6 +34,7 @@ public class InventoryUI extends JFrame{
     private JButton increment;
     private JButton amount;
     private JButton decrement;
+    private JRadioButton unitOfMeasure;
     private final ArrayList<HashMap<String, String>> ingredientList;
     private ArrayList<String> ingredientNames;
     private ArrayList<String> unitsOfMeasure;
@@ -170,21 +171,11 @@ public class InventoryUI extends JFrame{
         rightPanel.setBackground(Color.BLACK);
         rightPanel.setLayout(new GridLayout(row +1, col));
         rightPanel.setBorder(BorderFactory.createTitledBorder("Unit"));
-        JRadioButton unitOfMeasure = new JRadioButton(name);
+        unitOfMeasure = new JRadioButton(name);
         unitOfMeasure.setBackground(Color.BLACK);
         unitOfMeasure.setForeground(Color.WHITE);
-        //JRadioButton gallons = new JRadioButton("gallons");
-        //gallons.setBackground(Color.BLACK);
-        //gallons.setForeground(Color.WHITE);
-        //JRadioButton cups = new JRadioButton("cups");
-        //cups.setBackground(Color.BLACK);
-        //cups.setForeground(Color.WHITE);
         bg.add(unitOfMeasure);
-        //bg.add(gallons);
-        //bg.add(cups);
         measure_Box.add(unitOfMeasure);
-        //measure_Box.add(gallons);
-        //measure_Box.add(cups);
         measure_Box.add(Box.createVerticalStrut(10));
         rightPanel.add(measure_Box);
     }
@@ -206,7 +197,6 @@ public class InventoryUI extends JFrame{
     }
 
 
-
     //DropDownMenu Action Listener
     private class DropDownListener implements ActionListener
     {
@@ -225,8 +215,9 @@ public class InventoryUI extends JFrame{
                 // if the selected item == the ingredient's name
                 if(src1.getSelectedItem() == (map.get("name"))){
                     // update the unit of measure on the right panel
-                    RightPanel(row, col, map.get("unit_of_measure"));
-                    setVisible(true);
+                    //RightPanel(row, col, map.get("unit_of_measure"));
+                    unitOfMeasure.setText(map.get("unit_of_measure"));
+                    unitOfMeasure.updateUI();
 
                     // testing purposes
                     System.out.println("Selected Item: " + map.get("name"));
