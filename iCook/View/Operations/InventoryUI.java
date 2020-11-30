@@ -36,6 +36,7 @@ public class InventoryUI extends JFrame{
     private JButton decrement;
     private final ArrayList<HashMap<String, String>> ingredientList;
     private ArrayList<String> ingredientNames;
+    private ArrayList<String> unitsOfMeasure;
 
 
     //InitialSize of each panel's row & col
@@ -55,10 +56,13 @@ public class InventoryUI extends JFrame{
         // get all the ingredients from the system
         ingredientList = serviceDispatcher.getAllSystemIngredients();
         ingredientNames = new ArrayList<>();
+        unitsOfMeasure = new ArrayList<>();
 
         // for every HashMap in ingredientList, add the name to the ingredientNames ArrayList
-        for (HashMap<String, String> map : ingredientList)
+        for (HashMap<String, String> map : ingredientList) {
             ingredientNames.add(map.get("name"));
+            unitsOfMeasure.add(map.get("units_of_measure"));
+        }
 
         // sort the list of ingredient names
         Collections.sort(ingredientNames);
@@ -97,7 +101,7 @@ public class InventoryUI extends JFrame{
     {
         LeftPanel(row, col);
         CenterPanel(row, col, ingCount);
-        RightPanel(row, col);
+        RightPanel(row, col, "n/a");
     }
 
 
@@ -157,7 +161,7 @@ public class InventoryUI extends JFrame{
         centerPanel.add(vertical_box);
     }
 
-    private void RightPanel(int row, int col)
+    private void RightPanel(int row, int col, String name)
     {
         //RightPanel displaying measurement
         Box measure_Box = Box.createVerticalBox();
@@ -166,19 +170,19 @@ public class InventoryUI extends JFrame{
         rightPanel.setBackground(Color.BLACK);
         rightPanel.setLayout(new GridLayout(row +1, col));
         rightPanel.setBorder(BorderFactory.createTitledBorder("Unit"));
-        JRadioButton ounces = new JRadioButton("ounces");
-        ounces.setBackground(Color.BLACK);
-        ounces.setForeground(Color.WHITE);
+        JRadioButton unitOfMeasure = new JRadioButton(name);
+        unitOfMeasure.setBackground(Color.BLACK);
+        unitOfMeasure.setForeground(Color.WHITE);
         //JRadioButton gallons = new JRadioButton("gallons");
         //gallons.setBackground(Color.BLACK);
         //gallons.setForeground(Color.WHITE);
         //JRadioButton cups = new JRadioButton("cups");
         //cups.setBackground(Color.BLACK);
         //cups.setForeground(Color.WHITE);
-        bg.add(ounces);
+        bg.add(unitOfMeasure);
         //bg.add(gallons);
         //bg.add(cups);
-        measure_Box.add(ounces);
+        measure_Box.add(unitOfMeasure);
         //measure_Box.add(gallons);
         //measure_Box.add(cups);
         measure_Box.add(Box.createVerticalStrut(10));
@@ -214,11 +218,19 @@ public class InventoryUI extends JFrame{
 
             //Loop to check through list of ingredients
             //If ingredient is selected, it will be added to center panel
-            for(int i = 0; i < ingredientList.size(); i++){
-                if(src1.getSelectedItem() == (ingredientList.get(i))){
+            for(int i = 0; i < ingredientList.size(); i++) {
+                // get the HashMap at i
+                HashMap<String, String> map = ingredientList.get(i);
 
-                    System.out.println("Selected Item: " + ingredientList.get(i));
+                // if the selected item == the ingredient's name
+                if(src1.getSelectedItem() == (map.get("name"))){
+                    // update the unit of measure on the right panel
+                    RightPanel(row, col, map.get("unit_of_measure"));
+                    setVisible(true);
 
+                    // testing purposes
+                    System.out.println("Selected Item: " + map.get("name"));
+                    System.out.println("Unit of Measure: " + map.get("unit_of_measure"));
                 }
             }
         }
