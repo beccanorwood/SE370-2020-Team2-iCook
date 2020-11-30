@@ -106,7 +106,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns a HashMap of the user's ingredients
+     * Returns a HashMap of the user's inventory (contains their ingredients)
      */
     public HashMap<String, String> getUserInventory()
     {
@@ -114,7 +114,7 @@ public class ServiceDispatcher {
         getUserIngredients();
 
         // use a hashmap to store the info of the UserIngredient object
-        HashMap<String, String> userIngList = new HashMap<String, String>();
+        HashMap<String, String> userIngList = new HashMap<>();
 
         // for every user ingredient, add a key/value
         for (UserIngredient userIngredient : userIngredients)

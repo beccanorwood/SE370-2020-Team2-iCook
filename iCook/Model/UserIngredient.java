@@ -97,6 +97,9 @@ public class UserIngredient {
     }
 
 
+    /**
+     * Getter for the ingredient's name
+     */
     public String getUserIngredientName() {
 
         UserDAO userDAO = new UserDAO();
@@ -104,6 +107,10 @@ public class UserIngredient {
         return  userDAO.getUserIngredientName(ingredientID);
     }
 
+
+    /**
+     * Getter for the ingredient's unit of measure
+     */
     public String getUserIngredientUnitOfMeasure() {
 
         UserDAO userDAO = new UserDAO();
