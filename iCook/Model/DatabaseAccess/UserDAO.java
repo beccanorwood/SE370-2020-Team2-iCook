@@ -7,7 +7,8 @@ import iCook.Model.User;
 import iCook.Model.UserIngredient;
 
 /**
- * DAO class for the User table in iCook's database.
+ * DAO class for the users && user_ingredients table in iCook's database.
+ * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
  * @version 11/28/2020
@@ -152,68 +153,27 @@ public class UserDAO extends BaseDAO {
 
 
     /**
-     * Performs a SQL statement to return an Arraylist of the user's ingredients
+     * Performs a SQL statement to return an Arraylist of UserIngredient objects. Pulls data from the user_ingredients table
      */
     public ArrayList<UserIngredient> getUserIngredients(int userID) {
         try {
             // perform the query
-            ResultSet rs = statement.executeQuery("SELECT * FROM user_ingredients WHERE user_id = '" + userID + "' ");
+            ResultSet rs = statement.executeQuery("SELECT UI.id AS thisID, UI.quantity, I.id as ingID, I.name, I.unit_of_measure " +
+                                                        "FROM user_ingredients UI, ingredients I WHERE UI.user_id = '" + userID + "' AND UI.ingredient_id = I.id");
             ArrayList<UserIngredient> userIngredients = new ArrayList<>();
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                int ingredientID = rs.getInt("ingredient_id");
+                int id = rs.getInt("thisID");
+                int ingredientID = rs.getInt("ingID");
                 int quantity = rs.getInt("quantity");
+                String name = rs.getString("name");
+                String unit_of_measure = rs.getString("unit_of_measure");
 
                 // add the user ingredient to the array list
-                userIngredients.add(new UserIngredient(id, userID, ingredientID, quantity));
+                userIngredients.add(new UserIngredient(id, userID, ingredientID, quantity, name, unit_of_measure));
             }
 
             return userIngredients;
-        }
-
-        catch (SQLException throwables)
-        {
-            throwables.printStackTrace();
-            return null;
-        }
-    }
-
-
-    /**
-     * Performs a SQL statement to return the name of the ingredient from a user ingredient object
-     */
-    public String getUserIngredientName(int ingredientID) {
-        try {
-            // perform the query
-            ResultSet rs = statement.executeQuery("SELECT I.name FROM user_ingredients UI, ingredients I WHERE ingredient_id = '" + ingredientID + "' AND UI.ingredient_id = I.id");
-
-            if (rs.next())
-                return rs.getString("name");
-            else
-                return null;
-        }
-
-        catch (SQLException throwables)
-        {
-            throwables.printStackTrace();
-            return null;
-        }
-    }
-
-
-    /**
-     * Performs a SQL statement to return the unit of measure of the ingredient from a user ingredient object
-     */
-    public String getUserIngredientUnitOfMeasure(int ingredientID) {
-        try {
-            // perform the query
-            ResultSet rs = statement.executeQuery("SELECT I.unit_of_measure FROM user_ingredients UI, ingredients I WHERE ingredient_id = '" + ingredientID + "' AND UI.ingredient_id = I.id");
-
-            if (rs.next())
-                return rs.getString("unit_of_measure");
-            else
-                return null;
         }
 
         catch (SQLException throwables)

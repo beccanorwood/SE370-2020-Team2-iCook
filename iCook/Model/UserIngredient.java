@@ -1,14 +1,12 @@
 package iCook.Model;
 
-import iCook.Model.DatabaseAccess.UserDAO;
-
 /**
  * UserIngredient class stores user ingredient ID, user ID, ingredient ID, and quantity of ingredient.
  * This class is responsible for storing an ingredient for a user as well as the quantity they have
  * of the ingredient.
  *
  * @author Team 2
- * @version 11/14/2020
+ * @version 11/29/2020
  */
 public class UserIngredient {
 
@@ -17,6 +15,8 @@ public class UserIngredient {
     private int userID;
     private int ingredientID;
     private double quantity;
+    private String ingredientName;
+    private String unit_of_measure;
 
     /**
      * Constructor
@@ -24,13 +24,18 @@ public class UserIngredient {
      * @param userID int
      * @param ingredientID int
      * @param quantity int
+     * @param ingredientName String
+     * @param unit_of_measure String
      */
-    public UserIngredient(int userIngredientID, int userID, int ingredientID, int quantity) {
+    public UserIngredient(int userIngredientID, int userID, int ingredientID, int quantity, String ingredientName, String unit_of_measure) {
         this.userIngredientID = userIngredientID;
         this.userID = userID;
         this.ingredientID = ingredientID;
         this.quantity = quantity;
+        this.ingredientName = ingredientName;
+        this.unit_of_measure = unit_of_measure;
     }
+
 
     /**
      * Get user ID
@@ -40,6 +45,7 @@ public class UserIngredient {
         return userID;
     }
 
+
     /**
      * Set user ID
      * @param userID int
@@ -47,6 +53,7 @@ public class UserIngredient {
     public void setUserID(int userID) {
         this.userID = userID;
     }
+
 
     /**
      * Get user ingredient ID
@@ -56,6 +63,7 @@ public class UserIngredient {
         return userIngredientID;
     }
 
+
     /**
      * Set user ingredient ID
      * @param userIngredientID int
@@ -63,6 +71,7 @@ public class UserIngredient {
     public void setUserIngredientID(int userIngredientID) {
         this.userIngredientID = userIngredientID;
     }
+
 
     /**
      * Get ingredient ID
@@ -72,6 +81,7 @@ public class UserIngredient {
         return ingredientID;
     }
 
+
     /**
      * Set ingredient ID
      * @param ingredientID int
@@ -80,6 +90,7 @@ public class UserIngredient {
         this.ingredientID = ingredientID;
     }
 
+
     /**
      * Get quantity of ingredient
      * @return int
@@ -87,6 +98,7 @@ public class UserIngredient {
     public double getQuantity() {
         return quantity;
     }
+
 
     /**
      * Set quantity of ingredient
@@ -101,10 +113,7 @@ public class UserIngredient {
      * Getter for the ingredient's name
      */
     public String getUserIngredientName() {
-
-        UserDAO userDAO = new UserDAO();
-
-        return  userDAO.getUserIngredientName(ingredientID);
+        return ingredientName;
     }
 
 
@@ -112,9 +121,8 @@ public class UserIngredient {
      * Getter for the ingredient's unit of measure
      */
     public String getUserIngredientUnitOfMeasure() {
-
-        UserDAO userDAO = new UserDAO();
-
-        return  userDAO.getUserIngredientUnitOfMeasure(ingredientID);
+        return unit_of_measure;
     }
-}
+
+
+} // end of UserIngredient class

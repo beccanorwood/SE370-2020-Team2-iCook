@@ -13,14 +13,16 @@ import java.sql.SQLException;
  */
 public class BaseDAO {
 
+    // connection to the database needs to be static
+    private static Connection connection = null;
+
     // initialize instance variables
-    private static final String username = "se370";
-    private static final String password = "Team2!";
-    private static final String database = "icook";
-    private static final String url = "jdbc:mysql://izzy-se370.ca3u8x8hrfhy.us-west-1.rds.amazonaws.com:3306/" + database;
+    private final String username = "se370";
+    private final String password = "Team2!";
+    private final String database = "icook";
+    private final String url = "jdbc:mysql://izzy-se370.ca3u8x8hrfhy.us-west-1.rds.amazonaws.com:3306/" + database;
 
     // variables available to classes that extend BaseDAO
-    protected static Connection connection = null;
     protected Statement statement;
 
 
@@ -39,16 +41,19 @@ public class BaseDAO {
 
     /**
      * Establishes a connection to the iCook database and throws a SQLException
-     * if there is a problem getting the connection
+     * if there is a problem getting the connection.
      */
     private void connect() throws SQLException
     {
-        // Register the iCook.Controller.Driver
-        DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+        // only establish a connection to the database if the connection is null
+        if (connection == null) {
+            // Register the iCook.Controller.Driver
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 
-        // Getting the connection
-        connection = DriverManager.getConnection(url, username, password);
-        System.out.println("Connection established....");
+            // Getting the connection
+            connection = DriverManager.getConnection(url, username, password);
+            System.out.println("Connection established....");
+        }
 
         // Creating a statement object
         statement = connection.createStatement();

@@ -6,26 +6,32 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * The main controller class for iCook's MVC design pattern. Connects the View with the Model.
+ * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
  * @version 11/29/2020
  */
 public class ServiceDispatcher {
 
+    // user need to be static (not unique for each ServiceDispatcher object)
+    private static User user = null;
+
+
     // instance variables
     private Facade facade;
-    private User user = null;
-    private ArrayList<Ingredient> systemIngredients = new ArrayList<>();
-    private ArrayList<UserIngredient> userIngredients = new ArrayList<>();
+    private ArrayList<Ingredient> systemIngredients;
+    private ArrayList<UserIngredient> userIngredients;
 
 
     /**
-     * Constructor - initializes instance variables (except for the user singleton && userIngredients)
+     * Constructor - initializes instance variables.
+     * Calls getSystemIngredients to populate systemIngredients
      */
     public ServiceDispatcher()
     {
         facade = new Facade();
+        systemIngredients = new ArrayList<>();
+        userIngredients = new ArrayList<>();
         getSystemIngredients();
     }
 
@@ -106,34 +112,41 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns a HashMap of the user's inventory (contains their ingredients)
+     * Returns an ArrayList of HashMaps of the user's inventory (contains their ingredients)
      */
-    public HashMap<String, String> getUserInventory()
+    public ArrayList<HashMap<String, String>> getUserInventory()
     {
         // initialize the user's ingredients (inventory)
         getUserIngredients();
 
-        // use a hashmap to store the info of the UserIngredient object
-        HashMap<String, String> userIngList = new HashMap<>();
+        // the user's inventory will be stored in an ArrayList
+        ArrayList<HashMap<String, String>> inventory = new ArrayList<>();
+
 
         // for every user ingredient, add a key/value
         for (UserIngredient userIngredient : userIngredients)
         {
+            // use a hashmap to store the info of the UserIngredient object
+            HashMap<String, String> userIngMap = new HashMap<>();
+
             // put the UserIngredient ID in the map
-            userIngList.put("id", Integer.toString(userIngredient.getUserIngredientID()));
+            userIngMap.put("id", Integer.toString(userIngredient.getUserIngredientID()));
 
             // put the Ingredient's name in the map
-            userIngList.put("name", userIngredient.getUserIngredientName());
+            userIngMap.put("name", userIngredient.getUserIngredientName());
 
             // put the Ingredient's quantity in the map
-            userIngList.put("quantity", Double.toString(userIngredient.getQuantity()));
+            userIngMap.put("quantity", Double.toString(userIngredient.getQuantity()));
 
             // put the Ingredient's unit of measure in the map
-            userIngList.put("unit_of_measure", userIngredient.getUserIngredientUnitOfMeasure());
+            userIngMap.put("unit_of_measure", userIngredient.getUserIngredientUnitOfMeasure());
+
+            // add the HashMap to the ArrayList
+            inventory.add(userIngMap);
         }
 
         // return the hashmap
-        return userIngList;
+        return inventory;
     }
 
 
