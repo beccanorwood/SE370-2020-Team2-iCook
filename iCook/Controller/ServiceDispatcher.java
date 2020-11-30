@@ -85,20 +85,31 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns a SORTED ArrayList of all system ingredient's names
+     * Returns an ArrayList of HashMaps containing all system ingredients (contains the name and unit of measure)
      */
-    public ArrayList<String> getAllSystemIngredients()
+    public ArrayList<HashMap<String, String>> getAllSystemIngredients()
     {
-        ArrayList<String> nameList = new ArrayList<>();
+        // the ingredients will be stored in an ArrayList
+        ArrayList<HashMap<String, String>> allIngredients = new ArrayList<>();
 
+        // for every ingredient, add a key/value
         for(int i = 0; i < systemIngredients.size(); i++)
         {
-            nameList.add(systemIngredients.get(i).getIngredientName());
+            // use a hashmap to store the info of the Ingredient object
+            HashMap<String, String> ingredientMap = new HashMap<>();
+
+            // put the Ingredient name in the map
+            ingredientMap.put("name", systemIngredients.get(i).getIngredientName());
+
+            // put the Ingredient unit of measure in the map
+            ingredientMap.put("unit_of_measure", systemIngredients.get(i).getUnitOfMeasure());
+
+            // add the map to the ArrayList
+            allIngredients.add(ingredientMap);
         }
 
-        // sort the list of ingredient names
-        Collections.sort(nameList);
-        return nameList;
+        // return the ArrayList
+        return allIngredients;
     }
 
 
@@ -122,7 +133,6 @@ public class ServiceDispatcher {
         // the user's inventory will be stored in an ArrayList
         ArrayList<HashMap<String, String>> inventory = new ArrayList<>();
 
-
         // for every user ingredient, add a key/value
         for (UserIngredient userIngredient : userIngredients)
         {
@@ -145,7 +155,7 @@ public class ServiceDispatcher {
             inventory.add(userIngMap);
         }
 
-        // return the hashmap
+        // return the ArrayList
         return inventory;
     }
 
