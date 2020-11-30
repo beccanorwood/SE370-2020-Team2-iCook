@@ -1,17 +1,14 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
-import iCook.Model.UserIngredient;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.ArrayList;
 
 
 /**
@@ -34,9 +31,9 @@ public class InventoryUI extends JFrame{
     private JButton add;
     private JButton search;
     private JButton update;
-    private JButton increment;
+    private JButton increment = new JButton("+"); //Always be current ingredient
     private JButton amount;
-    private JButton decrement;
+    private JButton decrement = new JButton("-"); //Always be current ingredient
     private JRadioButton unitOfMeasure;
 
     private final ArrayList<HashMap<String, String>> ingredientList;    // stores the system ingredients
@@ -82,6 +79,8 @@ public class InventoryUI extends JFrame{
         userIngredientName = new ArrayList<>();
         userIngredientQuantity = new ArrayList<>();
         userIngredientUnit = new ArrayList<>();
+        row = userIngredientList.size();
+
 
         for (HashMap<String, String> map : userIngredientList)
         {
@@ -92,13 +91,6 @@ public class InventoryUI extends JFrame{
 
         System.out.println("\n\nTESTING:");
 
-        for (int i = 0; i < userIngredientList.size(); i ++)
-        {
-            System.out.println(userIngredientName.get(i));
-            System.out.println(userIngredientQuantity.get(i));
-            System.out.println(userIngredientUnit.get(i));
-        }
-
         topPanel = new JPanel();
         leftPanel = new JPanel();
         centerPanel = new JPanel();
@@ -106,9 +98,86 @@ public class InventoryUI extends JFrame{
         bottomPanel = new JPanel();
 
         TopPanel(); //Top Panel isn't modular, just displays title
+
+
+        if(userIngredientList.size() > 0) {
+            CurrentInventory();
+        }
+
         BottomPanel();
         CreatePanels(row, col);
         DisplayPanel();
+    }
+
+
+    private void CurrentInventory()
+    {
+        //Add Labels of ingredients to leftpanel
+        //Add quantity to center panel
+        //Add units to right panel
+
+
+        //Left Panel uses userIngredientName arraylist which retrieved name of ingredient
+        //in user's inventory and is displayed on left panel
+        Box leftBox = Box.createVerticalBox();
+        JLabel[] currInventoryName = new JLabel[userIngredientName.size()];
+
+        for(int i = 0; i < userIngredientName.size(); i++){
+            currInventoryName[i] = new JLabel();
+            currInventoryName[i].setText(userIngredientName.get(i));
+            currInventoryName[i].setForeground(Color.WHITE);
+            leftBox.add(currInventoryName[i]);
+            leftBox.add(Box.createVerticalStrut(10));
+        }
+
+        leftPanel.add(leftBox);
+
+
+        //Center Panel using userIngredientQuantity from database then displays quantity
+        Box centerPanel_vbox = Box.createVerticalBox();
+        Box centerPanel_hbox = Box.createHorizontalBox();
+
+        Box[] quantityBoxes = new Box[userIngredientQuantity.size()];
+        JButton[] currInventoryQuantity = new JButton[userIngredientQuantity.size()];
+        JButton[] currInventoryIncrement = new JButton[userIngredientQuantity.size()];
+        JButton[] currInventoryDecrement = new JButton[userIngredientQuantity.size()];
+
+        centerPanel.add(centerPanel_vbox);
+
+        for(int j = 0; j < userIngredientQuantity.size(); j++){
+            currInventoryQuantity[j] = new JButton();
+            currInventoryDecrement[j] = new JButton("-");
+            currInventoryIncrement[j] = new JButton("+");
+            quantityBoxes[j] = Box.createHorizontalBox();
+            currInventoryQuantity[j].setText(String.valueOf(userIngredientQuantity.get(j)));
+            quantityBoxes[j].add(currInventoryDecrement[j]);
+            quantityBoxes[j].add(Box.createHorizontalStrut(10));
+            quantityBoxes[j].add(currInventoryQuantity[j]);
+            quantityBoxes[j].add(Box.createHorizontalStrut(10));
+            quantityBoxes[j].add(currInventoryIncrement[j]);
+            centerPanel_vbox.add(quantityBoxes[j]);
+        }
+
+        centerPanel.add(centerPanel_vbox);
+
+        //Right Panel uses userIngredientUnit array that pulls from database and displays units
+        Box rightpanel_vbox = Box.createVerticalBox();
+        JRadioButton[] currInventoryUnit = new JRadioButton[userIngredientUnit.size()];
+
+        for(int k = 0; k < userIngredientUnit.size(); k++){
+            currInventoryUnit[k] = new JRadioButton();
+            currInventoryUnit[k].setText(userIngredientUnit.get(k));
+            currInventoryUnit[k].setForeground(Color.WHITE);
+            currInventoryUnit[k].setBackground(Color.BLACK);
+            rightpanel_vbox.add(currInventoryUnit[k]);
+            rightpanel_vbox.add(Box.createVerticalStrut(10));
+        }
+
+        rightPanel.add(rightpanel_vbox);
+
+
+        pack();
+
     }
 
     private void DisplayPanel()
@@ -152,11 +221,11 @@ public class InventoryUI extends JFrame{
     {
         //Left Panel displaying name of ingredient & dropdown menu
         JComboBox userIngredients = new JComboBox(ingredientNames.toArray());
-
         DropDownListener dl = new DropDownListener();
         userIngredients.addActionListener(dl);
 
         Box box = Box.createVerticalBox();
+
         //add = new JButton("Add");
         //add.addActionListener(bl);
 
@@ -164,7 +233,7 @@ public class InventoryUI extends JFrame{
         // Border border = new LineBorder(Color.GRAY, 1, true);
         // leftPanel.setBorder(border);
 
-        leftPanel.setLayout(new GridLayout(row +1, col));
+        leftPanel.setLayout(new GridLayout(row , col));
         leftPanel.setBackground(Color.BLACK);
         leftPanel.setBorder(BorderFactory.createTitledBorder("Name"));
         box.add(userIngredients);
@@ -178,21 +247,23 @@ public class InventoryUI extends JFrame{
         //Center Panel displaying amount of ingredient
         Box center_box = Box.createHorizontalBox();
         Box vertical_box = Box.createVerticalBox();
-        centerPanel.setLayout(new GridLayout(row +1, col));
+
+
+        centerPanel.setLayout(new GridLayout(row , col));
         centerPanel.setBackground(Color.BLACK);
         centerPanel.setBorder(BorderFactory.createTitledBorder("Quantity"));
-        increment = new JButton("+");
         increment.addActionListener(bl);
-        decrement = new JButton("-");
         decrement.addActionListener(bl);
         amount = new JButton(String.valueOf(count));
         amount.setBackground(Color.WHITE);
         amount.setForeground(Color.BLACK);
+        centerPanel.add(vertical_box);
         center_box.add(decrement);
         center_box.add(Box.createHorizontalStrut(10));
         center_box.add(amount);
         center_box.add(Box.createHorizontalStrut(10));
         center_box.add(increment);
+        vertical_box.add(Box.createVerticalStrut(10));
         vertical_box.add(center_box);
         centerPanel.add(vertical_box);
     }
@@ -204,7 +275,7 @@ public class InventoryUI extends JFrame{
         ButtonGroup bg = new ButtonGroup(); //Groups buttons together, if one is selected no others can be selected
 
         rightPanel.setBackground(Color.BLACK);
-        rightPanel.setLayout(new GridLayout(row +1, col));
+        rightPanel.setLayout(new GridLayout(row , col));
         rightPanel.setBorder(BorderFactory.createTitledBorder("Unit"));
         unitOfMeasure = new JRadioButton(name);
         unitOfMeasure.setBackground(Color.BLACK);
