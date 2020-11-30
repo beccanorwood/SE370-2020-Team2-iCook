@@ -77,13 +77,18 @@ public class HomeUI extends JFrame implements ActionListener {
 
         // ********************************************
         // *** FOR TESTING PURPOSES, CAN BE DELETED ***
+        System.out.println("\nUser Inventory");
+        System.out.println("--------------");
+
         ServiceDispatcher controller = new ServiceDispatcher();
         ArrayList<HashMap<String, String>> userInventory = controller.getUserInventory();
 
-        for (HashMap<String, String> map : userInventory)
-        {
-            System.out.println(map.get("name"));
+        if (!userInventory.isEmpty()) {
+            for (HashMap<String, String> map : userInventory)
+                System.out.println(map.get("name"));
         }
+        else
+            System.out.println("Your inventory is empty");
         // ********************************************
 
     }
