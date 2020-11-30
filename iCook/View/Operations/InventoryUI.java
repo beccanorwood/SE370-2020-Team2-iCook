@@ -42,6 +42,7 @@ public class InventoryUI extends JFrame{
     private int row = 1; //InitialSize
     private int col = 1; //InitialSize
 
+    ButtonListener bl = new ButtonListener();
 
     public InventoryUI(){
 
@@ -51,22 +52,15 @@ public class InventoryUI extends JFrame{
         // get all the ingredients from the system (NAMES ONLY)
         ingredientList = serviceDispatcher.getAllSystemIngredients();
 
-        //Drop down box containing iCook ingredient inventory
-        userIngredients = new JComboBox(ingredientList.toArray());
-
-        //Drop down menu action listener class
-        DropDownListener dl = new DropDownListener();
-        userIngredients.addActionListener(dl);
-
         topPanel = new JPanel();
         leftPanel = new JPanel();
         centerPanel = new JPanel();
         rightPanel = new JPanel();
         bottomPanel = new JPanel();
 
-        TopPanel();
+        TopPanel(); //Top Panel isn't modular, just displays title
         CreatePanels(row, col);
-        DisplayPanel(); //Initial with empty user inventory
+        DisplayPanel();
     }
 
     private void DisplayPanel()
@@ -89,12 +83,10 @@ public class InventoryUI extends JFrame{
 
     private void CreatePanels(int row, int col)
     {
-        ButtonListener bl = new ButtonListener();
-
-        LeftPanel(row, col, bl);
-        CenterPanel(row, col, bl);
+        LeftPanel(row, col);
+        CenterPanel(row, col);
         RightPanel(row, col);
-        BottomPanel(bl);
+        BottomPanel();
     }
 
 
@@ -109,22 +101,28 @@ public class InventoryUI extends JFrame{
         topPanel.add(title);
     }
 
-    private void LeftPanel(int row, int col, ButtonListener bl)
+    private void LeftPanel(int row, int col)
     {
         //Left Panel displaying name of ingredient & dropdown menu
+        userIngredients = new JComboBox(ingredientList.toArray());
+
+        DropDownListener dl = new DropDownListener();
+        userIngredients.addActionListener(dl);
+
         box = Box.createVerticalBox();
-        add = new JButton("Add");
-        add.addActionListener(bl);
+        //add = new JButton("Add");
+        //add.addActionListener(bl);
+        userIngredients.addActionListener(dl);
         leftPanel.setLayout(new GridLayout(row +1, col));
         leftPanel.setBackground(Color.BLACK);
         leftPanel.setBorder(BorderFactory.createTitledBorder("Name"));
         box.add(userIngredients);
         box.add(Box.createVerticalStrut(10));
-        box.add(add);
+        //box.add(add);
         leftPanel.add(box);
     }
 
-    private void CenterPanel(int row, int col, ButtonListener bl)
+    private void CenterPanel(int row, int col)
     {
         //Center Panel displaying amount of ingredient
         Box center_box = Box.createHorizontalBox();
@@ -151,7 +149,7 @@ public class InventoryUI extends JFrame{
     {
         //RightPanel displaying measurement
         Box measure_Box = Box.createVerticalBox();
-        ButtonGroup bg = new ButtonGroup();
+        ButtonGroup bg = new ButtonGroup(); //Groups buttons together, if one is selected no others can be selected
 
         rightPanel.setBackground(Color.BLACK);
         rightPanel.setLayout(new GridLayout(row +1, col));
@@ -175,15 +173,18 @@ public class InventoryUI extends JFrame{
         rightPanel.add(measure_Box);
     }
 
-    private void BottomPanel(ButtonListener bl)
+    private void BottomPanel()
     {
         //Bottom Panel displaying Buttons
         bottomPanel = new JPanel();
         bottomPanel.setBackground(Color.BLACK);
+        add = new JButton("Add");
         search = new JButton("Search");
         update = new JButton("Update");
+        add.addActionListener(bl);
         search.addActionListener(bl);
         update.addActionListener(bl);
+        bottomPanel.add(add);
         bottomPanel.add(search);
         bottomPanel.add(update);
     }
@@ -236,6 +237,8 @@ public class InventoryUI extends JFrame{
             }
             else if(src2 == increment){
                 System.out.println("Increment Button Pressed");
+                CenterPanel(row, col);
+
             }
             else if(src2 == decrement){
                 System.out.println("Decrement Button Pressed");
