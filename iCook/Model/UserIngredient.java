@@ -96,6 +96,7 @@ public class UserIngredient {
         this.quantity = quantity;
     }
 
+
     public String getUserIngredientName() {
 
         UserDAO userDAO = new UserDAO();
