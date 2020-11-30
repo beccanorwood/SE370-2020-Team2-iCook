@@ -21,26 +21,25 @@ public class InventoryUI extends JFrame{
     //Display dropbox containing list of available ingredients
     //User selects and it gets added to their inventory
     //Swing attributes
-    private JPanel topPanel;
-    private JPanel centerPanel;  //Selected ingredients that are displayed in center
-    private JPanel rightPanel;
-    private JPanel leftPanel;
+    private final JPanel topPanel;
+    private final JPanel centerPanel;  //Selected ingredients that are displayed in center
+    private final JPanel rightPanel;
+    private final JPanel leftPanel;
     private JPanel bottomPanel;
     private JButton add;
     private JButton search;
     private JButton update;
     private JButton increment;
+    private JButton amount;
     private JButton decrement;
-    private JRadioButton ounces;
-    private JRadioButton gallons;
-    private JRadioButton cups;
-    private Box box, button_box; //Organizes ingredients & delete buttons in vertical format
-    private JComboBox userIngredients;
-    private JRadioButton availableIngredients;
     private final ArrayList<String> ingredientList;
-    private Checkbox[] selectedIng;
-    private int row = 1; //InitialSize
-    private int col = 1; //InitialSize
+
+    //InitialSize of each panel's row & col
+    private int row = 1;
+    private int col = 1;
+
+    //User's current ingredient count
+    private int ingCount = 0;
 
     ButtonListener bl = new ButtonListener();
 
@@ -59,6 +58,7 @@ public class InventoryUI extends JFrame{
         bottomPanel = new JPanel();
 
         TopPanel(); //Top Panel isn't modular, just displays title
+        BottomPanel();
         CreatePanels(row, col);
         DisplayPanel();
     }
@@ -84,9 +84,8 @@ public class InventoryUI extends JFrame{
     private void CreatePanels(int row, int col)
     {
         LeftPanel(row, col);
-        CenterPanel(row, col);
+        CenterPanel(row, col, ingCount);
         RightPanel(row, col);
-        BottomPanel();
     }
 
 
@@ -104,12 +103,12 @@ public class InventoryUI extends JFrame{
     private void LeftPanel(int row, int col)
     {
         //Left Panel displaying name of ingredient & dropdown menu
-        userIngredients = new JComboBox(ingredientList.toArray());
+        JComboBox userIngredients = new JComboBox(ingredientList.toArray());
 
         DropDownListener dl = new DropDownListener();
         userIngredients.addActionListener(dl);
 
-        box = Box.createVerticalBox();
+        Box box = Box.createVerticalBox();
         //add = new JButton("Add");
         //add.addActionListener(bl);
         userIngredients.addActionListener(dl);
@@ -122,7 +121,7 @@ public class InventoryUI extends JFrame{
         leftPanel.add(box);
     }
 
-    private void CenterPanel(int row, int col)
+    private void CenterPanel(int row, int col, int count)
     {
         //Center Panel displaying amount of ingredient
         Box center_box = Box.createHorizontalBox();
@@ -134,7 +133,8 @@ public class InventoryUI extends JFrame{
         increment.addActionListener(bl);
         decrement = new JButton("-");
         decrement.addActionListener(bl);
-        JLabel amount = new JLabel("0");
+        amount = new JButton(String.valueOf(count));
+        amount.setBackground(Color.BLACK);
         amount.setForeground(Color.WHITE);
         center_box.add(decrement);
         center_box.add(Box.createHorizontalStrut(10));
@@ -154,21 +154,21 @@ public class InventoryUI extends JFrame{
         rightPanel.setBackground(Color.BLACK);
         rightPanel.setLayout(new GridLayout(row +1, col));
         rightPanel.setBorder(BorderFactory.createTitledBorder("Unit"));
-        ounces = new JRadioButton("ounces");
+        JRadioButton ounces = new JRadioButton("ounces");
         ounces.setBackground(Color.BLACK);
         ounces.setForeground(Color.WHITE);
-        gallons = new JRadioButton("gallons");
-        gallons.setBackground(Color.BLACK);
-        gallons.setForeground(Color.WHITE);
-        cups = new JRadioButton("cups");
-        cups.setBackground(Color.BLACK);
-        cups.setForeground(Color.WHITE);
+        //JRadioButton gallons = new JRadioButton("gallons");
+        //gallons.setBackground(Color.BLACK);
+        //gallons.setForeground(Color.WHITE);
+        //JRadioButton cups = new JRadioButton("cups");
+        //cups.setBackground(Color.BLACK);
+        //cups.setForeground(Color.WHITE);
         bg.add(ounces);
-        bg.add(gallons);
-        bg.add(cups);
+        //bg.add(gallons);
+        //bg.add(cups);
         measure_Box.add(ounces);
-        measure_Box.add(gallons);
-        measure_Box.add(cups);
+        //measure_Box.add(gallons);
+        //measure_Box.add(cups);
         measure_Box.add(Box.createVerticalStrut(10));
         rightPanel.add(measure_Box);
     }
@@ -237,11 +237,18 @@ public class InventoryUI extends JFrame{
             }
             else if(src2 == increment){
                 System.out.println("Increment Button Pressed");
-                CenterPanel(row, col);
-
+                ingCount++;
+                amount.setText(String.valueOf(ingCount));
             }
             else if(src2 == decrement){
-                System.out.println("Decrement Button Pressed");
+                ingCount--;
+                if(ingCount < 0){
+                    System.out.println("Error: Ingredient Quantity Cannot be Negative!");
+                }
+                else {
+                    System.out.println("Decrement Button Pressed");
+                    amount.setText(String.valueOf(ingCount));
+                }
             }
         }
     }
