@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 
 /**
@@ -37,7 +39,8 @@ public class InventoryUI extends JFrame{
     private Box box, button_box; //Organizes ingredients & delete buttons in vertical format
     private JComboBox userIngredients;
     private JRadioButton availableIngredients;
-    private final ArrayList<String> ingredientList;
+    private final ArrayList<HashMap<String, String>> ingredientList;
+    private ArrayList<String> ingredientNames;
     private Checkbox[] selectedIng;
     private int row = 1; //InitialSize
     private int col = 1; //InitialSize
@@ -49,8 +52,19 @@ public class InventoryUI extends JFrame{
         // create a new controller object
         ServiceDispatcher serviceDispatcher = new ServiceDispatcher();
 
-        // get all the ingredients from the system (NAMES ONLY)
+        // get all the ingredients from the system
         ingredientList = serviceDispatcher.getAllSystemIngredients();
+        ingredientNames = new ArrayList<>();
+
+        // put all ingredient names into an ArrayList
+        for(HashMap<String, String> map : ingredientList)
+        {
+            ingredientNames.add(map.get("name"));
+        }
+
+        // sort the ArrayList
+        Collections.sort(ingredientNames);
+
 
         topPanel = new JPanel();
         leftPanel = new JPanel();
@@ -104,7 +118,7 @@ public class InventoryUI extends JFrame{
     private void LeftPanel(int row, int col)
     {
         //Left Panel displaying name of ingredient & dropdown menu
-        userIngredients = new JComboBox(ingredientList.toArray());
+        userIngredients = new JComboBox(ingredientNames.toArray());
 
         DropDownListener dl = new DropDownListener();
         userIngredients.addActionListener(dl);
