@@ -13,19 +13,20 @@ import java.util.HashMap;
  */
 public class ServiceDispatcher {
 
+    // these need to be static (these are not unique for each object)
+    private static User user = null;
+    private static final Facade facade = new Facade();
+
     // instance variables
-    private Facade facade;
-    private User user = null;
     private ArrayList<Ingredient> systemIngredients = new ArrayList<>();
     private ArrayList<UserIngredient> userIngredients = new ArrayList<>();
 
 
     /**
-     * Constructor - initializes instance variables (except for the user singleton && userIngredients)
+     * Constructor - initializes systemIngredients
      */
     public ServiceDispatcher()
     {
-        facade = new Facade();
         getSystemIngredients();
     }
 
@@ -106,34 +107,41 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns a HashMap of the user's inventory (contains their ingredients)
+     * Returns an ArrayList of HashMaps of the user's inventory (contains their ingredients)
      */
-    public HashMap<String, String> getUserInventory()
+    public ArrayList<HashMap<String, String>> getUserInventory()
     {
         // initialize the user's ingredients (inventory)
         getUserIngredients();
 
-        // use a hashmap to store the info of the UserIngredient object
-        HashMap<String, String> userIngList = new HashMap<>();
+        // the user's inventory will be stored in an ArrayList
+        ArrayList<HashMap<String, String>> inventory = new ArrayList<>();
+
 
         // for every user ingredient, add a key/value
         for (UserIngredient userIngredient : userIngredients)
         {
+            // use a hashmap to store the info of the UserIngredient object
+            HashMap<String, String> userIngMap = new HashMap<>();
+
             // put the UserIngredient ID in the map
-            userIngList.put("id", Integer.toString(userIngredient.getUserIngredientID()));
+            userIngMap.put("id", Integer.toString(userIngredient.getUserIngredientID()));
 
             // put the Ingredient's name in the map
-            userIngList.put("name", userIngredient.getUserIngredientName());
+            userIngMap.put("name", userIngredient.getUserIngredientName());
 
             // put the Ingredient's quantity in the map
-            userIngList.put("quantity", Double.toString(userIngredient.getQuantity()));
+            userIngMap.put("quantity", Double.toString(userIngredient.getQuantity()));
 
             // put the Ingredient's unit of measure in the map
-            userIngList.put("unit_of_measure", userIngredient.getUserIngredientUnitOfMeasure());
+            userIngMap.put("unit_of_measure", userIngredient.getUserIngredientUnitOfMeasure());
+
+            // add the HashMap to the ArrayList
+            inventory.add(userIngMap);
         }
 
         // return the hashmap
-        return userIngList;
+        return inventory;
     }
 
 

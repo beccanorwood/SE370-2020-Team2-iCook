@@ -1,5 +1,8 @@
 package iCook.View.Operations;
 
+import iCook.Controller.ServiceDispatcher;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class HomeUI extends JFrame implements ActionListener {
     //User Home Page with two buttons
@@ -70,6 +74,17 @@ public class HomeUI extends JFrame implements ActionListener {
         homeframe.add(homepanel, BorderLayout.CENTER);
         homeframe.add(buttonPanel, BorderLayout.SOUTH);
         homeframe.setVisible(true);
+
+        // ********************************************
+        // *** FOR TESTING PURPOSES, CAN BE DELETED ***
+        ServiceDispatcher controller = new ServiceDispatcher();
+        ArrayList<HashMap<String, String>> userInventory = controller.getUserInventory();
+
+        for (HashMap<String, String> map : userInventory)
+        {
+            System.out.println(map.get("name"));
+        }
+        // ********************************************
 
     }
 

@@ -1,5 +1,6 @@
 package iCook.Model;
 import iCook.Model.DatabaseAccess.IngredientDAO;
+import iCook.Model.DatabaseAccess.RecipeDAO;
 import iCook.Model.DatabaseAccess.UserDAO;
 import iCook.UsernameTakenException;
 
@@ -13,8 +14,13 @@ import java.util.ArrayList;
  */
 public class Facade {
 
+    // instance variables (these are not unique for each object)
+    private static final UserDAO userDAO = new UserDAO();
+    private static final IngredientDAO ingredientDAO = new IngredientDAO();
+    private static final RecipeDAO recipeDAO = new RecipeDAO();
+
     /**
-     * Constructor. Does nothing.
+     * Constructor - does nothing.
      */
     public Facade() {
     }
@@ -28,12 +34,6 @@ public class Facade {
      */
     public boolean login(String username, String password)
     {
-        // create a UserDAO object
-        UserDAO userDAO;
-
-        // initialize connection to DB
-        userDAO = new UserDAO();
-
         // determine if the user's login info is valid, if so return true, false otherwise
         if ( userDAO.validUserLogin(username, password) )
         {
@@ -52,12 +52,6 @@ public class Facade {
      */
     public void signUp(String username, String password)
     {
-        // create a UserDAO object
-        UserDAO userDAO;
-
-        // initialize connection to DB
-        userDAO = new UserDAO();
-
         // make sure the username isn't taken
         // NEED TO THROW AN EXCEPTION HERE
         if ( userDAO.usernameIsTaken(username) ) {
@@ -77,10 +71,7 @@ public class Facade {
      */
     public ArrayList<Ingredient> getSystemIngredients()
     {
-        IngredientDAO ingDAO;
-        ingDAO = new IngredientDAO();
-
-        return ingDAO.getAllIngredients();
+        return ingredientDAO.getAllIngredients();
     }
 
 
@@ -89,9 +80,6 @@ public class Facade {
      */
     public ArrayList<UserIngredient> getUserIngredients(int userID)
     {
-        UserDAO userDAO;
-        userDAO = new UserDAO();
-
         return userDAO.getUserIngredients(userID);
     }
 

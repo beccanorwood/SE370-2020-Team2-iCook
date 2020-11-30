@@ -17,6 +17,8 @@ public class UserIngredient {
     private int userID;
     private int ingredientID;
     private double quantity;
+    private String ingredientName;
+    private String unit_of_measure;
 
     /**
      * Constructor
@@ -25,11 +27,13 @@ public class UserIngredient {
      * @param ingredientID int
      * @param quantity int
      */
-    public UserIngredient(int userIngredientID, int userID, int ingredientID, int quantity) {
+    public UserIngredient(int userIngredientID, int userID, int ingredientID, int quantity, String ingredientName, String unit_of_measure) {
         this.userIngredientID = userIngredientID;
         this.userID = userID;
         this.ingredientID = ingredientID;
         this.quantity = quantity;
+        this.ingredientName = ingredientName;
+        this.unit_of_measure = unit_of_measure;
     }
 
     /**
@@ -101,10 +105,7 @@ public class UserIngredient {
      * Getter for the ingredient's name
      */
     public String getUserIngredientName() {
-
-        UserDAO userDAO = new UserDAO();
-
-        return  userDAO.getUserIngredientName(ingredientID);
+        return ingredientName;
     }
 
 
@@ -112,9 +113,6 @@ public class UserIngredient {
      * Getter for the ingredient's unit of measure
      */
     public String getUserIngredientUnitOfMeasure() {
-
-        UserDAO userDAO = new UserDAO();
-
-        return  userDAO.getUserIngredientUnitOfMeasure(ingredientID);
+        return unit_of_measure;
     }
 }
