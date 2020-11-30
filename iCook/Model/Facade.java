@@ -7,23 +7,26 @@ import iCook.UsernameTakenException;
 import java.util.ArrayList;
 
 /**
- * Central class for all DAO objects. Has access to all DAO objects.
+ * Central class for all DAO classes. Has access to all DAO classes.
  *
  * @author Team 2
  * @version 11/29/2020
  */
 public class Facade {
 
-    // instance variables (these are not unique for each object, so they are static)
-    private static final UserDAO userDAO = new UserDAO();
-    private static final IngredientDAO ingredientDAO = new IngredientDAO();
-    private static final RecipeDAO recipeDAO = new RecipeDAO();
+    // instance variables
+    private UserDAO userDAO;
+    private IngredientDAO ingredientDAO;
+    private RecipeDAO recipeDAO;
 
 
     /**
-     * Constructor - does nothing.
+     * Constructor - initializes instance variables
      */
     public Facade() {
+        userDAO = new UserDAO();
+        ingredientDAO = new IngredientDAO();
+        recipeDAO = new RecipeDAO();
     }
 
 

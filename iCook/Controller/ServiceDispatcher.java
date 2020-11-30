@@ -13,20 +13,25 @@ import java.util.HashMap;
  */
 public class ServiceDispatcher {
 
-    // these need to be static (these are not unique for each object)
+    // user need to be static (not unique for each ServiceDispatcher object)
     private static User user = null;
-    private static final Facade facade = new Facade();
+
 
     // instance variables
-    private ArrayList<Ingredient> systemIngredients = new ArrayList<>();
-    private ArrayList<UserIngredient> userIngredients = new ArrayList<>();
+    private Facade facade;
+    private ArrayList<Ingredient> systemIngredients;
+    private ArrayList<UserIngredient> userIngredients;
 
 
     /**
-     * Constructor - initializes systemIngredients
+     * Constructor - initializes instance variables.
+     * Calls getSystemIngredients to populate systemIngredients
      */
     public ServiceDispatcher()
     {
+        facade = new Facade();
+        systemIngredients = new ArrayList<>();
+        userIngredients = new ArrayList<>();
         getSystemIngredients();
     }
 
