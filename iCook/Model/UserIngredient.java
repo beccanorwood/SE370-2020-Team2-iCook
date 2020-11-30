@@ -100,6 +100,13 @@ public class UserIngredient {
 
         UserDAO userDAO = new UserDAO();
 
-        return  userDAO.getUserIngredientName();
+        return  userDAO.getUserIngredientName(ingredientID);
+    }
+
+    public String getUserIngredientUnitOfMeasure() {
+
+        UserDAO userDAO = new UserDAO();
+
+        return  userDAO.getUserIngredientUnitOfMeasure(ingredientID);
     }
 }

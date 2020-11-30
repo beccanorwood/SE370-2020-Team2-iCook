@@ -180,4 +180,48 @@ public class UserDAO extends BaseDAO {
     }
 
 
+    /**
+     * Performs a SQL statement to return the name of the ingredient from a user ingredient object
+     */
+    public String getUserIngredientName(int ingredientID) {
+        try {
+            // perform the query
+            ResultSet rs = statement.executeQuery("SELECT I.name FROM user_ingredients UI, ingredients I WHERE ingredient_id = '" + ingredientID + "' AND UI.ingredient_id = I.id");
+
+            if (rs.next())
+                return rs.getString("name");
+            else
+                return null;
+        }
+
+        catch (SQLException throwables)
+        {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * Performs a SQL statement to return the unit of measure of the ingredient from a user ingredient object
+     */
+    public String getUserIngredientUnitOfMeasure(int ingredientID) {
+        try {
+            // perform the query
+            ResultSet rs = statement.executeQuery("SELECT I.unit_of_measure FROM user_ingredients UI, ingredients I WHERE ingredient_id = '" + ingredientID + "' AND UI.ingredient_id = I.id");
+
+            if (rs.next())
+                return rs.getString("unit_of_measure");
+            else
+                return null;
+        }
+
+        catch (SQLException throwables)
+        {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+
 } // end of UserDAO class

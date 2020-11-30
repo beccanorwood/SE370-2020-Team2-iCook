@@ -3,12 +3,13 @@ import iCook.Model.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * The main controller class for iCook's MVC design pattern. Connects the View with the Model.
  *
  * @author Team 2
- * @version 11/28/2020
+ * @version 11/29/2020
  */
 public class ServiceDispatcher {
 
@@ -20,7 +21,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Constructor - initializes instance variables (except for the user singleton)
+     * Constructor - initializes instance variables (except for the user singleton && userIngredients)
      */
     public ServiceDispatcher()
     {
@@ -105,25 +106,39 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns a SORTED ArrayList of all system ingredient's names
+     * Returns a HashMap of the user's ingredients
      */
-    public ArrayList<String> getAllUserIngredients()
+    public HashMap<String, String> getUserInventory()
     {
-        ArrayList<String> userIngredientList = new ArrayList<>();
+        // initialize the user's ingredients (inventory)
+        getUserIngredients();
 
-        for(int i = 0; i < userIngredients.size(); i++)
+        // use a hashmap to store the info of the UserIngredient object
+        HashMap<String, String> userIngList = new HashMap<String, String>();
+
+        // for every user ingredient, add a key/value
+        for (UserIngredient userIngredient : userIngredients)
         {
-            userIngredientList.add(userIngredients.get(i).getUserIngredientName());
+            // put the UserIngredient ID in the map
+            userIngList.put("id", Integer.toString(userIngredient.getUserIngredientID()));
+
+            // put the Ingredient's name in the map
+            userIngList.put("name", userIngredient.getUserIngredientName());
+
+            // put the Ingredient's quantity in the map
+            userIngList.put("quantity", Double.toString(userIngredient.getQuantity()));
+
+            // put the Ingredient's unit of measure in the map
+            userIngList.put("unit_of_measure", userIngredient.getUserIngredientUnitOfMeasure());
         }
 
-        // sort the list of ingredient names
-        Collections.sort(userIngredientList);
-        return userIngredientList;
+        // return the hashmap
+        return userIngList;
     }
 
 
     /**
-     * Initializes systemIngredients with an ArrayList containing Ingredient objects
+     * Initializes userIngredients with an ArrayList containing UserIngredient objects
      */
     private void getUserIngredients()
     {
