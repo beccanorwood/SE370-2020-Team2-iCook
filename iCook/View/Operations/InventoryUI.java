@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.ArrayList;
 
 
@@ -32,7 +34,9 @@ public class InventoryUI extends JFrame{
     private JButton increment;
     private JButton amount;
     private JButton decrement;
-    private final ArrayList<String> ingredientList;
+    private final ArrayList<HashMap<String, String>> ingredientList;
+    private ArrayList<String> ingredientNames;
+
 
     //InitialSize of each panel's row & col
     private int row = 1;
@@ -48,8 +52,16 @@ public class InventoryUI extends JFrame{
         // create a new controller object
         ServiceDispatcher serviceDispatcher = new ServiceDispatcher();
 
-        // get all the ingredients from the system (NAMES ONLY)
+        // get all the ingredients from the system
         ingredientList = serviceDispatcher.getAllSystemIngredients();
+        ingredientNames = new ArrayList<>();
+
+        // for every HashMap in ingredientList, add the name to the ingredientNames ArrayList
+        for (HashMap<String, String> map : ingredientList)
+            ingredientNames.add(map.get("name"));
+
+        // sort the list of ingredient names
+        Collections.sort(ingredientNames);
 
         topPanel = new JPanel();
         leftPanel = new JPanel();
