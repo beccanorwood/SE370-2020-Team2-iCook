@@ -39,7 +39,7 @@ public class BaseDAO {
 
     /**
      * Establishes a connection to the iCook database and throws a SQLException
-     * if there is a problem getting the connection
+     * if there is a problem getting the connection.
      */
     private void connect() throws SQLException
     {

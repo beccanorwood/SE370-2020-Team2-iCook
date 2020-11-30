@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * The main controller class for iCook's MVC design pattern. Connects the View with the Model.
+ * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
  * @version 11/29/2020

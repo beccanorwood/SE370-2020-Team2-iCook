@@ -10,14 +10,15 @@ import java.util.ArrayList;
  * Central class for all DAO objects. Has access to all DAO objects.
  *
  * @author Team 2
- * @version 11/28/2020
+ * @version 11/29/2020
  */
 public class Facade {
 
-    // instance variables (these are not unique for each object)
+    // instance variables (these are not unique for each object, so they are static)
     private static final UserDAO userDAO = new UserDAO();
     private static final IngredientDAO ingredientDAO = new IngredientDAO();
     private static final RecipeDAO recipeDAO = new RecipeDAO();
+
 
     /**
      * Constructor - does nothing.
@@ -82,5 +83,6 @@ public class Facade {
     {
         return userDAO.getUserIngredients(userID);
     }
+
 
 } // end of Facade class

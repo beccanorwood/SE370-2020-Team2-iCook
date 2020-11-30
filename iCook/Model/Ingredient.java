@@ -5,7 +5,7 @@ package iCook.Model;
  * This class represents the system's ingredients that a user can choose from.
  *
  * @author Team 2
- * @version 11/14/2020
+ * @version 11/29/2020
  */
 public class Ingredient {
 
@@ -13,6 +13,7 @@ public class Ingredient {
     private int ingredientID;
     private String ingredientName;
     private String unitOfMeasure;
+
 
     /**
      * Constructor
@@ -26,6 +27,7 @@ public class Ingredient {
         this.unitOfMeasure = unitOfMeasure;
     }
 
+
     /**
      * Get ingredient ID
      * @return ingredientID
@@ -33,6 +35,7 @@ public class Ingredient {
     public int getIngredientID() {
         return ingredientID;
     }
+
 
     /**
      * Set the ID of ingredient
@@ -42,6 +45,7 @@ public class Ingredient {
         this.ingredientID = ingredientID;
     }
 
+
     /**
      * Get the name of ingredient
      * @return ingredientName
@@ -49,6 +53,7 @@ public class Ingredient {
     public String getIngredientName() {
         return ingredientName;
     }
+
 
     /**
      * Set the name of ingredient
@@ -58,6 +63,7 @@ public class Ingredient {
         this.ingredientName = ingredientName;
     }
 
+
     /**
      * Get ingredient unit of measure
      * @return unitOfMeasure
@@ -66,6 +72,7 @@ public class Ingredient {
         return unitOfMeasure;
     }
 
+
     /**
      * Set ingredient unit of measure
      * @param unitOfMeasure String
@@ -73,4 +80,6 @@ public class Ingredient {
     public void setUnitOfMeasure(String unitOfMeasure) {
         this.unitOfMeasure = unitOfMeasure;
     }
-}
+
+
+} // end of Ingredient class
