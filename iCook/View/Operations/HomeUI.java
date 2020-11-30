@@ -47,10 +47,10 @@ public class HomeUI extends JFrame implements ActionListener {
         welcome.setForeground(Color.WHITE);
 
         //Search & Inventory Buttons
-        JButton search = new JButton("Search All");
+        JButton recipes = new JButton("Recipes");
         JButton myInventory = new JButton("My Inventory");
         JButton myRecipes = new JButton("My Recipes");
-        search.addActionListener(this);
+        recipes.addActionListener(this);
         myInventory.addActionListener(this);
         myRecipes.addActionListener(this);
 
@@ -62,7 +62,7 @@ public class HomeUI extends JFrame implements ActionListener {
         constraints.gridx = 4;
         homepanel.add(pic, constraints);
 
-        buttonPanel.add(search);
+        buttonPanel.add(recipes);
         buttonPanel.add(myInventory);
         buttonPanel.add(myRecipes);
 
