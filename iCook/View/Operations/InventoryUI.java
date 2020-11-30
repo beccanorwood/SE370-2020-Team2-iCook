@@ -31,9 +31,9 @@ public class InventoryUI extends JFrame{
     private JButton add;
     private JButton search;
     private JButton update;
-    private JButton increment = new JButton("+"); //Always be current ingredient
+    private JButton increment;
     private JButton amount;
-    private JButton decrement = new JButton("-"); //Always be current ingredient
+    private JButton decrement;//Always be current ingredient
     private JRadioButton unitOfMeasure;
 
     private final ArrayList<HashMap<String, String>> ingredientList;    // stores the system ingredients
@@ -122,6 +122,7 @@ public class InventoryUI extends JFrame{
         Box leftBox = Box.createVerticalBox();
         JLabel[] currInventoryName = new JLabel[userIngredientName.size()];
 
+
         for(int i = 0; i < userIngredientName.size(); i++){
             currInventoryName[i] = new JLabel();
             currInventoryName[i].setText(userIngredientName.get(i));
@@ -183,7 +184,7 @@ public class InventoryUI extends JFrame{
     private void DisplayPanel()
     {
         setTitle("iCook");
-        setSize(500, 500);
+        //setSize(500, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -226,9 +227,6 @@ public class InventoryUI extends JFrame{
 
         Box box = Box.createVerticalBox();
 
-        //add = new JButton("Add");
-        //add.addActionListener(bl);
-
         // ** TESTING TO ADD COLOR FOR BORDER **
         // Border border = new LineBorder(Color.GRAY, 1, true);
         // leftPanel.setBorder(border);
@@ -252,7 +250,9 @@ public class InventoryUI extends JFrame{
         centerPanel.setLayout(new GridLayout(row , col));
         centerPanel.setBackground(Color.BLACK);
         centerPanel.setBorder(BorderFactory.createTitledBorder("Quantity"));
+        increment = new JButton("+");
         increment.addActionListener(bl);
+        decrement = new JButton("-");
         decrement.addActionListener(bl);
         amount = new JButton(String.valueOf(count));
         amount.setBackground(Color.WHITE);
@@ -352,6 +352,7 @@ public class InventoryUI extends JFrame{
             else if(src2 == add){
                 System.out.println("Add Button Pressed");
                 row++;
+                ingCount = 0;
                 CreatePanels(row, col);
                 pack();
                 setVisible(true);
