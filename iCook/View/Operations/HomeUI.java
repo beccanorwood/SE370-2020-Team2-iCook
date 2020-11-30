@@ -94,10 +94,6 @@ public class HomeUI extends JFrame implements ActionListener {
 
     }
 
-    public HomeUI() {
-
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -106,10 +102,10 @@ public class HomeUI extends JFrame implements ActionListener {
         //User goes to view all recipes if search is clicked, otherwise they view their inventory
         //and add, update, or delete ingredients
 
-        if(btn.equals("Search All")){
+        if(btn.equals("Recipes")){
             homeframe.setVisible(false);
             homeframe.dispose();
-            RecipeUI inventory = new RecipeUI();
+            RecipeUI recipe = new RecipeUI();
         }
         else{
             homeframe.setVisible(false);
