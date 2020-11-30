@@ -128,7 +128,6 @@ public class InventoryUI extends JFrame{
         Box box = Box.createVerticalBox();
         //add = new JButton("Add");
         //add.addActionListener(bl);
-        userIngredients.addActionListener(dl);
         leftPanel.setLayout(new GridLayout(row +1, col));
         leftPanel.setBackground(Color.BLACK);
         leftPanel.setBorder(BorderFactory.createTitledBorder("Name"));
