@@ -115,7 +115,7 @@ public class InventoryUI extends JFrame{
     private void LeftPanel(int row, int col)
     {
         //Left Panel displaying name of ingredient & dropdown menu
-        JComboBox userIngredients = new JComboBox(ingredientList.toArray());
+        JComboBox userIngredients = new JComboBox(ingredientNames.toArray());
 
         DropDownListener dl = new DropDownListener();
         userIngredients.addActionListener(dl);
