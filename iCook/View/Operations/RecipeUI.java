@@ -74,14 +74,13 @@ public class RecipeUI extends JFrame implements ActionListener{
 
         JButton login = new JButton("Home");
         JButton signup = new JButton("Inventory");
-        JButton guest = new JButton("Guest Mode");
+
 
         login.addActionListener(this);
         signup.addActionListener(this);
-        guest.addActionListener(this);
 
-        constraints.gridx = 4;
-        constraints.gridy = 30;
+        constraints.gridx = 3;
+        constraints.gridy = 7;
         panel.add(signup, constraints);
 
 
