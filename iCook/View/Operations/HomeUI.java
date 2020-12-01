@@ -107,6 +107,8 @@ public class HomeUI extends JFrame implements ActionListener {
             homeframe.setVisible(false);
             homeframe.dispose();
 
+            ServiceDispatcher servDis = new ServiceDispatcher();
+            servDis.logUserOut();
 
             WelcomeUI inventory = new WelcomeUI();
         }
