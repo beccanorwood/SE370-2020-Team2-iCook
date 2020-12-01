@@ -183,7 +183,6 @@ public class ServiceDispatcher {
     public void logUserOut()
     {
         user.deleteUserObject();
-        user = null;
     }
 
 
