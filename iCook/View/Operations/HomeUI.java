@@ -1,6 +1,8 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.Login.WelcomeUI;
+
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -101,8 +103,12 @@ public class HomeUI extends JFrame implements ActionListener {
         //User goes to view all recipes if search is clicked, otherwise they view their inventory
         //and add, update, or delete ingredients
 
-        if(btn.equals("Search All")){
+        if(btn.equals("Logout")){
+            homeframe.setVisible(false);
+            homeframe.dispose();
 
+
+            WelcomeUI inventory = new WelcomeUI();
         }
         else{
             homeframe.setVisible(false);
