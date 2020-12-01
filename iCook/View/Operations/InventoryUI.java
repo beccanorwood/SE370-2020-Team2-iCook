@@ -45,6 +45,8 @@ public class InventoryUI extends JFrame{
     private ArrayList<String> userIngredientQuantity;   // ArrayList of user ingredient quantities
     private ArrayList<String> userIngredientUnit;       // ArrayList of user ingredient units
 
+    private ArrayList<HashMap<String, String>> updatedIngredientList;   // this will store the inventory the user wants to be updated (sent to controller)
+
 
     //InitialSize of each panel's row & col
     private int row = 1;
@@ -347,6 +349,7 @@ public class InventoryUI extends JFrame{
                 System.out.println("Search button pressed");
             }
             else if(src2 == update){
+                // send new inventory to the database
                 System.out.println("Update Button Pressed");
             }
             else if(src2 == add){

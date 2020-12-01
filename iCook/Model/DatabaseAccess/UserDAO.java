@@ -2,6 +2,7 @@ package iCook.Model.DatabaseAccess;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import iCook.Model.User;
 import iCook.Model.UserIngredient;
@@ -180,6 +181,40 @@ public class UserDAO extends BaseDAO {
         {
             throwables.printStackTrace();
             return null;
+        }
+    }
+
+
+    /**
+     * Performs a SQL statement to update the user_ingredients table for a specified user
+     */
+    public void updateUserIngredients(int userID, ArrayList<HashMap<String, String>> updatedIngredientList) {
+        try {
+            // loop over each map (each map has info for a UserIngredient)
+            for(HashMap<String, String> map : updatedIngredientList)
+            {
+
+            }
+
+            // perform the query
+            ResultSet rs = statement.executeQuery("SELECT UI.id AS thisID, UI.quantity, I.id as ingID, I.name, I.unit_of_measure ");
+            ArrayList<UserIngredient> userIngredients = new ArrayList<>();
+
+            while (rs.next()) {
+                int id = rs.getInt("thisID");
+                int ingredientID = rs.getInt("ingID");
+                int quantity = rs.getInt("quantity");
+                String name = rs.getString("name");
+                String unit_of_measure = rs.getString("unit_of_measure");
+
+                // add the user ingredient to the array list
+                userIngredients.add(new UserIngredient(id, userID, ingredientID, quantity, name, unit_of_measure));
+            }
+        }
+
+        catch (SQLException throwables)
+        {
+            throwables.printStackTrace();
         }
     }
 

@@ -5,6 +5,7 @@ import iCook.Model.DatabaseAccess.UserDAO;
 import iCook.UsernameTakenException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Central class for all DAO classes. Has access to all DAO classes.
@@ -85,6 +86,15 @@ public class Facade {
     public ArrayList<UserIngredient> getUserIngredients(int userID)
     {
         return userDAO.getUserIngredients(userID);
+    }
+
+
+    /**
+     * Requests the UserDAO to update the user's inventory
+     */
+    public void updateUserInventory(int userID, ArrayList<HashMap<String, String>> updatedIngredientList)
+    {
+        userDAO.updateUserIngredients(userID, updatedIngredientList);
     }
 
 
