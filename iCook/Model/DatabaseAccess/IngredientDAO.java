@@ -3,6 +3,8 @@ package iCook.Model.DatabaseAccess;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import iCook.Model.Ingredient;
+
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -10,15 +12,14 @@ import java.util.ArrayList;
  * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
- * @version 11/28/2020
+ * @version 11/30/2020
  */
 public class IngredientDAO extends BaseDAO {
 
     /**
-     * Constructor for the IngredientDAO
+     * Constructor
      */
     public IngredientDAO() {
-
     }
 
 
@@ -27,6 +28,7 @@ public class IngredientDAO extends BaseDAO {
      */
     public void displayIngredientsTable() {
         try {
+            Statement statement = this.createStatement();
             // Perform the query
             ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
 
@@ -43,38 +45,48 @@ public class IngredientDAO extends BaseDAO {
 
         catch (SQLException throwables)
         {
-            throwables.printStackTrace();;
+            throwables.printStackTrace();
         }
     }
 
 
     /**
-     * Performs a SQL statement to return the quantity field of an ingredient
+     * Performs a SQL statement to return the id field from the ingredients table
+     *
+     * @param name the name of the ingredient whose id we want to find
+     * @return the id field of the ingredient
      */
-    public String getIngredientMeasurement(int ID) {
+    public int getIngredientID(String name) {
         try {
+            //create a new statement
+            Statement statement = this.createStatement();
+
             // perform the query
-            ResultSet rs = statement.executeQuery("SELECT unit_of_measure FROM ingredients WHERE ID = " + ID + " ");
+            ResultSet rs = statement.executeQuery("SELECT id FROM ingredients WHERE name = '" + name + "' ");
             rs.next();  // move the 'cursor' to the first row (ALWAYS NEED THIS WHEN QUERYING)
 
             // return the quantity field of the specified ingredient
-            return rs.getString("unit_of_measure");
+            return rs.getInt("id");
         }
 
         catch (SQLException throwables)
         {
             throwables.printStackTrace();
-            return null;
+            return 0;
         }
     }
 
 
     /**
-     * Performs a SQL statement to return an ArrayList of Ingredient Objects
-     * (all system ingredients will be in this list).
+     * Performs a SQL statement to get all entries in the ingredients table
+     *
+     * @return an ArrayList containing Ingredient objects (all system ingredients will be in this list)
      */
     public ArrayList<Ingredient> getAllIngredients() {
         try {
+            //create a new statement
+            Statement statement = this.createStatement();
+
             // perform the query
             ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
             ArrayList<Ingredient> ingList = new ArrayList<>();  // array list we are going to return

@@ -3,8 +3,6 @@ package iCook.View.Operations;
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.Login.WelcomeUI;
 
-import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HomeUI extends JFrame implements ActionListener {
@@ -77,21 +77,21 @@ public class HomeUI extends JFrame implements ActionListener {
         homeframe.add(buttonPanel, BorderLayout.SOUTH);
         homeframe.setVisible(true);
 
-        // ********************************************
-        // *** FOR TESTING PURPOSES, CAN BE DELETED ***
-        System.out.println("\nUser Inventory");
-        System.out.println("--------------");
-
-        ServiceDispatcher controller = new ServiceDispatcher();
-        ArrayList<HashMap<String, String>> userInventory = controller.getUserInventory();
-
-        if (!userInventory.isEmpty()) {
-            for (HashMap<String, String> map : userInventory)
-                System.out.println(map.get("name"));
-        }
-        else
-            System.out.println("Your inventory is empty");
-        // ********************************************
+//        // ********************************************
+//        // *** FOR TESTING PURPOSES, CAN BE DELETED ***
+//        System.out.println("\nUser Inventory");
+//        System.out.println("--------------");
+//
+//        ServiceDispatcher controller = new ServiceDispatcher();
+//        ArrayList<HashMap<String, String>> userInventory = controller.getUserInventory();
+//
+//        if (!userInventory.isEmpty()) {
+//            for (HashMap<String, String> map : userInventory)
+//                System.out.println(map.get("name"));
+//        }
+//        else
+//            System.out.println("Your inventory is empty");
+//        // ********************************************
 
     }
 
@@ -107,14 +107,16 @@ public class HomeUI extends JFrame implements ActionListener {
             homeframe.setVisible(false);
             homeframe.dispose();
 
+            // log the user out of their account
             ServiceDispatcher servDis = new ServiceDispatcher();
             servDis.logUserOut();
 
+            // take the user to the welcome page (start page)
             WelcomeUI inventory = new WelcomeUI();
         }
         else if(btn.equals("Recipes")){
             homeframe.setVisible(false);
-            homeframe.dispose();;
+            homeframe.dispose();
             RecipeUI Recipe = new RecipeUI();
         }
         else{

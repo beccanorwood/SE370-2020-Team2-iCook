@@ -11,7 +11,7 @@ import java.util.HashMap;
  * Central class for all DAO classes. Has access to all DAO classes.
  *
  * @author Team 2
- * @version 11/29/2020
+ * @version 11/30/2020
  */
 public class Facade {
 
@@ -32,14 +32,16 @@ public class Facade {
 
 
     /**
-     * Calls the UserDAO to determine if the user's credentials are valid and
-     * returns true if so, false otherwise.
+     * Calls the UserDAO to determine if the user's credentials are valid.
+     * If true, we request the userDAO to create the user singleton.
      *
-     * If true, we request the userDAO to create the user singleton
+     * @param username the username of the user trying to login
+     * @param password the password of the user trying to login
+     * @return true if the user can login, false otherwise
      */
     public boolean login(String username, String password)
     {
-        // determine if the user's login info is valid, if so return true, false otherwise
+        // determine if the user's login info is valid. If so return true, false otherwise
         if ( userDAO.validUserLogin(username, password) )
         {
             userDAO.getUser(username, password);
@@ -51,11 +53,14 @@ public class Facade {
 
 
     /**
-     * Calls the UserDAO to create a new user with the given credentials
+     * Calls the UserDAO to create a new user with the given credentials.
+     * If the username isn't taken, we request the userDAO to create the user singleton.
      *
-     * If the username isn't taken, we request the userDAO to create the user singleton
+     * @param username the username of the user trying to sign up
+     * @param password the password of the user trying to sign up
+     * @throws UsernameTakenException if the username is already taken
      */
-    public void signUp(String username, String password)
+    public void signUp(String username, String password) throws UsernameTakenException
     {
         // make sure the username isn't taken
         // NEED TO THROW AN EXCEPTION HERE
@@ -72,7 +77,9 @@ public class Facade {
 
 
     /**
-     * Calls the IngredientDAO to return an ArrayList of Ingredient objects (all system objects)
+     * Calls the IngredientDAO to return all system ingredients
+     *
+     * @return an ArrayList of Ingredient objects (all system ingredients)
      */
     public ArrayList<Ingredient> getSystemIngredients()
     {
@@ -81,7 +88,10 @@ public class Facade {
 
 
     /**
-     * Calls the UserDAO to return an ArrayList of UserIngredient objects (all user's ingredients)
+     * Calls the UserDAO to return the user's ingredients
+     *
+     * @param userID the user's id whose ingredients we want to get
+     * @return an ArrayList of UserIngredient objects (user's inventory)
      */
     public ArrayList<UserIngredient> getUserIngredients(int userID)
     {
@@ -91,10 +101,13 @@ public class Facade {
 
     /**
      * Requests the UserDAO to update the user's inventory
+     *
+     * @param userID the user's id whose ingredients we want to get
+     * @param updatedIngredientList the ArrayList of HashMaps that contains the user's inventory information (to be updated)
      */
     public void updateUserInventory(int userID, ArrayList<HashMap<String, String>> updatedIngredientList)
     {
-        userDAO.updateUserIngredients(userID, updatedIngredientList);
+        userDAO.updateUserIngredientTable(userID, updatedIngredientList);
     }
 
 

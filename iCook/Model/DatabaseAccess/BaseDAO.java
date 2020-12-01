@@ -9,11 +9,11 @@ import java.sql.SQLException;
  * Superclass for DAO classes that establishes the connection to iCook's database
  *
  * @author Team 2
- * @version 11/28/2020
+ * @version 11/30/2020
  */
 public class BaseDAO {
 
-    // connection to the database needs to be static
+    // connection to the database is independent of classes
     private static Connection connection = null;
 
     // initialize instance variables
@@ -22,14 +22,12 @@ public class BaseDAO {
     private final String database = "icook";
     private final String url = "jdbc:mysql://izzy-se370.ca3u8x8hrfhy.us-west-1.rds.amazonaws.com:3306/" + database;
 
-    // variables available to classes that extend BaseDAO
-    protected Statement statement;
-
 
     /**
      * Constructor that establishes a connection to iCook's database
+     * (only DAO classes have access to it)
      */
-    BaseDAO() {
+    protected BaseDAO() {
         try {
             connect();
         }
@@ -42,6 +40,8 @@ public class BaseDAO {
     /**
      * Establishes a connection to the iCook database and throws a SQLException
      * if there is a problem getting the connection.
+     *
+     * @throws SQLException if there is a problem connecting to the database
      */
     private void connect() throws SQLException
     {
@@ -54,9 +54,20 @@ public class BaseDAO {
             connection = DriverManager.getConnection(url, username, password);
             System.out.println("Connection established....");
         }
+    }
 
-        // Creating a statement object
-        statement = connection.createStatement();
+
+    /**
+     * Returns a newly created Statement object. This allows DAO classes who extend BaseDAO to
+     * create their own statements to perform SQL statements.
+     * Method is available only to classes that extend BaseDAO.
+     *
+     * @return a Statement object created from the established connection
+     * @throws SQLException if there is a problem with the connection
+     */
+    protected Statement createStatement() throws SQLException
+    {
+        return connection.createStatement();
     }
 
 

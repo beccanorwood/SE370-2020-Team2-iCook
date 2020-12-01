@@ -8,13 +8,12 @@ import java.util.HashMap;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 11/29/2020
+ * @version 11/30/2020
  */
 public class ServiceDispatcher {
 
     // user need to be static (not unique for each ServiceDispatcher object)
     private static User user = null;
-
 
     // instance variables
     private Facade facade;
@@ -36,15 +35,41 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns true if the user's credentials are valid, false otherwise.
-     * Requests the facade to try to log the user in.
-     *
+     * Requests the facade to log the user in.
      * If the facade successfully logs the user in, initialize the user singleton.
+     *
+     * @param username the username of the user trying to login
+     * @param password the password of the user trying to login
+     * @return true if the login was successful, false otherwise
      */
     public boolean login(String username, String password)
     {
         if ( facade.login(username, password) ) {
+            // initialize the user SINGLETON here
+            // initialize the user's list of ingredient here (1st time)
             user = User.getUser();
+            userIngredients = facade.getUserIngredients(user.getId());
+
+//            // TESTING THE UPDATE DB
+//            ArrayList<HashMap<String, String>> test = new ArrayList<>();
+//            HashMap<String, String> map = new HashMap<>();
+//            map.put("name", "milk");
+//            map.put("quantity", "2");
+//            test.add(map);
+//            HashMap<String, String> map2 = new HashMap<>();
+//            map2.put("name", "flour");
+//            map2.put("quantity", "2");
+//            test.add(map2);
+//            HashMap<String, String> map3 = new HashMap<>();
+//            map3.put("name", "vegetable oil");
+//            map3.put("quantity", "2");
+//            test.add(map3);
+//            HashMap<String, String> map4 = new HashMap<>();
+//            map4.put("name", "egg");
+//            map4.put("quantity", "0");
+//            test.add(map4);
+//            updateUserInventory(test);
+
             return true;
         }
         else
@@ -53,13 +78,18 @@ public class ServiceDispatcher {
 
 
     /**
-     * Requests the facade to create a new user with the given username and password.
-     * Initializes the user singleton with the newly created account.
+     * Requests the facade to create a new user with the given credentials.
+     * Initializes the user singleton with the newly created account and sets the
+     * user's list of ingredients to null.
+     *
+     * @param username the username of the user trying to sign up
+     * @param password the password of the user trying to sign up
      */
     public void signUp(String username, String password)
     {
         facade.signUp(username, password);
         user = User.getUser();
+        userIngredients = null;
     }
 
 
@@ -75,7 +105,9 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns true if the singleton object is not null
+     * Determines if the user is logged in by looking at the user SINGLETON object
+     *
+     * @return true if the singleton object is not null, false otherwise
      */
     public boolean isLoggedIn()
     {
@@ -84,7 +116,9 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns an ArrayList of HashMaps containing all system ingredients (contains the name and unit of measure)
+     * Gets all of the system ingredients and stores them into an ArrayList of HashMaps
+     *
+     * @return an ArrayList of HashMaps containing all system ingredients (contains the name and unit of measure)
      */
     public ArrayList<HashMap<String, String>> getAllSystemIngredients()
     {
@@ -123,10 +157,13 @@ public class ServiceDispatcher {
 
     /**
      * Returns an ArrayList of HashMaps of the user's inventory (contains their ingredients)
+     *
+     * @return an ArrayList of HashMaps containing all user ingredients (NOT UserIngredient objects)
      */
     public ArrayList<HashMap<String, String>> getUserInventory()
     {
-        // initialize the user's ingredients (inventory)
+        // initialize the user's ingredients
+        // ** this will change so need call here **
         getUserIngredients();
 
         // the user's inventory will be stored in an ArrayList
@@ -169,7 +206,9 @@ public class ServiceDispatcher {
 
 
     /**
-     * Requests the facade to update the user's inventory
+     * Requests the facade to update the user's inventory with a given ArrayList
+     *
+     * @param updatedIngredientList the ArrayList of HashMaps that contains the user's inventory information (to be updated)
      */
     public void updateUserInventory(ArrayList<HashMap<String, String>> updatedIngredientList)
     {
@@ -178,7 +217,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Sets the User Singleton to Null (A new User Singleton can be created after this call)
+     * Logs the user out of their account. Deletes the User Singleton.
      */
     public void logUserOut()
     {
