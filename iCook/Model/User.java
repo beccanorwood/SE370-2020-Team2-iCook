@@ -67,6 +67,15 @@ public class User {
 
 
     /**
+     * Sets the User Singleton to Null (A new User Singleton can be created after this call)
+     */
+    public void deleteUserObject()
+    {
+        userObject = null ;
+    }
+
+
+    /**
      * Getter for the user's username
      */
     public String getUserName()
