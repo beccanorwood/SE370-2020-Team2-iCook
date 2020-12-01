@@ -1,7 +1,7 @@
 package iCook.View.DisplayObjects;
 
 /**
- * Display object for an ingredient used primarily in the Model package.
+ * Display object for an ingredient used in the InventoryUI
  *
  * @Author: Team 2
  * @Date: 12/1/2020

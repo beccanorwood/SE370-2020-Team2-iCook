@@ -1,7 +1,7 @@
 package iCook.View.DisplayObjects;
 
 /**
- * Display object for a recipe used primarily in the Model package.
+ * Display object for a recipe used in the RecipeUI
  *
  * @Author: Team 2
  * @Date: 12/1/2020
