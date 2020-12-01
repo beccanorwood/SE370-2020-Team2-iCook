@@ -39,12 +39,12 @@ public class RecipeUI extends JFrame implements ActionListener{
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(30, 30, 30, 30);
 
-        JLabel iCook = new JLabel("Welcome to iCook!");
+        JLabel iCook = new JLabel("Available Recipes");
         iCook.setFont(new Font("ARIAL", Font.BOLD, 30));
         iCook.setForeground(Color.WHITE);
 
         constraints.gridx = 3;
-        constraints.gridy = 0;
+        constraints.gridy = 6;
         panel.add(iCook, constraints);
 
         try{
@@ -59,15 +59,16 @@ public class RecipeUI extends JFrame implements ActionListener{
         JLabel iCookLogo = new JLabel();
         iCookLogo.setIcon(logo);
 
-        constraints.gridx = 4;
+        constraints.gridx = 3;
+        constraints.gridy = 5;
         panel.add(iCookLogo, constraints);
 
+        int j = 1;
         for(int i = 0; i < 16; i++){
             JButton login = new JButton("Recipe "+i);
-            constraints.gridx = 2;
-            constraints.gridy = ((1+i)/2);
+            constraints.gridx = 1;
+            constraints.gridy = i + (3/2);
             panel.add(login, constraints);
-
 
         }
 
@@ -79,16 +80,10 @@ public class RecipeUI extends JFrame implements ActionListener{
         signup.addActionListener(this);
         guest.addActionListener(this);
 
-   //     constraints.gridx = 3;
-    //    constraints.gridy = 30;
-
         constraints.gridx = 4;
         constraints.gridy = 30;
         panel.add(signup, constraints);
 
-        constraints.gridx = 3;
-        constraints.gridy = 3;
-        //panel.add(guest, constraints);
 
         panel.setBackground(Color.BLACK);
         frame.add(panel);
