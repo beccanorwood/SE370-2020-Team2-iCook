@@ -251,6 +251,8 @@ public class InventoryUI extends JFrame{
         centerPanel.add(vertical_box);
     }
 
+    //Hi :)
+
     private void RightPanel(int row, int col, String name)
     {
         //RightPanel displaying measurement
