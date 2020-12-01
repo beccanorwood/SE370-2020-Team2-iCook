@@ -63,7 +63,7 @@ public class RecipeUI extends JFrame implements ActionListener{
         constraints.gridy = 5;
         panel.add(iCookLogo, constraints);
 
-        int j = 1;
+
         for(int i = 0; i < 16; i++){
             JButton login = new JButton("Recipe "+i);
             constraints.gridx = 1;
