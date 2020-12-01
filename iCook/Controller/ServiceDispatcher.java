@@ -2,7 +2,6 @@ package iCook.Controller;
 import iCook.Model.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -166,6 +165,25 @@ public class ServiceDispatcher {
     private void getUserIngredients()
     {
         userIngredients = facade.getUserIngredients(user.getId());
+    }
+
+
+    /**
+     * Requests the facade to update the user's inventory
+     */
+    public void updateUserInventory(ArrayList<HashMap<String, String>> updatedIngredientList)
+    {
+        facade.updateUserInventory(user.getId(), updatedIngredientList);
+    }
+
+
+    /**
+     * Sets the User Singleton to Null (A new User Singleton can be created after this call)
+     */
+    public void logUserOut()
+    {
+        user.deleteUserObject();
+        user = null;
     }
 
 

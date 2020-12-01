@@ -1,6 +1,8 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.Login.WelcomeUI;
+
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -18,7 +20,6 @@ public class HomeUI extends JFrame implements ActionListener {
     //Search and My Inventory
     private BufferedImage img;
     private final JFrame homeframe;
-
 
     public HomeUI(String userName){
 
@@ -54,10 +55,10 @@ public class HomeUI extends JFrame implements ActionListener {
         //Search & Inventory Buttons
         JButton recipes = new JButton("Recipes");
         JButton myInventory = new JButton("My Inventory");
-        JButton myRecipes = new JButton("My Recipes");
+        JButton logout = new JButton("Logout");
         recipes.addActionListener(this);
         myInventory.addActionListener(this);
-        myRecipes.addActionListener(this);
+        logout.addActionListener(this);
 
         //Component Positions
         constraints.gridx = 3;
@@ -69,7 +70,7 @@ public class HomeUI extends JFrame implements ActionListener {
 
         buttonPanel.add(recipes);
         buttonPanel.add(myInventory);
-        buttonPanel.add(myRecipes);
+        buttonPanel.add(logout);
 
         homepanel.setBackground(Color.BLACK);
         homeframe.add(homepanel, BorderLayout.CENTER);
@@ -102,10 +103,12 @@ public class HomeUI extends JFrame implements ActionListener {
         //User goes to view all recipes if search is clicked, otherwise they view their inventory
         //and add, update, or delete ingredients
 
-        if(btn.equals("Recipes")){
+        if(btn.equals("Logout")){
             homeframe.setVisible(false);
             homeframe.dispose();
-            RecipeUI recipe = new RecipeUI();
+
+
+            WelcomeUI inventory = new WelcomeUI();
         }
         else{
             homeframe.setVisible(false);
