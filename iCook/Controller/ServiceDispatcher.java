@@ -1,7 +1,7 @@
 package iCook.Controller;
 
 import iCook.Model.*;
-import iCook.View.DisplayObjects.IngredientDisplayObject;
+import iCook.View.DisplayObjects.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +83,17 @@ public class ServiceDispatcher {
         facade.signUp(username, password);
         user = User.getUser();
         userIngredients = null;
+    }
+
+
+    /**
+     * Gets the username of the user SINGLETON
+     *
+     * @return the username of the logged in user
+     */
+    public String getUserName()
+    {
+        return user.getUserName();
     }
 
 

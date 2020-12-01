@@ -28,6 +28,7 @@ public class InventoryUI extends JFrame{
     private JButton add;
     private JButton search;
     private JButton update;
+    private JButton homeBtn;
     private JButton increment;
     private JButton amount;
     private JButton decrement;//Always be current ingredient
@@ -63,7 +64,7 @@ public class InventoryUI extends JFrame{
         ingredientList = serviceDispatcher.getAllSystemIngredients();
         ingredientNames = new ArrayList<>();
 
-        // for every HashMap in ingredientList, add the name to the ingredientNames ArrayList
+        // for every ingredient in ingredientList, add the name to the ingredientNames ArrayList
         for (IngredientDisplayObject ingredient : ingredientList) {
             ingredientNames.add(ingredient.getName());
         }
@@ -276,12 +277,15 @@ public class InventoryUI extends JFrame{
         add = new JButton("Add");
         search = new JButton("Search");
         update = new JButton("Update");
+        homeBtn = new JButton("Home");
         add.addActionListener(bl);
         search.addActionListener(bl);
         update.addActionListener(bl);
+        homeBtn.addActionListener(bl);
         bottomPanel.add(add);
         bottomPanel.add(search);
         bottomPanel.add(update);
+        bottomPanel.add(homeBtn);
     }
 
 
@@ -400,6 +404,10 @@ public class InventoryUI extends JFrame{
                 CreatePanels(row, col);
                 pack();
                 setVisible(true);
+            }
+            else if(src2 == homeBtn){
+                //Instantiate home Class to display home GUI
+                HomeUI homeUI = new HomeUI(serviceDispatcher.getUserName());
             }
             else if(src2 == increment){
                 System.out.println("Increment Button Pressed");

@@ -1,9 +1,9 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.DisplayObjects.RecipeDisplayObject;
 import iCook.View.Login.LoginUI;
 import iCook.View.Login.SignUpUI;
-//import javafx.scene.layout.Border;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -31,8 +31,11 @@ public class RecipeUI extends JFrame implements ActionListener{
     private JPanel bottom_panel;
     private BufferedImage img;
     private JButton[] recipes;
+    private ServiceDispatcher serviceDispatcher;
 
     public RecipeUI(){
+        serviceDispatcher = new ServiceDispatcher();
+
         frame = new JFrame("iCook");
         frame.setSize(500, 500);
         frame.setLocationRelativeTo(null);
@@ -114,8 +117,8 @@ public class RecipeUI extends JFrame implements ActionListener{
             frame.setVisible(false);
             frame.dispose();
 
-            //Instantiate Login Class to display login GUI
-            LoginUI userLoginUI = new LoginUI();
+            //Instantiate home Class to display home GUI
+            HomeUI homeUI = new HomeUI(serviceDispatcher.getUserName());
 
         }
         else if(buttonChosen.equals("Inventory")){

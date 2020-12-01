@@ -12,9 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class HomeUI extends JFrame implements ActionListener {
     //User Home Page with two buttons
     //Search and My Inventory
@@ -112,7 +109,7 @@ public class HomeUI extends JFrame implements ActionListener {
             servDis.logUserOut();
 
             // take the user to the welcome page (start page)
-            WelcomeUI inventory = new WelcomeUI();
+            WelcomeUI welcomeuI = new WelcomeUI();
         }
         else if(btn.equals("Recipes")){
             homeframe.setVisible(false);
