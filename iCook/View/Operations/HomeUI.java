@@ -112,6 +112,11 @@ public class HomeUI extends JFrame implements ActionListener {
 
             WelcomeUI inventory = new WelcomeUI();
         }
+        else if(btn.equals("Recipes")){
+            homeframe.setVisible(false);
+            homeframe.dispose();;
+            RecipeUI Recipe = new RecipeUI();
+        }
         else{
             homeframe.setVisible(false);
             homeframe.dispose();
