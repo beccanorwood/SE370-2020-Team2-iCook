@@ -41,6 +41,8 @@ public class InventoryUI extends JFrame{
     private ArrayList<IngredientDisplayObject> updatedIngredientList;   // this will store the inventory the user wants to be updated (sends to controller)
 
     private JButton[] currInventoryQuantity;
+    private JButton[] currInventoryIncrement;
+    private JButton[] currInventoryDecrement;
     private int numOfNewIngs = 0;
 
     //InitialSize of each panel's row & col
@@ -102,6 +104,8 @@ public class InventoryUI extends JFrame{
         Box leftBox = Box.createVerticalBox();
         JLabel[] currInventoryName = new JLabel[userIngredientList.size()];
 
+        leftPanel.setLayout(new GridLayout(row + 1, col));
+
         for(int i = 0; i < userIngredientList.size(); i++){
             currInventoryName[i] = new JLabel();
             currInventoryName[i].setText(userIngredientList.get(i).getName());
@@ -118,8 +122,8 @@ public class InventoryUI extends JFrame{
 
         Box[] quantityBoxes = new Box[userIngredientList.size()];
         currInventoryQuantity = new JButton[userIngredientList.size()];
-        JButton[] currInventoryIncrement = new JButton[userIngredientList.size()];
-        JButton[] currInventoryDecrement = new JButton[userIngredientList.size()];
+        currInventoryIncrement = new JButton[userIngredientList.size()];
+        currInventoryDecrement = new JButton[userIngredientList.size()];
 
         centerPanel.add(centerPanel_vbox);
 
@@ -127,6 +131,8 @@ public class InventoryUI extends JFrame{
             currInventoryQuantity[j] = new JButton();
             currInventoryDecrement[j] = new JButton("-");
             currInventoryIncrement[j] = new JButton("+");
+            currInventoryIncrement[j].addActionListener(bl);
+            currInventoryDecrement[j].addActionListener(bl);
             quantityBoxes[j] = Box.createHorizontalBox();
             currInventoryQuantity[j].setText(String.valueOf(userIngredientList.get(j).getQuantity()));
             quantityBoxes[j].add(currInventoryDecrement[j]);
@@ -146,6 +152,7 @@ public class InventoryUI extends JFrame{
         for(int k = 0; k < userIngredientList.size(); k++){
             currInventoryUnit[k] = new JRadioButton();
             currInventoryUnit[k].setText(userIngredientList.get(k).getUnitOfMeasure());
+            currInventoryUnit[k].setSelected(true);
             currInventoryUnit[k].setForeground(Color.WHITE);
             currInventoryUnit[k].setBackground(Color.BLACK);
             rightpanel_vbox.add(currInventoryUnit[k]);
@@ -313,9 +320,49 @@ public class InventoryUI extends JFrame{
     private class ButtonListener implements ActionListener
     {
 
+        private String updatedQuantity(int index, JButton operation){
+            String currentQuantity = currInventoryQuantity[index].getText();
+            int change = 1;
+            int num = Integer.parseInt(currentQuantity);
+            int newAmount = 0;
+
+            String newQuantity = " ";
+
+            if(operation.getText() == "+"){
+                newAmount = change + num;
+            }
+            else{
+                newAmount = num - change;
+            }
+
+            newQuantity = String.valueOf(newAmount);
+
+            return newQuantity;
+        }
+
+
         @Override
         public void actionPerformed(ActionEvent e) {
+
             JButton src2 = (JButton) e.getSource();
+            String updatedQuantity = " ";
+
+            /*Loop through array of increment buttons */
+            for(int i = 0; i < currInventoryIncrement.length; i++){
+                if(src2 == currInventoryIncrement[i]){
+                    updatedQuantity = updatedQuantity(i, currInventoryIncrement[i]);
+                    currInventoryQuantity[i].setText(updatedQuantity);
+                }
+            }
+
+            /*Loop through array of decrement buttons */
+            for(int j = 0; j < currInventoryDecrement.length; j++){
+                if(src2 == currInventoryDecrement[j]){
+                    updatedQuantity = updatedQuantity(j, currInventoryDecrement[j]);
+                    currInventoryQuantity[j].setText(updatedQuantity);
+                }
+            }
+
 
             if(src2 == search){
                 System.out.println("Search button pressed");
