@@ -3,7 +3,7 @@ package iCook.View.Operations;
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.Login.LoginUI;
 import iCook.View.Login.SignUpUI;
-import javafx.scene.layout.Border;
+//import javafx.scene.layout.Border;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -70,7 +70,7 @@ public class RecipeUI extends JFrame implements ActionListener{
 
         recipes = new JButton[row];
 
-        for(int i = 0; i < 16; i++){
+        for(int i = 0; i < row; i++){
             recipes[i] = new JButton();
             recipes[i].setText("Recipe " + i);
             recipes[i].addActionListener(this);
