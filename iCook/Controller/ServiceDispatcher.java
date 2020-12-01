@@ -1,5 +1,6 @@
 package iCook.Controller;
 import iCook.Model.*;
+import iCook.View.DisplayObjects.IngredientDisplayObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,27 +119,24 @@ public class ServiceDispatcher {
     /**
      * Gets all of the system ingredients and stores them into an ArrayList of HashMaps
      *
-     * @return an ArrayList of HashMaps containing all system ingredients (contains the name and unit of measure)
+     * @return an ArrayList of IngredientDisplayObject representing all system ingredients (no quantity here)
      */
-    public ArrayList<HashMap<String, String>> getAllSystemIngredients()
+    public ArrayList<IngredientDisplayObject> getAllSystemIngredients()
     {
         // the ingredients will be stored in an ArrayList
-        ArrayList<HashMap<String, String>> allIngredients = new ArrayList<>();
+        ArrayList<IngredientDisplayObject> allIngredients = new ArrayList<>();
 
-        // for every ingredient, add a key/value
-        for(int i = 0; i < systemIngredients.size(); i++)
+        // for every ingredient in the list of system ingredients
+        for(Ingredient ingredient : systemIngredients)
         {
-            // use a hashmap to store the info of the Ingredient object
-            HashMap<String, String> ingredientMap = new HashMap<>();
+            // store the Ingredient's name
+            String name = ingredient.getIngredientName();
 
-            // put the Ingredient name in the map
-            ingredientMap.put("name", systemIngredients.get(i).getIngredientName());
+            // store the Ingredient's unit of measure
+            String unitOfMeasure = ingredient.getUnitOfMeasure();
 
-            // put the Ingredient unit of measure in the map
-            ingredientMap.put("unit_of_measure", systemIngredients.get(i).getUnitOfMeasure());
-
-            // add the map to the ArrayList
-            allIngredients.add(ingredientMap);
+            // add a new IngredientDisplayObject to the ArrayList
+            allIngredients.add(new IngredientDisplayObject(name, unitOfMeasure));
         }
 
         // return the ArrayList
@@ -158,37 +156,31 @@ public class ServiceDispatcher {
     /**
      * Returns an ArrayList of HashMaps of the user's inventory (contains their ingredients)
      *
-     * @return an ArrayList of HashMaps containing all user ingredients (NOT UserIngredient objects)
+     * @return an ArrayList of IngredientDisplayObject representing all user ingredients
      */
-    public ArrayList<HashMap<String, String>> getUserInventory()
+    public ArrayList<IngredientDisplayObject> getUserInventory()
     {
         // initialize the user's ingredients
         // ** this will change so need call here **
         getUserIngredients();
 
         // the user's inventory will be stored in an ArrayList
-        ArrayList<HashMap<String, String>> inventory = new ArrayList<>();
+        ArrayList<IngredientDisplayObject> inventory = new ArrayList<>();
 
-        // for every user ingredient, add a key/value
+        // for every user ingredient in the list of user ingredients
         for (UserIngredient userIngredient : userIngredients)
         {
-            // use a hashmap to store the info of the UserIngredient object
-            HashMap<String, String> userIngMap = new HashMap<>();
+            // store the Ingredient's name
+            String name = userIngredient.getUserIngredientName();
 
-            // put the UserIngredient ID in the map
-            userIngMap.put("id", Integer.toString(userIngredient.getUserIngredientID()));
+            // store the Ingredient's unit of measure
+            String unitOfMeasure = userIngredient.getUserIngredientUnitOfMeasure();
 
-            // put the Ingredient's name in the map
-            userIngMap.put("name", userIngredient.getUserIngredientName());
+            // store the Ingredient's quantity
+            double quantity = userIngredient.getQuantity();
 
-            // put the Ingredient's quantity in the map
-            userIngMap.put("quantity", Double.toString(userIngredient.getQuantity()));
-
-            // put the Ingredient's unit of measure in the map
-            userIngMap.put("unit_of_measure", userIngredient.getUserIngredientUnitOfMeasure());
-
-            // add the HashMap to the ArrayList
-            inventory.add(userIngMap);
+            // add a new IngredientDisplayObject to the ArrayList
+            inventory.add(new IngredientDisplayObject(name, unitOfMeasure, quantity));
         }
 
         // return the ArrayList
@@ -208,11 +200,21 @@ public class ServiceDispatcher {
     /**
      * Requests the facade to update the user's inventory with a given ArrayList
      *
-     * @param updatedIngredientList the ArrayList of HashMaps that contains the user's inventory information (to be updated)
+     * @param updatedIngredientList the ArrayList of IngredientDisplayObject that contains the user's inventory information (to be updated)
      */
-    public void updateUserInventory(ArrayList<HashMap<String, String>> updatedIngredientList)
+    public void updateUserInventory(ArrayList<IngredientDisplayObject> updatedIngredientList)
     {
-        facade.updateUserInventory(user.getId(), updatedIngredientList);
+        ArrayList<HashMap<String, String>> updatedInventory = new ArrayList<>();
+
+        for (IngredientDisplayObject ingredient : updatedIngredientList)
+        {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("name", ingredient.getName());
+            map.put("quantity", Double.toString(ingredient.getQuantity()));
+            updatedInventory.add(map);
+        }
+
+        facade.updateUserInventory(user.getId(), updatedInventory);
     }
 
 
