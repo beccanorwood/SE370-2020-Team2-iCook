@@ -3,7 +3,6 @@ package iCook.Model.DatabaseAccess;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import iCook.Model.Ingredient;
-
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -12,7 +11,7 @@ import java.util.ArrayList;
  * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
- * @version 11/30/2020
+ * @version 12/1/2020
  */
 public class IngredientDAO extends BaseDAO {
 
@@ -24,55 +23,52 @@ public class IngredientDAO extends BaseDAO {
 
 
     /**
-     * Performs a SQL statement to nicely display all system ingredients
-     */
-    public void displayIngredientsTable() {
-        try {
-            Statement statement = this.createStatement();
-            // Perform the query
-            ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
-
-            // read each row in the table
-            while (rs.next()) {
-                // read each column of the row
-                String name = rs.getString("name");
-                String unit_of_measure = rs.getString("unit_of_measure");
-
-                // print out the row
-                System.out.println(name + " measured in " + unit_of_measure);
-            }
-        }
-
-        catch (SQLException throwables)
-        {
-            throwables.printStackTrace();
-        }
-    }
-
-
-    /**
-     * Performs a SQL statement to return the id field from the ingredients table
+     * Performs a SQL statement to return the name field from the ingredients table with a given id
      *
-     * @param name the name of the ingredient whose id we want to find
-     * @return the id field of the ingredient
+     * @param id the id of the ingredient whose name we want to get
+     * @return the name field of the ingredient
      */
-    public int getIngredientID(String name) {
+    public String getIngredientName(int id) {
         try {
             //create a new statement
             Statement statement = this.createStatement();
 
             // perform the query
-            ResultSet rs = statement.executeQuery("SELECT id FROM ingredients WHERE name = '" + name + "' ");
+            ResultSet rs = statement.executeQuery("SELECT name FROM ingredients WHERE id = '" + id + "' ");
             rs.next();  // move the 'cursor' to the first row (ALWAYS NEED THIS WHEN QUERYING)
 
             // return the quantity field of the specified ingredient
-            return rs.getInt("id");
+            return rs.getString("name");
         }
 
         catch (SQLException throwables)
         {
             throwables.printStackTrace();
-            return 0;
+            return null;
+        }
+    }
+
+
+    /**
+     * Performs a SQL statement to determine if the ingredient is in the ingredients table
+     *
+     * @param id the id of the ingredient we want to check exists
+     * @return true if the ingredient is in the ingredients table, false otherwise
+     */
+    public boolean validIngredient(int id) {
+        try {
+            //create a new statement
+            Statement statement = this.createStatement();
+
+            // perform the query
+            ResultSet rs = statement.executeQuery("SELECT * FROM ingredients WHERE id = '" + id + "' ");
+            return rs.next();  // move the 'cursor' to the first row (ALWAYS NEED THIS WHEN QUERYING)
+        }
+
+        catch (SQLException throwables)
+        {
+            throwables.printStackTrace();
+            return false;
         }
     }
 
@@ -89,7 +85,7 @@ public class IngredientDAO extends BaseDAO {
 
             // perform the query
             ResultSet rs = statement.executeQuery("SELECT * FROM ingredients");
-            ArrayList<Ingredient> ingList = new ArrayList<>();  // array list we are going to return
+            ArrayList<Ingredient> ingList = new ArrayList<>();  // ArrayList we are going to return
 
             // read each row in the table
             while (rs.next())
@@ -98,7 +94,7 @@ public class IngredientDAO extends BaseDAO {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
                 String unit_of_measure = rs.getString("unit_of_measure");
-                ingList.add(new Ingredient(id, name, unit_of_measure)); // add the ingredient to the array list
+                ingList.add(new Ingredient(id, name, unit_of_measure)); // add the ingredient to the ArrayList
             }
 
             return ingList;

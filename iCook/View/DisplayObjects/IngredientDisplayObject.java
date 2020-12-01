@@ -1,7 +1,7 @@
 package iCook.View.DisplayObjects;
 
 /**
- * Display object for an ingredient used exclusively in the model package.
+ * Display object for an ingredient used primarily in the Model package.
  *
  * @Author: Team 2
  * @Date: 12/1/2020
@@ -9,19 +9,22 @@ package iCook.View.DisplayObjects;
 public class IngredientDisplayObject {
 
     // instance variables
+    private int ingredientID;
     private String name;
     private String unitOfMeasure;
-    private double quantity;
+    private int quantity;
 
 
     /**
-     * Constructor - 3 parameters
+     * Constructor - 4 parameters
      *
+     * @param ingredientID the id of the ingredient
      * @param name the name of the ingredient
      * @param unitOfMeasure the unit of measure of the ingredient
      * @param quantity the quantity of the ingredient
      */
-    public IngredientDisplayObject(String name, String unitOfMeasure, double quantity){
+    public IngredientDisplayObject(int ingredientID, String name, String unitOfMeasure, int quantity){
+        this.ingredientID = ingredientID;
         this.name = name;
         this.unitOfMeasure = unitOfMeasure;
         this.quantity = quantity;
@@ -29,14 +32,27 @@ public class IngredientDisplayObject {
 
 
     /**
-     * Constructor - 2 parameters
+     * Constructor - 3 parameters
      *
+     * @param ingredientID the id of the ingredient
      * @param name the name of the ingredient
      * @param unitOfMeasure the unit of measure of the ingredient
      */
-    public IngredientDisplayObject(String name, String unitOfMeasure){
+    public IngredientDisplayObject(int ingredientID, String name, String unitOfMeasure){
+        this.ingredientID = ingredientID;
         this.name = name;
         this.unitOfMeasure = unitOfMeasure;
+    }
+
+
+    /**
+     * Getter for the id of the ingredient
+     *
+     * @return the id
+     */
+    public int getIngredientID()
+    {
+        return ingredientID;
     }
 
 
@@ -67,7 +83,7 @@ public class IngredientDisplayObject {
      *
      * @return the quantity
      */
-    public double getQuantity()
+    public int getQuantity()
     {
         return quantity;
     }
@@ -78,7 +94,7 @@ public class IngredientDisplayObject {
      *
      * @param quantity the quantity to be set
      */
-    public void setQuantity(double quantity)
+    public void setQuantity(int quantity)
     {
         this.quantity = quantity;
     }

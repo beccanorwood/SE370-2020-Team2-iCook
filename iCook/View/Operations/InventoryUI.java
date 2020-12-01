@@ -9,16 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-
 
 /**
  *
  * @author Team 2
  * @version 11/29/2020
  */
-
-
 public class InventoryUI extends JFrame{
 
     //Display dropbox containing list of available ingredients

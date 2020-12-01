@@ -1,7 +1,6 @@
 package iCook.Model;
-import iCook.Model.DatabaseAccess.IngredientDAO;
-import iCook.Model.DatabaseAccess.RecipeDAO;
-import iCook.Model.DatabaseAccess.UserDAO;
+
+import iCook.Model.DatabaseAccess.*;
 import iCook.UsernameTakenException;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.HashMap;
  * Central class for all DAO classes. Has access to all DAO classes.
  *
  * @author Team 2
- * @version 11/30/2020
+ * @version 12/1/2020
  */
 public class Facade {
 
@@ -102,10 +101,10 @@ public class Facade {
     /**
      * Requests the UserDAO to update the user's inventory
      *
-     * @param userID the user's id whose ingredients we want to get
-     * @param updatedIngredientList the ArrayList of HashMaps that contains the user's inventory information (to be updated)
+     * @param userID the user's id whose ingredients we want to update
+     * @param updatedIngredientList a HashMap containing the user's pending inventory information (to be updated)
      */
-    public void updateUserInventory(int userID, ArrayList<HashMap<String, String>> updatedIngredientList)
+    public void updateUserInventory(int userID, HashMap<Integer, Integer> updatedIngredientList)
     {
         userDAO.updateUserIngredientTable(userID, updatedIngredientList);
     }

@@ -6,7 +6,7 @@ package iCook.Model;
  * of the ingredient.
  *
  * @author Team 2
- * @version 11/29/2020
+ * @version 12/1/2020
  */
 public class UserIngredient {
 
@@ -14,7 +14,7 @@ public class UserIngredient {
     private int userIngredientID;
     private int userID;
     private int ingredientID;
-    private double quantity;
+    private int quantity;
     private String ingredientName;
     private String unit_of_measure;
 
@@ -95,7 +95,7 @@ public class UserIngredient {
      * Get quantity of ingredient
      * @return int
      */
-    public double getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 

@@ -1,19 +1,21 @@
 package iCook.Model.DatabaseAccess;
+
+import iCook.Model.User;
+import iCook.Model.UserIngredient;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import iCook.Model.User;
-import iCook.Model.UserIngredient;
+import java.util.Map;
 
 /**
  * DAO class for the users && user_ingredients table in iCook's database.
  * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
- * @version 11/30/2020
+ * @version 12/1/2020
  */
 public class UserDAO extends BaseDAO {
 
@@ -242,48 +244,56 @@ public class UserDAO extends BaseDAO {
      * Performs a SQL statement to update the user_ingredients table for a specified user
      *
      * @param userID the user_id field within the user_ingredients table
-     * @param updatedIngredientList an ArrayList containing HashMaps that contain the name and quantity of the user ingredients
+     * @param updatedIngredientList a HashMap that contains each ingredient id and quantity of the pending user's inventory
      */
-    public void updateUserIngredientTable(int userID, ArrayList<HashMap<String, String>> updatedIngredientList) {
+    public void updateUserIngredientTable(int userID, HashMap<Integer, Integer> updatedIngredientList) {
         try {
             //create a new statement
             Statement statement = this.createStatement();
 
-            // need to access the ingredient table to get the ingredient's id
+            // need to access the IngredientDAO for validity check
             IngredientDAO ingredientDAO = new IngredientDAO();
 
-            // loop over each map (each map has info for a UserIngredient)
-            for(HashMap<String, String> map : updatedIngredientList)
-            {
-                // local variables we will use
-                String ingredient_name = map.get("name");
-                double ingredient_quantity = Double.parseDouble(map.get("quantity"));
+            // do 1 query to get the current user's user_ingredient table entries
+            ResultSet rs = statement.executeQuery("SELECT ingredient_id, quantity FROM user_ingredients WHERE user_id = '" + userID + "' ");
 
-                // get the ingredient's id from the ingredients table (method from the IngredientDAO)
-                int ingredient_id = ingredientDAO.getIngredientID(ingredient_name);
+            // stores the SQL query info from above into a HashMap
+            HashMap<Integer, Integer> currentInventory = new HashMap<>();
 
-                // perform the query to get the current user ingredient quantity
-                ResultSet rs = statement.executeQuery("SELECT UI.quantity " +
-                                                            "FROM user_ingredients UI, ingredients I, users U " +
-                                                            "WHERE UI.user_id = '" + userID + "' AND I.name = '" + ingredient_name + "' " +
-                                                            "AND UI.ingredient_id = I.id ");
+            // populate the HashMap with key = ingredient_id / value = quantity
+            while (rs.next())
+                currentInventory.put(rs.getInt("ingredient_id"), rs.getInt("quantity"));
 
-                // if the ingredient is in the user_ingredients table
-                // check if it needs to be updated
-                if (rs.next()) {
-                    // if the ingredient quantity is 0, remove it from the table
-                    if(ingredient_quantity == 0)
-                        deleteUserIngredient(userID, ingredient_id);
+            // loop over each entry of the passed in user inventory
+            for(Map.Entry<Integer, Integer> entry : updatedIngredientList.entrySet()) {
+                // local variables we will need
+                int ingredient_id = entry.getKey();
+                int ingredient_quantity = entry.getValue();
 
-                    // else if the ingredient's quantity is different from the quantity in the table, update it
-                    else if (ingredient_quantity != rs.getDouble("quantity"))
-                        updateUserIngredient(userID, ingredient_quantity);
+                // make sure the ingredient is valid (safety measure --> this should always be valid)
+                if (ingredientDAO.validIngredient(ingredient_id))
+                {
+                    // if the ingredient is in the user_ingredients table
+                    // check if it needs to be updated
+                    if (currentInventory.containsKey(ingredient_id))
+                    {
+                        // get the current quantity of the ingredient
+                        int current_ingredient_quantity = currentInventory.get(ingredient_id);
+
+                        // if the ingredient quantity is 0, remove it from the table
+                        if (ingredient_quantity == 0)
+                            deleteUserIngredient(userID, ingredient_id);
+
+                        // else if the requested ingredient's quantity is different from the quantity already in the table, update it
+                        else if (ingredient_quantity != current_ingredient_quantity)
+                            updateUserIngredient(userID, ingredient_quantity);
+                    }
+
+                    // else the ingredient is not in the user_ingredients table
+                    // insert it as a new entry to the user_ingredients table as long as the quantity is not 0
+                    else if (ingredient_quantity != 0)
+                        addUserIngredient(userID, ingredient_id, ingredient_quantity);
                 }
-
-                // else the ingredient is not in the database
-                // insert it as a new entry to the user_ingredients table as long as the quantity is not 0
-                else if (!rs.next() && ingredient_quantity != 0)
-                    addUserIngredient(userID, ingredient_id, ingredient_quantity);
             }
         }
 

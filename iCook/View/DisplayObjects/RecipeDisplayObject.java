@@ -1,7 +1,7 @@
 package iCook.View.DisplayObjects;
 
 /**
- * Display object for a recipe used exclusively in the model package.
+ * Display object for a recipe used primarily in the Model package.
  *
  * @Author: Team 2
  * @Date: 12/1/2020
@@ -9,20 +9,34 @@ package iCook.View.DisplayObjects;
 public class RecipeDisplayObject {
 
     // instance variables
+    private int recipeID;
     private String name;
     private String instructions;
 
 
     /**
-     * Constructor - 2 parameters
+     * Constructor - 3 parameters
      *
+     * @param recipeID the id of the recipe
      * @param name the name of the recipe
      * @param instructions the instructions of the recipe
      */
-    public RecipeDisplayObject(String name, String instructions)
+    public RecipeDisplayObject(int recipeID, String name, String instructions)
     {
+        this.recipeID = recipeID;
         this.name = name;
         this.instructions = instructions;
+    }
+
+
+    /**
+     * Getter for the id of the recipe
+     *
+     * @return the id
+     */
+    public int getRecipeID()
+    {
+        return recipeID;
     }
 
 
@@ -42,7 +56,7 @@ public class RecipeDisplayObject {
      *
      * @return the instructions
      */
-    public String getinstructions()
+    public String getInstructions()
     {
         return instructions;
     }

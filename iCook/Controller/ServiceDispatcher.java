@@ -1,4 +1,5 @@
 package iCook.Controller;
+
 import iCook.Model.*;
 import iCook.View.DisplayObjects.IngredientDisplayObject;
 
@@ -9,7 +10,7 @@ import java.util.HashMap;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 11/30/2020
+ * @version 12/1/2020
  */
 public class ServiceDispatcher {
 
@@ -24,7 +25,7 @@ public class ServiceDispatcher {
 
     /**
      * Constructor - initializes instance variables.
-     * Calls getSystemIngredients to populate systemIngredients
+     * Calls getSystemIngredients to populate systemIngredients.
      */
     public ServiceDispatcher()
     {
@@ -52,24 +53,15 @@ public class ServiceDispatcher {
             userIngredients = facade.getUserIngredients(user.getId());
 
 //            // TESTING THE UPDATE DB
-//            ArrayList<HashMap<String, String>> test = new ArrayList<>();
-//            HashMap<String, String> map = new HashMap<>();
-//            map.put("name", "milk");
-//            map.put("quantity", "2");
-//            test.add(map);
-//            HashMap<String, String> map2 = new HashMap<>();
-//            map2.put("name", "flour");
-//            map2.put("quantity", "2");
-//            test.add(map2);
-//            HashMap<String, String> map3 = new HashMap<>();
-//            map3.put("name", "vegetable oil");
-//            map3.put("quantity", "2");
-//            test.add(map3);
-//            HashMap<String, String> map4 = new HashMap<>();
-//            map4.put("name", "egg");
-//            map4.put("quantity", "0");
-//            test.add(map4);
-//            updateUserInventory(test);
+//            HashMap<Integer, Integer> map = new HashMap<>();
+//            map.put(1, 2);
+//            map.put(19, 6);
+//            map.put(0, 2);
+//            map.put(20, 8);
+//            map.put(20, 8);
+//            map.put(20, 2);
+//            map.put(32, 0);
+//            facade.updateUserInventory(user.getId(), map);
 
             return true;
         }
@@ -117,7 +109,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Gets all of the system ingredients and stores them into an ArrayList of HashMaps
+     * Gets all of the system ingredients and stores them into an ArrayList of IngredientDisplayObjects
      *
      * @return an ArrayList of IngredientDisplayObject representing all system ingredients (no quantity here)
      */
@@ -129,6 +121,9 @@ public class ServiceDispatcher {
         // for every ingredient in the list of system ingredients
         for(Ingredient ingredient : systemIngredients)
         {
+            // store the Ingredient's id
+            int ingredientID = ingredient.getIngredientID();
+
             // store the Ingredient's name
             String name = ingredient.getIngredientName();
 
@@ -136,7 +131,7 @@ public class ServiceDispatcher {
             String unitOfMeasure = ingredient.getUnitOfMeasure();
 
             // add a new IngredientDisplayObject to the ArrayList
-            allIngredients.add(new IngredientDisplayObject(name, unitOfMeasure));
+            allIngredients.add(new IngredientDisplayObject(ingredientID, name, unitOfMeasure));
         }
 
         // return the ArrayList
@@ -154,9 +149,9 @@ public class ServiceDispatcher {
 
 
     /**
-     * Returns an ArrayList of HashMaps of the user's inventory (contains their ingredients)
+     * Returns an ArrayList of IngredientDisplayObjects representing the user's inventory
      *
-     * @return an ArrayList of IngredientDisplayObject representing all user ingredients
+     * @return an ArrayList of IngredientDisplayObjects representing all user ingredients
      */
     public ArrayList<IngredientDisplayObject> getUserInventory()
     {
@@ -170,6 +165,9 @@ public class ServiceDispatcher {
         // for every user ingredient in the list of user ingredients
         for (UserIngredient userIngredient : userIngredients)
         {
+            // store the Ingredient's id
+            int ingredientID = userIngredient.getIngredientID();
+
             // store the Ingredient's name
             String name = userIngredient.getUserIngredientName();
 
@@ -177,10 +175,10 @@ public class ServiceDispatcher {
             String unitOfMeasure = userIngredient.getUserIngredientUnitOfMeasure();
 
             // store the Ingredient's quantity
-            double quantity = userIngredient.getQuantity();
+            int quantity = userIngredient.getQuantity();
 
             // add a new IngredientDisplayObject to the ArrayList
-            inventory.add(new IngredientDisplayObject(name, unitOfMeasure, quantity));
+            inventory.add(new IngredientDisplayObject(ingredientID, name, unitOfMeasure, quantity));
         }
 
         // return the ArrayList
@@ -200,20 +198,21 @@ public class ServiceDispatcher {
     /**
      * Requests the facade to update the user's inventory with a given ArrayList
      *
-     * @param updatedIngredientList the ArrayList of IngredientDisplayObject that contains the user's inventory information (to be updated)
+     * @param updatedIngredientList an ArrayList of IngredientDisplayObject that contains the user's pending inventory information (to be updated)
      */
     public void updateUserInventory(ArrayList<IngredientDisplayObject> updatedIngredientList)
     {
-        ArrayList<HashMap<String, String>> updatedInventory = new ArrayList<>();
+        // store the needed ingredient information in a HashMap
+        HashMap<Integer, Integer> updatedInventory = new HashMap<>();
 
+        // for every display object received from the Model, put the id and quantity in the HashMap
         for (IngredientDisplayObject ingredient : updatedIngredientList)
         {
-            HashMap<String, String> map = new HashMap<>();
-            map.put("name", ingredient.getName());
-            map.put("quantity", Double.toString(ingredient.getQuantity()));
-            updatedInventory.add(map);
+            // key = ingredientID / value = quantity
+            updatedInventory.put(ingredient.getIngredientID(), ingredient.getQuantity());
         }
 
+        // send the HashMap to the facade to be processed
         facade.updateUserInventory(user.getId(), updatedInventory);
     }
 
