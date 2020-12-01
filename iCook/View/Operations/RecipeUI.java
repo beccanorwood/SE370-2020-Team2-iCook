@@ -3,6 +3,7 @@ package iCook.View.Operations;
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.Login.LoginUI;
 import iCook.View.Login.SignUpUI;
+//import javafx.scene.layout.Border;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,8 +25,12 @@ import java.util.ArrayList;
 
 public class RecipeUI extends JFrame implements ActionListener{
     private JFrame frame;
-    private JPanel panel;
+    private JPanel toppanel;
+    private JPanel recipe_panel;
+    private JPanel center_panel;
+    private JPanel bottom_panel;
     private BufferedImage img;
+    private JButton[] recipes;
 
     public RecipeUI(){
         frame = new JFrame("iCook");
@@ -34,18 +39,11 @@ public class RecipeUI extends JFrame implements ActionListener{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(30, 30, 30, 30);
 
         JLabel iCook = new JLabel("Available Recipes");
         iCook.setFont(new Font("ARIAL", Font.BOLD, 30));
         iCook.setForeground(Color.WHITE);
 
-        constraints.gridx = 3;
-        constraints.gridy = 6;
-        panel.add(iCook, constraints);
 
         try{
             img = ImageIO.read(new File("iCook_Logo.png"));
@@ -56,36 +54,50 @@ public class RecipeUI extends JFrame implements ActionListener{
 
         ImageIcon logo = new ImageIcon(img);
 
+
         JLabel iCookLogo = new JLabel();
         iCookLogo.setIcon(logo);
 
-        constraints.gridx = 3;
-        constraints.gridy = 5;
-        panel.add(iCookLogo, constraints);
+        toppanel = new JPanel();
+        toppanel.setBackground(Color.BLACK);
+        toppanel.add(iCook);
+        toppanel.add(iCookLogo);
 
 
-        for(int i = 0; i < 16; i++){
-            JButton login = new JButton("Recipe "+i);
-            constraints.gridx = 1;
-            constraints.gridy = i + (3/2);
-            panel.add(login, constraints);
+        int row = 16;
+        recipe_panel = new JPanel(new GridLayout(row, 1));
+        recipe_panel.setBackground(Color.BLACK);
 
+        recipes = new JButton[row];
+
+        for(int i = 0; i < row; i++){
+            recipes[i] = new JButton();
+            recipes[i].setText("Recipe " + i);
+            recipes[i].addActionListener(this);
+            recipe_panel.add(recipes[i]);
+            recipe_panel.add(Box.createVerticalStrut(10));
         }
+
+
+        center_panel = new JPanel();
+        center_panel.setBackground(Color.BLACK);
+
 
         JButton login = new JButton("Home");
         JButton signup = new JButton("Inventory");
-
-
         login.addActionListener(this);
         signup.addActionListener(this);
 
-        constraints.gridx = 3;
-        constraints.gridy = 7;
-        panel.add(signup, constraints);
+        bottom_panel = new JPanel();
+        bottom_panel.setBackground(Color.BLACK);
+        bottom_panel.add(login);
+        bottom_panel.add(signup);
 
+        frame.add(toppanel, BorderLayout.NORTH);
+        frame.add(recipe_panel, BorderLayout.WEST);
+        frame.add(center_panel, BorderLayout.CENTER);
+        frame.add(bottom_panel, BorderLayout.SOUTH);
 
-        panel.setBackground(Color.BLACK);
-        frame.add(panel);
         frame.setVisible(true);
 
     }
@@ -113,7 +125,11 @@ public class RecipeUI extends JFrame implements ActionListener{
 
         }
         else{
-            System.out.println("\nYou pressed the Guest Mode button!");
+            for(int i = 0; i < recipes.length; i++){
+                if(buttonChosen.equals("Recipe " + i)){
+                    System.out.println("You pressed Button: " + i);
+                }
+            }
 
         }
     }
