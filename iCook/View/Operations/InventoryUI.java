@@ -406,6 +406,7 @@ public class InventoryUI extends JFrame{
                 setVisible(true);
             }
             else if(src2 == homeBtn){
+                dispose();
                 //Instantiate home Class to display home GUI
                 HomeUI homeUI = new HomeUI(serviceDispatcher.getUserName());
             }
