@@ -107,13 +107,9 @@ public class RecipeUI extends JFrame implements ActionListener{
 
         }
         else if(buttonChosen.equals("Inventory")){
-            //Close home page
-            //SignUp class
             frame.setVisible(false);
             frame.dispose();
-
-            //Sign Up class will display and user can create account
-            SignUpUI userSignUpUI = new SignUpUI();
+            InventoryUI inventory = new InventoryUI();
 
         }
         else{
