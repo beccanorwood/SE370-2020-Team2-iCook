@@ -40,12 +40,16 @@ public class SignUpUI extends JFrame implements ActionListener
         signup_panel.add(iCook_signUP, constraints);
 
         JButton create = new JButton("Create Account");
+        create.setPreferredSize(new Dimension(144,32));
+        create.addActionListener(this);
+
         JButton back = new JButton("Back");
         back.addActionListener(this);
-        create.addActionListener(this);
+        back.setPreferredSize(new Dimension(144,32));
 
         JLabel userName = new JLabel("Create username: ");
         userName_field = new JTextField(20);
+        userName_field.setFont(new Font("Helvetica", Font.PLAIN, 20));
         userName.setForeground(new Color(249,250,244));
         userName.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
@@ -58,6 +62,7 @@ public class SignUpUI extends JFrame implements ActionListener
 
         JLabel passWord = new JLabel("Create password: ");
         passwordField = new JPasswordField(20);
+        passwordField.setFont(new Font("Helvetica", Font.PLAIN, 20));
         passWord.setForeground(new Color(249,250,244));
         passWord.setFont(new Font("Helvetica", Font.PLAIN, 20));
 

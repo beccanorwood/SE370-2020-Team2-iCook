@@ -39,14 +39,18 @@ public class LoginUI extends JFrame implements ActionListener {
         login_panel.add(iCook_login, constraints);
 
         JButton login = new JButton("Login");
-        JButton back = new JButton("Back");
-        back.addActionListener(this);
+        login.setPreferredSize(new Dimension(144,32));
         login.addActionListener(this);
+
+        JButton back = new JButton("Back");
+        back.setPreferredSize(new Dimension(144,32));
+        back.addActionListener(this);
 
         JLabel userName = new JLabel("Enter username: ");
         userName.setForeground(new Color(249,250,244));
         userName.setFont(new Font("Helvetica", Font.PLAIN, 20));
         userName_field = new JTextField(20);
+        userName_field.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
         constraints.gridx = 3;
         constraints.gridy = 3;
@@ -59,6 +63,7 @@ public class LoginUI extends JFrame implements ActionListener {
         passWord.setForeground(new Color(249,250,244));
         passWord.setFont(new Font("Helvetica", Font.PLAIN, 20));
         passwordField = new JPasswordField(20);
+        passwordField.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
         constraints.gridx = 3;
         constraints.gridy = 6;
