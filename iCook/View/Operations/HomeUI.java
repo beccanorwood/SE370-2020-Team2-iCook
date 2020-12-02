@@ -22,12 +22,15 @@ public class HomeUI extends JFrame implements ActionListener {
 
         homeframe = new JFrame("iCook");
         JPanel homepanel = new JPanel(new GridBagLayout());
+
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(Color.BLACK);
-        homeframe.setSize(500, 500);
+        buttonPanel.setBackground(new Color(26, 27, 34));
+
+        homeframe.setSize(1024, 768);
         homeframe.setLocationRelativeTo(null);
         homeframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         homeframe.setLayout(new BorderLayout());
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(10, 10, 10, 10);
@@ -45,51 +48,51 @@ public class HomeUI extends JFrame implements ActionListener {
         JLabel pic = new JLabel();
         pic.setIcon(logo);
 
-        JLabel welcome = new JLabel("Welcome " + userName + "!"); //Welcome label
-        welcome.setFont(new Font("ARIAL", Font.BOLD, 30)); //Size, Color, etc
+        JLabel welcome = new JLabel("Hi " + userName + "!"); //Welcome label
+        welcome.setFont(new Font("Helvetica", Font.BOLD, 54)); //Size, Color, etc
         welcome.setForeground(Color.WHITE);
 
-        //Search & Inventory Buttons
-        JButton recipes = new JButton("Recipes");
+        constraints.gridx = 4;
+        constraints.gridy = 0;
+        homepanel.add(welcome, constraints);
+
+        constraints.gridx = 5;
+        constraints.gridy = 0;
+        homepanel.add(pic, constraints);
+
+        // Buttons
         JButton myInventory = new JButton("My Inventory");
+        myInventory.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        myInventory.setPreferredSize(new Dimension(144,32));
+
+        constraints.gridx = 4;
+        constraints.gridy = 1;
+        homepanel.add(buttonPanel.add(myInventory), constraints);
+
+        JButton recipes = new JButton("Recipes");
+        recipes.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        recipes.setPreferredSize(new Dimension(144,32));
+
+        constraints.gridx = 4;
+        constraints.gridy = 2;
+        homepanel.add(recipes, constraints);
+
         JButton logout = new JButton("Logout");
+        logout.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        logout.setPreferredSize(new Dimension(144,32));
+
+        constraints.gridx = 4;
+        constraints.gridy = 3;
+        homepanel.add(buttonPanel.add(logout), constraints);
+
         recipes.addActionListener(this);
         myInventory.addActionListener(this);
         logout.addActionListener(this);
 
-        //Component Positions
-        constraints.gridx = 3;
-        constraints.gridy = 0;
-        homepanel.add(welcome, constraints);
-
-        constraints.gridx = 4;
-        homepanel.add(pic, constraints);
-
-        buttonPanel.add(recipes);
-        buttonPanel.add(myInventory);
-        buttonPanel.add(logout);
-
-        homepanel.setBackground(Color.BLACK);
+        homepanel.setBackground(new Color(26, 27, 34));
         homeframe.add(homepanel, BorderLayout.CENTER);
         homeframe.add(buttonPanel, BorderLayout.SOUTH);
         homeframe.setVisible(true);
-
-//        // ********************************************
-//        // *** FOR TESTING PURPOSES, CAN BE DELETED ***
-//        System.out.println("\nUser Inventory");
-//        System.out.println("--------------");
-//
-//        ServiceDispatcher controller = new ServiceDispatcher();
-//        ArrayList<HashMap<String, String>> userInventory = controller.getUserInventory();
-//
-//        if (!userInventory.isEmpty()) {
-//            for (HashMap<String, String> map : userInventory)
-//                System.out.println(map.get("name"));
-//        }
-//        else
-//            System.out.println("Your inventory is empty");
-//        // ********************************************
-
     }
 
     @Override
@@ -109,17 +112,17 @@ public class HomeUI extends JFrame implements ActionListener {
             servDis.logUserOut();
 
             // take the user to the welcome page (start page)
-            WelcomeUI welcomeuI = new WelcomeUI();
+            new WelcomeUI();
         }
         else if(btn.equals("Recipes")){
             homeframe.setVisible(false);
             homeframe.dispose();
-            RecipeUI Recipe = new RecipeUI();
+            new RecipeUI();
         }
         else{
             homeframe.setVisible(false);
             homeframe.dispose();
-            InventoryUI inventory = new InventoryUI();
+            new InventoryUI();
         }
 
 

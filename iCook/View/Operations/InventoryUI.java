@@ -61,6 +61,7 @@ public class InventoryUI extends JFrame{
     ButtonListener bl = new ButtonListener();
 
     public InventoryUI(){
+        this.setSize(1024, 768);
         // initialize instance variables
         addedIngredients = new ArrayList<>();
         newlyAddedIncrementBtns = new ArrayList<>();

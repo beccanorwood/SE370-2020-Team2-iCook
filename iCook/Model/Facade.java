@@ -1,7 +1,6 @@
 package iCook.Model;
 
 import iCook.Model.DatabaseAccess.*;
-import iCook.UsernameTakenException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +64,7 @@ public class Facade {
         // NEED TO THROW AN EXCEPTION HERE
         if ( userDAO.usernameIsTaken(username) ) {
             System.out.println("UsernameTakenException thrown");
-            throw new UsernameTakenException("\"" + username + "\"" + " is already in use.");
+            throw new UsernameTakenException("\"" + username + "\"" + " is already in use!");
         }
         else {
             // create a new User with the given username and password

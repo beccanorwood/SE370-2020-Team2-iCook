@@ -1,4 +1,4 @@
-package iCook;
+package iCook.Model;
 
 /**
  * User defined exception. Used when a username has already been taken.
@@ -28,7 +28,7 @@ public class UsernameTakenException extends RuntimeException {
      */
     public String toString()
     {
-        return ("Error: The Username " + message);
+        return ("Error: The username " + message);
     }
 
 

@@ -19,19 +19,20 @@ public class LoginUI extends JFrame implements ActionListener {
     public LoginUI() {
         //Need text fields for username & password
         login_frame = new JFrame("iCook");
-        login_frame.setSize(500, 500);
+        login_frame.setSize(1024, 768);
         login_frame.setLocationRelativeTo(null);
         login_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         login_frame.setLayout(new BorderLayout());
+        login_frame.setResizable(false);
 
         login_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
         constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(15, 10, 15, 10);
 
-        JLabel iCook_login = new JLabel("Login!");
-        iCook_login.setFont(new Font("ARIAL", Font.BOLD, 30));
-        iCook_login.setForeground(Color.WHITE);
+        JLabel iCook_login = new JLabel("Login");
+        iCook_login.setFont(new Font("Helvetica", Font.BOLD, 40));
+        iCook_login.setForeground(new Color(249,250,244));
 
         constraints.gridx = 3;
         constraints.gridy = 0;
@@ -43,7 +44,8 @@ public class LoginUI extends JFrame implements ActionListener {
         login.addActionListener(this);
 
         JLabel userName = new JLabel("Enter username: ");
-        userName.setForeground(Color.WHITE);
+        userName.setForeground(new Color(249,250,244));
+        userName.setFont(new Font("Helvetica", Font.PLAIN, 20));
         userName_field = new JTextField(20);
 
         constraints.gridx = 3;
@@ -54,7 +56,8 @@ public class LoginUI extends JFrame implements ActionListener {
         login_panel.add(userName_field, constraints);
 
         JLabel passWord = new JLabel("Enter password: ");
-        passWord.setForeground(Color.WHITE);
+        passWord.setForeground(new Color(249,250,244));
+        passWord.setFont(new Font("Helvetica", Font.PLAIN, 20));
         passwordField = new JPasswordField(20);
 
         constraints.gridx = 3;
@@ -73,7 +76,7 @@ public class LoginUI extends JFrame implements ActionListener {
         constraints.gridx = 4;
         login_panel.add(login, constraints);
 
-        login_panel.setBackground(Color.BLACK);
+        login_panel.setBackground(new Color(26, 27, 34));
         login_frame.add(login_panel);
         login_frame.setVisible(true);
 
@@ -85,11 +88,15 @@ public class LoginUI extends JFrame implements ActionListener {
         String btn_Selection = e.getActionCommand();
 
         JPanel southPanel = new JPanel();
-        southPanel.setBackground(Color.BLACK);
-        JLabel emptyFields = new JLabel("ERROR! The user name or password cannot be empty");
-        emptyFields.setForeground(Color.WHITE);
-        JLabel noAccountFound = new JLabel("ERROR! The user name or password you entered does not match an account");
-        noAccountFound.setForeground(Color.WHITE);
+        southPanel.setBackground(new Color(26, 27, 34));
+
+        JLabel emptyFields = new JLabel("Error: The username and/or password cannot be empty");
+        emptyFields.setForeground(new Color(241,122,126));
+        emptyFields.setFont(new Font("Helvetica", Font.PLAIN, 20));
+
+        JLabel noAccountFound = new JLabel("Error: The username and/or password you entered does not match an account");
+        noAccountFound.setForeground(new Color(241,122,126));
+        noAccountFound.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
 
         // user clicks on "Back"
@@ -125,7 +132,7 @@ public class LoginUI extends JFrame implements ActionListener {
 
                 login_frame.setVisible(false);
                 login_frame.dispose();
-                HomeUI userHomePage = new HomeUI(username);
+                new HomeUI(username);
 
             }
 
@@ -133,7 +140,7 @@ public class LoginUI extends JFrame implements ActionListener {
             else {
                 if(username.isBlank() || password.isBlank()){
                     southPanel.add(emptyFields);
-                    login_frame.add(southPanel, BorderLayout.SOUTH);
+                    login_frame.add(southPanel,BorderLayout.SOUTH);
                     login_frame.setVisible(true);
                 }
                 else {

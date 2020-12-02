@@ -1,4 +1,5 @@
 package iCook.View.Login;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -17,10 +18,11 @@ public class WelcomeUI extends JFrame implements ActionListener
     public WelcomeUI() //Constructor will display initial login screen to user
     {
         frame = new JFrame("iCook");
-        frame.setSize(500, 500);
+        frame.setSize(1024, 768);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
+        frame.setResizable(false);
 
         panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
         GridBagConstraints constraints = new GridBagConstraints();
@@ -28,8 +30,8 @@ public class WelcomeUI extends JFrame implements ActionListener
         constraints.insets = new Insets(10, 10, 10, 10);
 
         JLabel iCook = new JLabel("Welcome to iCook!");
-        iCook.setFont(new Font("ARIAL", Font.BOLD, 30));
-        iCook.setForeground(Color.WHITE);
+        iCook.setFont(new Font("Helvetica", Font.BOLD, 54));
+        iCook.setForeground(new Color(241,122,126));
 
         constraints.gridx = 3;
         constraints.gridy = 0;
@@ -50,14 +52,16 @@ public class WelcomeUI extends JFrame implements ActionListener
         constraints.gridx = 4;
         panel.add(iCookLogo, constraints);
 
-
         JButton login = new JButton("Login");
+        login.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        login.setPreferredSize(new Dimension(144,32));
+
         JButton signup = new JButton("Signup");
-        JButton guest = new JButton("Guest Mode");
+        signup.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        signup.setPreferredSize(new Dimension(144,32));
 
         login.addActionListener(this);
         signup.addActionListener(this);
-        guest.addActionListener(this);
 
         constraints.gridx = 3;
         constraints.gridy = 3;
@@ -67,11 +71,7 @@ public class WelcomeUI extends JFrame implements ActionListener
         constraints.gridy = 6;
         panel.add(signup, constraints);
 
-        constraints.gridx = 3;
-        constraints.gridy = 9;
-        //panel.add(guest, constraints);
-
-        panel.setBackground(Color.BLACK);
+        panel.setBackground(new Color(249,250,244));
         frame.add(panel);
         frame.setVisible(true);
 
@@ -90,7 +90,7 @@ public class WelcomeUI extends JFrame implements ActionListener
             frame.dispose();
 
             //Instantiate Login Class to display login GUI
-            LoginUI userLoginUI = new LoginUI();
+            new LoginUI();
 
         }
         else if(buttonChosen.equals("Signup")){
@@ -100,7 +100,7 @@ public class WelcomeUI extends JFrame implements ActionListener
             frame.dispose();
 
             //Sign Up class will display and user can create account
-            SignUpUI userSignUpUI = new SignUpUI();
+            new SignUpUI();
 
         }
         else{

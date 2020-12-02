@@ -51,18 +51,6 @@ public class ServiceDispatcher {
             // initialize the user's list of ingredient here (1st time)
             user = User.getUser();
             userIngredients = facade.getUserIngredients(user.getId());
-
-//            // TESTING THE UPDATE DB
-//            HashMap<Integer, Integer> map = new HashMap<>();
-//            map.put(1, 2);
-//            map.put(19, 6);
-//            map.put(0, 2);
-//            map.put(20, 8);
-//            map.put(20, 8);
-//            map.put(20, 2);
-//            map.put(32, 0);
-//            facade.updateUserInventory(user.getId(), map);
-
             return true;
         }
         else
@@ -77,12 +65,21 @@ public class ServiceDispatcher {
      *
      * @param username the username of the user trying to sign up
      * @param password the password of the user trying to sign up
+     * @return the username if sign up was successful, error message if the username is taken
      */
-    public void signUp(String username, String password)
+    public String signUp(String username, String password)
     {
-        facade.signUp(username, password);
-        user = User.getUser();
-        userIngredients = null;
+        try
+        {
+            facade.signUp(username, password);
+            user = User.getUser();
+            userIngredients = null;
+            return username;
+        }
+        catch (UsernameTakenException error)
+        {
+            return error.toString();
+        }
     }
 
 

@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import iCook.Controller.ServiceDispatcher;
-import iCook.UsernameTakenException;
 import iCook.View.Operations.HomeUI;
 
 public class SignUpUI extends JFrame implements ActionListener
@@ -21,10 +20,11 @@ public class SignUpUI extends JFrame implements ActionListener
     public SignUpUI()
     {
         signup_frame = new JFrame("iCook");
-        signup_frame.setSize(500, 500);
+        signup_frame.setSize(1024, 768);
         signup_frame.setLocationRelativeTo(null);
         signup_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         signup_frame.setLayout(new BorderLayout());
+        signup_frame.setResizable(false);
 
         signup_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
         constraints = new GridBagConstraints();
@@ -32,8 +32,8 @@ public class SignUpUI extends JFrame implements ActionListener
         constraints.insets = new Insets(15, 10, 15, 10);
 
         JLabel iCook_signUP = new JLabel("Sign Up");
-        iCook_signUP.setFont(new Font("ARIAL", Font.BOLD, 20));
-        iCook_signUP.setForeground(Color.WHITE);
+        iCook_signUP.setFont(new Font("Helvetica", Font.BOLD, 40));
+        iCook_signUP.setForeground(new Color(249,250,244));
 
         constraints.gridx = 3;
         constraints.gridy = 0;
@@ -44,9 +44,10 @@ public class SignUpUI extends JFrame implements ActionListener
         back.addActionListener(this);
         create.addActionListener(this);
 
-        JLabel userName = new JLabel("Enter username: ");
+        JLabel userName = new JLabel("Create username: ");
         userName_field = new JTextField(20);
-        userName.setForeground(Color.WHITE);
+        userName.setForeground(new Color(249,250,244));
+        userName.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
         constraints.gridx = 3;
         constraints.gridy = 7;
@@ -55,9 +56,10 @@ public class SignUpUI extends JFrame implements ActionListener
         constraints.gridx = 4;
         signup_panel.add(userName_field, constraints);
 
-        JLabel passWord = new JLabel("Enter password: ");
+        JLabel passWord = new JLabel("Create password: ");
         passwordField = new JPasswordField(20);
-        passWord.setForeground(Color.WHITE);
+        passWord.setForeground(new Color(249,250,244));
+        passWord.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
         constraints.gridx = 3;
         constraints.gridy = 9;
@@ -75,7 +77,7 @@ public class SignUpUI extends JFrame implements ActionListener
         //Sign Up Button position
         constraints.gridx = 4;
         signup_panel.add(create, constraints);
-        signup_panel.setBackground(Color.BLACK);
+        signup_panel.setBackground(new Color(26, 27, 34));
         signup_frame.add(signup_panel);
         signup_frame.setVisible(true);
     }
@@ -104,11 +106,12 @@ public class SignUpUI extends JFrame implements ActionListener
             {
                 //Error message
                 System.out.println("Error!");
-                JLabel blank_error = new JLabel("Error: Username or Password cannot be blank");
-                blank_error.setForeground(Color.WHITE);
+                JLabel blank_error = new JLabel("Error: username and/or password cannot be blank!");
+                blank_error.setForeground(new Color(241,122,126));
+                blank_error.setFont(new Font("Helvetica", Font.PLAIN, 20));
                 JPanel blank_error_p = new JPanel();
                 blank_error_p.add(blank_error);
-                blank_error_p.setBackground(Color.BLACK);
+                blank_error_p.setBackground(new Color(26, 27, 34));
                 signup_frame.add(blank_error_p, BorderLayout.SOUTH);
                 signup_frame.setVisible(true);
             }
@@ -118,28 +121,32 @@ public class SignUpUI extends JFrame implements ActionListener
                 // Create ServiceDispatcher
                 serviceDispatcher = new ServiceDispatcher();
 
-                try {
-                    // create an account with the given username and password
-                    serviceDispatcher.signUp(username, password);
+                // try to sign the user in, store the result in message
+                String message = serviceDispatcher.signUp(username, password);
 
+                // if creation was successful, check to see if they're logged in
+                if (username.equals(message))
+                {
                     // if the user is logged in, go to next page
-                    if (serviceDispatcher.isLoggedIn()) {
-                        serviceDispatcher.displayUser();
-                        HomeUI userHomePage = new HomeUI(username);
+                    if (serviceDispatcher.isLoggedIn())
+                    {
+                        //serviceDispatcher.displayUser();
+                        signup_frame.dispose();
+                        new HomeUI(username);
                     }
                 }
-
-                catch (UsernameTakenException error) {
+                // if the creation was not successful, display the error
+                else {
                     //Error message
-                    JLabel blank_error = new JLabel(error.toString());
-                    blank_error.setForeground(Color.WHITE);
+                    JLabel blank_error = new JLabel(message);
+                    blank_error.setForeground(new Color(241,122,126));
                     JPanel blank_error_p = new JPanel();
                     blank_error_p.add(blank_error);
-                    blank_error_p.setBackground(Color.BLACK);
+                    blank_error.setFont(new Font("Helvetica", Font.PLAIN, 20));
+                    blank_error_p.setBackground(new Color(26, 27, 34));
                     signup_frame.add(blank_error_p, BorderLayout.SOUTH);
                     signup_frame.setVisible(true);
                 }
-
             }
         }
 
