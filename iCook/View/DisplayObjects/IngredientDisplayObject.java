@@ -42,6 +42,7 @@ public class IngredientDisplayObject {
         this.ingredientID = ingredientID;
         this.name = name;
         this.unitOfMeasure = unitOfMeasure;
+        this.quantity = 0;
     }
 
 

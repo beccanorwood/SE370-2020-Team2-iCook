@@ -54,7 +54,7 @@ public class UserDAO extends BaseDAO {
      * @param ingredientID the id of the ingredient entry
      * @param quantity the quantity of the user ingredient entry
      */
-    private void updateUserIngredient(int ingredientID, double quantity) {
+    private void updateUserIngredient(int ingredientID, int quantity) {
         try {
             //create a new statement
             Statement statement = this.createStatement();
@@ -286,7 +286,7 @@ public class UserDAO extends BaseDAO {
 
                         // else if the requested ingredient's quantity is different from the quantity already in the table, update it
                         else if (ingredient_quantity != current_ingredient_quantity)
-                            updateUserIngredient(userID, ingredient_quantity);
+                            updateUserIngredient(ingredient_id, ingredient_quantity);
                     }
 
                     // else the ingredient is not in the user_ingredients table
