@@ -67,6 +67,9 @@ public class InventoryUI extends JFrame{
             ingredientNames.add(ingredient.getName());
         }
 
+        // the default item for the dropdown list
+        ingredientNames.add("\"Select Ingredient\"");
+
         // sort the list of ingredient names
         Collections.sort(ingredientNames);
 
@@ -331,16 +334,16 @@ public class InventoryUI extends JFrame{
 //                for (int i = 0; i < userIngredientList.size(); i++)
 //                {
 //                    IngredientDisplayObject userIngredient = userIngredientList.get(i);
-//                    userIngredient.setQuantity(Double.parseDouble(currInventoryQuantity[i].getText()));
+//                    userIngredient.setQuantity(userIngredient.getQuantity());
 //                    updatedIngredientList.add(userIngredient);
 //                }
 //
 //                // add the newly added ingredients to the updated ingredients list
 //                for (int i = row; i > (row - numOfNewIngs); i--)
 //                {
-//                    String name = ;
+//                    String name;
 //                    String unitOfMeasure;
-//                    double quantity;
+//                    int quantity;
 //
 //                    IngredientDisplayObject addedIngredient = new IngredientDisplayObject(name, unitOfMeasure, quantity);
 //                    updatedIngredientList.add(addedIngredient);
