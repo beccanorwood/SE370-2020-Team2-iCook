@@ -18,11 +18,8 @@ public class HomeUI extends JFrame implements ActionListener {
     private BufferedImage img;
     private final JFrame homeframe;
 
-    public HomeUI(String userName){
-        ServiceDispatcher test = new ServiceDispatcher();
-
-        test.getSatisfiedRecipes();
-
+    public HomeUI(String userName)
+    {
         homeframe = new JFrame("iCook");
         JPanel homepanel = new JPanel(new GridBagLayout());
 
@@ -127,7 +124,7 @@ public class HomeUI extends JFrame implements ActionListener {
             homeframe.dispose();
             new InventoryUI();
         }
-
-
     }
-}
+
+
+} // end of HomeUI
