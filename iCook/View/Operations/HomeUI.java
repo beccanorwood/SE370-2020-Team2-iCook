@@ -19,6 +19,9 @@ public class HomeUI extends JFrame implements ActionListener {
     private final JFrame homeframe;
 
     public HomeUI(String userName){
+        ServiceDispatcher test = new ServiceDispatcher();
+
+        test.getSatisfiedRecipes();
 
         homeframe = new JFrame("iCook");
         JPanel homepanel = new JPanel(new GridBagLayout());

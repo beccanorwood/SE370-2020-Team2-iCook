@@ -26,6 +26,7 @@ public class ServiceDispatcher {
     /**
      * Constructor - initializes instance variables.
      * Calls getSystemIngredients to populate systemIngredients.
+     * Calls getUserIngredients to populate userIngredients.
      */
     public ServiceDispatcher()
     {
@@ -33,6 +34,7 @@ public class ServiceDispatcher {
         systemIngredients = new ArrayList<>();
         userIngredients = new ArrayList<>();
         getSystemIngredients();
+        getUserIngredients();
     }
 
 
@@ -199,7 +201,9 @@ public class ServiceDispatcher {
      */
     private void getUserIngredients()
     {
-        userIngredients = facade.getUserIngredients(user.getId());
+        // only call the facade if the user singleton has been initialized
+        if (user != null)
+            userIngredients = facade.getUserIngredients(user.getId());
     }
 
 
@@ -222,6 +226,36 @@ public class ServiceDispatcher {
 
         // send the HashMap to the facade to be processed
         facade.updateUserInventory(user.getId(), updatedInventory);
+    }
+
+
+    /**
+     * Requests the facade to return an ArrayList of recipes available to the user
+     *
+     * @return an ArrayList of RecipeDisplayObjects that represent recipes satisfiable to the user, based on their inventory
+     */
+    public ArrayList<RecipeDisplayObject> getSatisfiedRecipes()
+    {
+        // send the user's inventory to the facade to be processed
+        ArrayList<Recipe> recipes = facade.getSatisfiedRecipes(userIngredients);
+
+        // make sure the user has recipes available to them
+        if (recipes != null && !recipes.isEmpty())
+        {
+            // create new ArrayList of RecipeDisplayObjects to be sent to the View
+            ArrayList<RecipeDisplayObject> display_recipes = new ArrayList<>();
+
+            // for every Recipe object, create a RecipeDisplayObject and add it to
+            // the ArrayList to be returned
+            for (Recipe recipe : recipes)
+                display_recipes.add(new RecipeDisplayObject(recipe.getRecipeID(), recipe.getRecipeName(), recipe.getinstructions()));
+
+            // return the list of available recipes
+            return display_recipes;
+        }
+
+        // return null to indicate that the user cannot make any recipes with their current inventory
+        return null;
     }
 
 

@@ -2,6 +2,7 @@ package iCook.Model;
 
 import iCook.Model.DatabaseAccess.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -106,6 +107,18 @@ public class Facade {
     public void updateUserInventory(int userID, HashMap<Integer, Integer> updatedIngredientList)
     {
         userDAO.updateUserIngredientTable(userID, updatedIngredientList);
+    }
+
+
+    /**
+     * Sends a Request to the RecipeDAO to get a list of recipes available to the user based on their inventory
+     *
+     * @param userIngredients the ArrayList containing UserIngredient objects (the user's inventory)
+     * @return an ArrayList of Recipe objects satisfiable to the user, based on their inventory
+     */
+    public ArrayList<Recipe> getSatisfiedRecipes(ArrayList<UserIngredient> userIngredients)
+    {
+        return recipeDAO.getSatisfiedRecipes(userIngredients);
     }
 
 
