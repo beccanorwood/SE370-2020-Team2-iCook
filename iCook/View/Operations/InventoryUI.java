@@ -27,7 +27,7 @@ public class InventoryUI extends JFrame{
     private final JPanel leftPanel;
     private JPanel bottomPanel;
     private JButton add;
-    private JButton search;
+    private JButton recipesbtn;
     private JButton update;
     private JButton homeBtn;
     private JButton increment;
@@ -51,6 +51,8 @@ public class InventoryUI extends JFrame{
     private ArrayList<JButton> newlyAddedIncrementBtns; // list of newly created + buttons (whenever add button is pressed)
     private ArrayList<JButton> newlyAddedDecrementBtns; // list of newly created - buttons (whenever add button is pressed)
 
+    //private JPanel mainPanel;
+
     //InitialSize of each panel's row & col
     private int row;
     private int col = 1;
@@ -60,8 +62,12 @@ public class InventoryUI extends JFrame{
 
     ButtonListener bl = new ButtonListener();
 
-    public InventoryUI(){
+    public InventoryUI()
+    {
+        //mainPanel = new JPanel();
         this.setSize(1024, 768);
+        //this.setResizable(false);
+
         // initialize instance variables
         addedIngredients = new ArrayList<>();
         newlyAddedIncrementBtns = new ArrayList<>();
@@ -94,10 +100,19 @@ public class InventoryUI extends JFrame{
         Collections.sort(ingredientNames);
 
         topPanel = new JPanel();
+        topPanel.setBackground(new Color(26, 27, 34));
+
         leftPanel = new JPanel();
+        leftPanel.setBackground(new Color(26, 27, 34));
+
         centerPanel = new JPanel();
+        centerPanel.setBackground(new Color(26, 27, 34));
+
         rightPanel = new JPanel();
+        rightPanel.setBackground(new Color(26, 27, 34));
+
         bottomPanel = new JPanel();
+        bottomPanel.setBackground(new Color(26, 27, 34));
 
         TopPanel(); //Top Panel isn't modular, just displays title
 
@@ -137,6 +152,7 @@ public class InventoryUI extends JFrame{
         }
 
         leftPanel.add(leftBox);
+        leftPanel.setBackground(new Color(26, 27, 34));
 
         // *********************************************
         // *** CENTER PANEL FOR EXISTING INGREDIENTS ***
@@ -150,7 +166,8 @@ public class InventoryUI extends JFrame{
         currInventoryIncrement = new JButton[userIngredientList.size()];
         currInventoryDecrement = new JButton[userIngredientList.size()];
 
-        centerPanel.add(centerPanel_vbox);
+        centerPanel.setBackground(new Color(26, 27, 34));
+
 
         for(int j = 0; j < userIngredientList.size(); j++){
             currInventoryQuantity[j] = new JButton();
@@ -200,6 +217,8 @@ public class InventoryUI extends JFrame{
         }
 
         rightPanel.add(rightpanel_vbox);
+        rightPanel.setBackground(new Color(26, 27, 34));
+
         pack();
     }
 
@@ -211,9 +230,17 @@ public class InventoryUI extends JFrame{
         setLayout(new BorderLayout());
 
         add(topPanel, BorderLayout.NORTH);
+
         add(leftPanel, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
         add(rightPanel, BorderLayout.EAST);
+
+        //mainPanel.add(leftPanel, BorderLayout.WEST);
+        //mainPanel.add(centerPanel, BorderLayout.CENTER);
+        //mainPanel.add(rightPanel, BorderLayout.EAST);
+        //JScrollPane scroller = new JScrollPane(mainPanel);
+        //add(scroller);
+
         add(bottomPanel, BorderLayout.SOUTH);
         pack();
         setVisible(true);
@@ -229,10 +256,10 @@ public class InventoryUI extends JFrame{
     {
         //Top Panel displaying Title
         JLabel title = new JLabel("Your Ingredient Inventory");
-        title.setFont(new Font("ARIAL", Font.BOLD, 30));
-        title.setForeground(Color.WHITE);
+        title.setFont(new Font("Helvetica", Font.BOLD, 40));
+        title.setForeground(new Color(249,250,244));
 
-        topPanel.setBackground(Color.BLACK);
+        topPanel.setBackground(new Color(26, 27, 34));
         topPanel.add(title);
     }
 
@@ -246,8 +273,9 @@ public class InventoryUI extends JFrame{
         Box box = Box.createVerticalBox();
 
         leftPanel.setLayout(new GridLayout(row , col));
-        leftPanel.setBackground(Color.BLACK);
         leftPanel.setBorder(BorderFactory.createTitledBorder("Name"));
+        leftPanel.setBackground(new Color(26, 27, 34));
+
 
         box.add(ingredientChoices);
         box.add(Box.createVerticalStrut(10));
@@ -262,7 +290,7 @@ public class InventoryUI extends JFrame{
         Box vertical_box = Box.createVerticalBox();
 
         centerPanel.setLayout(new GridLayout(row , col));
-        centerPanel.setBackground(Color.BLACK);
+        centerPanel.setBackground(new Color(26, 27, 34));
         centerPanel.setBorder(BorderFactory.createTitledBorder("Quantity"));
 
         increment = new JButton("+");
@@ -276,8 +304,7 @@ public class InventoryUI extends JFrame{
         newlyAddedDecrementBtns.add(decrement);
 
         amount = new JButton(String.valueOf(count));
-        amount.setBackground(Color.WHITE);
-        amount.setForeground(Color.BLACK);
+        amount.setBackground(new Color(26, 27, 34));
 
         centerPanel.add(vertical_box);
 
@@ -302,12 +329,12 @@ public class InventoryUI extends JFrame{
         Box measure_Box = Box.createVerticalBox();
         ButtonGroup bg = new ButtonGroup(); //Groups buttons together, if one is selected no others can be selected
 
-        rightPanel.setBackground(Color.BLACK);
+        rightPanel.setBackground(new Color(26, 27, 34));
         rightPanel.setLayout(new GridLayout(row , col));
         rightPanel.setBorder(BorderFactory.createTitledBorder("Unit"));
         unitOfMeasure = new JRadioButton(name);
-        unitOfMeasure.setBackground(Color.BLACK);
-        unitOfMeasure.setForeground(Color.WHITE);
+        unitOfMeasure.setBackground(new Color(26, 27, 34));
+        unitOfMeasure.setForeground(new Color(249,250,244));
         bg.add(unitOfMeasure);
         measure_Box.add(unitOfMeasure);
         measure_Box.add(Box.createVerticalStrut(10));
@@ -320,19 +347,33 @@ public class InventoryUI extends JFrame{
     {
         //Bottom Panel displaying Buttons
         bottomPanel = new JPanel();
-        bottomPanel.setBackground(Color.BLACK);
-        add = new JButton("Add");
-        search = new JButton("Search");
-        update = new JButton("Update");
+        bottomPanel.setBackground(new Color(26, 27, 34));
+
         homeBtn = new JButton("Home");
+        homeBtn.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        homeBtn.setPreferredSize(new Dimension(144,32));
+
+        recipesbtn = new JButton("Recipes");
+        recipesbtn.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        recipesbtn.setPreferredSize(new Dimension(144,32));
+
+        add = new JButton("Add");
+        add.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        add.setPreferredSize(new Dimension(144,32));
+
+        update = new JButton("Update");
+        update.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        update.setPreferredSize(new Dimension(144,32));
+
         add.addActionListener(bl);
-        search.addActionListener(bl);
+        recipesbtn.addActionListener(bl);
         update.addActionListener(bl);
         homeBtn.addActionListener(bl);
-        bottomPanel.add(add);
-        bottomPanel.add(search);
-        bottomPanel.add(update);
+
         bottomPanel.add(homeBtn);
+        bottomPanel.add(recipesbtn);
+        bottomPanel.add(add);
+        bottomPanel.add(update);
     }
 
 
@@ -462,9 +503,9 @@ public class InventoryUI extends JFrame{
             }
 
             // if the user clicked the search button
-            if(src2 == search)
+            if(src2 == recipesbtn)
             {
-                System.out.println("Search button pressed");
+                System.out.println("Recipes button pressed");
                 dispose();
                 new RecipeUI();
             }

@@ -1,5 +1,6 @@
 package iCook.Controller;
 import iCook.View.Login.WelcomeUI;
+import iCook.View.Operations.RecipeUI;
 
 /**
  * iCook's entry point to begin the program.
@@ -11,6 +12,7 @@ public class iCook
 {
     public static void main(String[] args)
     {
-        WelcomeUI icook = new WelcomeUI();
+        new WelcomeUI();
+        //new RecipeUI();
     }
 }
