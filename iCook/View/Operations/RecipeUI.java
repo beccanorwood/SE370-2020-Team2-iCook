@@ -5,7 +5,6 @@ import iCook.View.DisplayObjects.RecipeDisplayObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -183,6 +182,14 @@ public class RecipeUI extends JFrame implements ActionListener
             center_panel.setVisible(true);
 
         }
+
+        // let the user they need to click on a recipe button to view its details
+        instructions.setText("Click on a recipe to get started!");
+        instructions.setSize(center_scrollable.getSize());
+        instructions.setForeground(new Color(249,250,244));
+        center_panel.add(instructions, gbc2);
+        center_panel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        center_panel.setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e)
