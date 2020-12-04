@@ -5,6 +5,7 @@ import iCook.View.DisplayObjects.RecipeDisplayObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -126,7 +127,10 @@ public class RecipeUI extends JFrame implements ActionListener
         }
 
         // set the center panel
-        center_panel = new JPanel();
+        center_panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        gbc2.anchor = GridBagConstraints.CENTER;
+        gbc2.fill = GridBagConstraints.HORIZONTAL;
         center_panel.setBackground(new Color(26, 27, 34));
 
         // create button to go back to home page
@@ -167,12 +171,14 @@ public class RecipeUI extends JFrame implements ActionListener
 
         // set frame to visible
         frame.setVisible(true);
-        if(numOfRecipes < 1){
-            System.out.println("Insufficient Ingredients in User Inventory");
-            instructions.setText("Insufficient Ingredients in User Inventory");
-            instructions.setSize(center_scrollable.getSize());
 
-            center_panel.add(instructions, BorderLayout.CENTER);
+        if(numOfRecipes < 1){
+            instructions.setText("We cannot find any recipes given your inventory! " +
+                                "\nAdd more ingredients to your inventory to get recipes!");
+            instructions.setSize(center_scrollable.getSize());
+            instructions.setForeground(new Color(241,122,126));
+
+            center_panel.add(instructions, gbc2);
             center_panel.setAlignmentY(Component.CENTER_ALIGNMENT);
             center_panel.setVisible(true);
 
@@ -206,15 +212,18 @@ public class RecipeUI extends JFrame implements ActionListener
         // and display the corresponding recipe's instructions
         else
         {
-
             for(int i = 0; i < recipesBtn.length; i++) {
                 if (buttonChosen.equals(satisfiedRecipes.get(i).getName())) {
                     System.out.println("You pressed Button: " + satisfiedRecipes.get(i).getName());
                     instructions.setText(satisfiedRecipes.get(i).getInstructions());
                     instructions.setSize(center_scrollable.getSize());
 
-                    center_panel.add(instructions, BorderLayout.CENTER);
-                    center_panel.setAlignmentY(Component.CENTER_ALIGNMENT);
+                    GridBagConstraints gbc = new GridBagConstraints();
+                    gbc.anchor = GridBagConstraints.CENTER;
+                    gbc.fill = GridBagConstraints.VERTICAL;
+
+                    center_panel.add(instructions, gbc);
+                    center_panel.setAlignmentX(Component.CENTER_ALIGNMENT);
                     center_panel.setVisible(true);
                 }
             }
@@ -222,13 +231,4 @@ public class RecipeUI extends JFrame implements ActionListener
     }
 
 
-    /**
-     *
-     */
-    public void initializeUI()
-    {
-
-    }
-
-
-}
+} // end of RecipeUI class
