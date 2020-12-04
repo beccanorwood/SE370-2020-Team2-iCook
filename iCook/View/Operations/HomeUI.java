@@ -104,25 +104,24 @@ public class HomeUI extends JFrame implements ActionListener {
         //and add, update, or delete ingredients
 
         if(btn.equals("Logout")){
-            homeframe.setVisible(false);
-            homeframe.dispose();
-
             // log the user out of their account
             ServiceDispatcher servDis = new ServiceDispatcher();
             servDis.logUserOut();
 
             // take the user to the welcome page (start page)
             new WelcomeUI();
+            homeframe.setVisible(false);
+            homeframe.dispose();
         }
         else if(btn.equals("Recipes")){
+            new RecipeUI();
             homeframe.setVisible(false);
             homeframe.dispose();
-            new RecipeUI();
         }
         else{
+            new InventoryUI();
             homeframe.setVisible(false);
             homeframe.dispose();
-            new InventoryUI();
         }
     }
 

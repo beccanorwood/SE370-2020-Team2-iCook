@@ -106,12 +106,10 @@ public class LoginUI extends JFrame implements ActionListener {
 
         // user clicks on "Back"
         if (btn_Selection.equals("Back")) {
+            new WelcomeUI();
 
             login_frame.setVisible(false);
             login_frame.dispose();
-
-            WelcomeUI ui = new WelcomeUI();
-
         }
 
         // user clicks on "Login"
@@ -135,10 +133,9 @@ public class LoginUI extends JFrame implements ActionListener {
                 System.out.println("Successfully logged in");
                 serviceDispatcher.displayUser();
 
+                new HomeUI(username);
                 login_frame.setVisible(false);
                 login_frame.dispose();
-                new HomeUI(username);
-
             }
 
             // else, display an error
@@ -152,7 +149,6 @@ public class LoginUI extends JFrame implements ActionListener {
                     southPanel.add(noAccountFound);
                     login_frame.add(southPanel, BorderLayout.SOUTH);
                     login_frame.setVisible(true);
-                    System.out.println("The user name or password you entered does not match an account");
                 }
             }
         }

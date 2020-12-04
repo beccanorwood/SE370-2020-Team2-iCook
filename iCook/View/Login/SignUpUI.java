@@ -94,9 +94,10 @@ public class SignUpUI extends JFrame implements ActionListener
 
         if(btn_Selection.equals("Back"))
         {
+            new WelcomeUI();
+
             signup_frame.setVisible(false);
             signup_frame.dispose();
-            WelcomeUI homepage = new WelcomeUI();
         }
 
         // user click on "Create Account"
@@ -110,13 +111,14 @@ public class SignUpUI extends JFrame implements ActionListener
             if(username.isBlank() || password.isBlank())
             {
                 //Error message
-                System.out.println("Error!");
                 JLabel blank_error = new JLabel("Error: username and/or password cannot be blank!");
                 blank_error.setForeground(new Color(241,122,126));
                 blank_error.setFont(new Font("Helvetica", Font.PLAIN, 20));
+
                 JPanel blank_error_p = new JPanel();
                 blank_error_p.add(blank_error);
                 blank_error_p.setBackground(new Color(26, 27, 34));
+
                 signup_frame.add(blank_error_p, BorderLayout.SOUTH);
                 signup_frame.setVisible(true);
             }
@@ -136,8 +138,10 @@ public class SignUpUI extends JFrame implements ActionListener
                     if (serviceDispatcher.isLoggedIn())
                     {
                         //serviceDispatcher.displayUser();
-                        signup_frame.dispose();
                         new HomeUI(username);
+
+                        signup_frame.setVisible(false);
+                        signup_frame.dispose();
                     }
                 }
                 // if the creation was not successful, display the error
@@ -145,10 +149,12 @@ public class SignUpUI extends JFrame implements ActionListener
                     //Error message
                     JLabel blank_error = new JLabel(message);
                     blank_error.setForeground(new Color(241,122,126));
+
                     JPanel blank_error_p = new JPanel();
                     blank_error_p.add(blank_error);
                     blank_error.setFont(new Font("Helvetica", Font.PLAIN, 20));
                     blank_error_p.setBackground(new Color(26, 27, 34));
+
                     signup_frame.add(blank_error_p, BorderLayout.SOUTH);
                     signup_frame.setVisible(true);
                 }

@@ -236,19 +236,19 @@ public class RecipeUI extends JFrame implements ActionListener
         //Create 3 separate cases for each actionEvent to populate the proper JFrame
         if(buttonChosen.equals("Home"))
         {
+            //Instantiate home Class to display home GUI
+            new HomeUI(serviceDispatcher.getUserName());
+
             //Close initial login page
             frame.setVisible(false);
             frame.dispose();
-
-            //Instantiate home Class to display home GUI
-            new HomeUI(serviceDispatcher.getUserName());
         }
 
         else if(buttonChosen.equals("Inventory"))
         {
+            new InventoryUI();
             frame.setVisible(false);
             frame.dispose();
-            new InventoryUI();
         }
 
         // this is where we will figure out what button they pressed

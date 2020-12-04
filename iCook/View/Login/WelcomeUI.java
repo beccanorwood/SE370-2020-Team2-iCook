@@ -94,27 +94,26 @@ public class WelcomeUI extends JFrame implements ActionListener
         //Create 3 separate classes for each actionEvent to populate the proper JFrame
 
         if(buttonChosen.equals("Login")){
-            //Close initial login page
-            frame.setVisible(false);
-            frame.dispose();
-
             //Instantiate Login Class to display login GUI
             new LoginUI();
 
+            //Close initial login page
+            frame.setVisible(false);
+            frame.dispose();
         }
         else if(buttonChosen.equals("Signup")){
+            //Sign Up class will display and user can create account
+            new SignUpUI();
+
             //Close home page
             //SignUp class
             frame.setVisible(false);
             frame.dispose();
-
-            //Sign Up class will display and user can create account
-            new SignUpUI();
-
         }
         else if (buttonChosen.equals("Quit"))
         {
             frame.setVisible(false);
+            frame.dispose();
             System.exit(0);
         }
     }
