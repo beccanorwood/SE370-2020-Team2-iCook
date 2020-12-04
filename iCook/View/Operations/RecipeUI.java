@@ -40,6 +40,7 @@ public class RecipeUI extends JFrame implements ActionListener
     private ServiceDispatcher serviceDispatcher;
 
     private ArrayList<RecipeDisplayObject> satisfiedRecipes;
+    private int numOfRecipes;
 
     public RecipeUI()
     {
@@ -91,8 +92,11 @@ public class RecipeUI extends JFrame implements ActionListener
         //toppanel.add(iCookLogo);
 
         // numOfRecipes will be the size of the array returned from the controller containing recipes
-        int numOfRecipes = satisfiedRecipes.size();
-
+        if(satisfiedRecipes == null || satisfiedRecipes.isEmpty()){
+            numOfRecipes = 0;
+        } else {
+            numOfRecipes = satisfiedRecipes.size();
+        }
         // create the recipe panel (this stores all recipe buttons)
         recipe_panel = new JPanel(new GridBagLayout());
         recipe_panel.setBackground(new Color(26, 27, 34));
@@ -163,6 +167,16 @@ public class RecipeUI extends JFrame implements ActionListener
 
         // set frame to visible
         frame.setVisible(true);
+        if(numOfRecipes < 1){
+            System.out.println("Insufficient Ingredients in User Inventory");
+            instructions.setText("Insufficient Ingredients in User Inventory");
+            instructions.setSize(center_scrollable.getSize());
+
+            center_panel.add(instructions, BorderLayout.CENTER);
+            center_panel.setAlignmentY(Component.CENTER_ALIGNMENT);
+            center_panel.setVisible(true);
+
+        }
     }
 
     public void actionPerformed(ActionEvent e)
@@ -192,9 +206,9 @@ public class RecipeUI extends JFrame implements ActionListener
         // and display the corresponding recipe's instructions
         else
         {
-            for(int i = 0; i < recipesBtn.length; i++){
-                if(buttonChosen.equals(satisfiedRecipes.get(i).getName()))
-                {
+
+            for(int i = 0; i < recipesBtn.length; i++) {
+                if (buttonChosen.equals(satisfiedRecipes.get(i).getName())) {
                     System.out.println("You pressed Button: " + satisfiedRecipes.get(i).getName());
                     instructions.setText(satisfiedRecipes.get(i).getInstructions());
                     instructions.setSize(center_scrollable.getSize());
@@ -204,7 +218,6 @@ public class RecipeUI extends JFrame implements ActionListener
                     center_panel.setVisible(true);
                 }
             }
-
         }
     }
 
