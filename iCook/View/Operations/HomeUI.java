@@ -61,25 +61,25 @@ public class HomeUI extends JFrame implements ActionListener {
         homepanel.add(pic, constraints);
 
         // Buttons
-        JButton myInventory = new JButton("My Inventory");
-        myInventory.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        myInventory.setPreferredSize(new Dimension(144,32));
+        JButton myInventory = new JButton("Inventory");
+        myInventory.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        myInventory.setPreferredSize(new Dimension(144,35));
 
         constraints.gridx = 4;
         constraints.gridy = 1;
         homepanel.add(buttonPanel.add(myInventory), constraints);
 
         JButton recipes = new JButton("Recipes");
-        recipes.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        recipes.setPreferredSize(new Dimension(144,32));
+        recipes.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        recipes.setPreferredSize(new Dimension(144,35));
 
         constraints.gridx = 4;
         constraints.gridy = 2;
         homepanel.add(recipes, constraints);
 
         JButton logout = new JButton("Logout");
-        logout.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        logout.setPreferredSize(new Dimension(144,32));
+        logout.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        logout.setPreferredSize(new Dimension(144,35));
 
         constraints.gridx = 4;
         constraints.gridy = 3;

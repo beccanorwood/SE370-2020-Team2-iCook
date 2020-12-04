@@ -53,15 +53,20 @@ public class WelcomeUI extends JFrame implements ActionListener
         panel.add(iCookLogo, constraints);
 
         JButton login = new JButton("Login");
-        login.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        login.setPreferredSize(new Dimension(144,32));
+        login.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        login.setPreferredSize(new Dimension(144,35));
 
         JButton signup = new JButton("Signup");
-        signup.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        signup.setPreferredSize(new Dimension(144,32));
+        signup.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        signup.setPreferredSize(new Dimension(144,35));
+
+        JButton quit = new JButton("Quit");
+        quit.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        quit.setPreferredSize(new Dimension(144,35));
 
         login.addActionListener(this);
         signup.addActionListener(this);
+        quit.addActionListener(this);
 
         constraints.gridx = 3;
         constraints.gridy = 3;
@@ -70,6 +75,10 @@ public class WelcomeUI extends JFrame implements ActionListener
         constraints.gridx = 3;
         constraints.gridy = 6;
         panel.add(signup, constraints);
+
+        constraints.gridx = 3;
+        constraints.gridy = 9;
+        panel.add(quit, constraints);
 
         panel.setBackground(new Color(26, 27, 34));
         frame.add(panel);
@@ -103,9 +112,10 @@ public class WelcomeUI extends JFrame implements ActionListener
             new SignUpUI();
 
         }
-        else{
-            System.out.println("\nYou pressed the Guest Mode button!");
-
+        else if (buttonChosen.equals("Quit"))
+        {
+            frame.setVisible(false);
+            System.exit(0);
         }
     }
 }
