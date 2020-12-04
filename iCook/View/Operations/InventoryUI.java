@@ -81,15 +81,21 @@ public class InventoryUI extends JFrame{
         // for every ingredient in ingredientList, add its name to the ingredientNames ArrayList (drop down menu)
         for (IngredientDisplayObject ingredient : ingredientList)
         {
-            // checks to see if the ingredient is in the user's inventory
-            for (int j = 0; j < userIngredientList.size(); j++)
-            {
-                // if the ingredient is in the user's inventory, skip this ingredient (don't add it)
-                if (ingredient.getName().equals(userIngredientList.get(j).getName()))
-                    break;
-                // else if the ingredient is not in the user's ingredient list && the name list doesn't already contain it, add it
-                else if (j == userIngredientList.size() - 1 && !ingredientNames.contains(ingredient.getName()))
-                    ingredientNames.add(ingredient.getName());
+            if (userIngredientList.isEmpty())
+                ingredientNames.add(ingredient.getName());
+
+            else
+                {
+                // checks to see if the ingredient is in the user's inventory
+                for (int j = 0; j < userIngredientList.size(); j++)
+                {
+                    // if the ingredient is in the user's inventory, skip this ingredient (don't add it)
+                    if (ingredient.getName().equals(userIngredientList.get(j).getName()))
+                        break;
+                    // else if the ingredient is not in the user's ingredient list && the name list doesn't already contain it, add it
+                    else if (j == userIngredientList.size() - 1 && !ingredientNames.contains(ingredient.getName()))
+                        ingredientNames.add(ingredient.getName());
+                }
             }
         }
 

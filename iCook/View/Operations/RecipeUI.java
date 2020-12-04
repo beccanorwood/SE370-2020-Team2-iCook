@@ -32,16 +32,29 @@ public class RecipeUI extends JFrame implements ActionListener
 
     private JPanel center_panel;
     private JScrollPane center_scrollable;
+    private JTextArea instructions;
 
     private JPanel bottom_panel;
     private BufferedImage img;
-    private JButton[] recipes;
+    private JButton[] recipesBtn;
     private ServiceDispatcher serviceDispatcher;
+
+    private ArrayList<RecipeDisplayObject> satisfiedRecipes;
 
     public RecipeUI()
     {
-        // use the service dispatcher to get the recipe list
+        // use the service dispatcher to get the recipe list for the logged in user
         serviceDispatcher = new ServiceDispatcher();
+        satisfiedRecipes = serviceDispatcher.getSatisfiedRecipes();
+
+        instructions = new JTextArea();
+        instructions.setLineWrap(true);
+        instructions.setWrapStyleWord(true);
+        instructions.setEditable(false);
+        instructions.setCaretPosition(0);
+        instructions.setFont(new Font("Helvetica", Font.PLAIN, 22));
+        instructions.setBackground(new Color(26, 27, 34));
+        instructions.setForeground(new Color(249,250,244));
 
         // set the frame up
         frame = new JFrame("iCook");
@@ -77,29 +90,35 @@ public class RecipeUI extends JFrame implements ActionListener
         toppanel.add(iCook);
         //toppanel.add(iCookLogo);
 
-        // row will be the size of the array returned from the controller containing recipes
-        int row = 40;
-        recipe_panel = new JPanel(new GridLayout(row, 1));
+        // numOfRecipes will be the size of the array returned from the controller containing recipes
+        int numOfRecipes = satisfiedRecipes.size();
+
+        // create the recipe panel (this stores all recipe buttons)
+        recipe_panel = new JPanel(new GridBagLayout());
         recipe_panel.setBackground(new Color(26, 27, 34));
 
-        // create an array of buttons
-        recipes = new JButton[row];
-
-        // idk if this does anything
+        // this is the bounds for where the button will be added in the left panel
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.VERTICAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        // create an array of buttons
+        recipesBtn = new JButton[numOfRecipes];
 
         // populate the left scrollable with recipe buttons
-        for(int i = 0; i < row; i++)
+        for(int i = 0; i < numOfRecipes; i++)
         {
-            recipes[i] = new JButton();
-            recipes[i].setText("Recipe " + i);
-            recipes[i].addActionListener(this);
-            recipes[i].setFont(new Font("Helvetica", Font.PLAIN, 16));
-            recipes[i].setPreferredSize(new Dimension(123,32));
-            recipe_panel.add(recipes[i], gbc);
-            recipe_panel.add(Box.createVerticalStrut(32));
+            recipesBtn[i] = new JButton();
+            recipesBtn[i].setText(satisfiedRecipes.get(i).getName());
+            recipesBtn[i].addActionListener(this);
+            recipesBtn[i].setFont(new Font("Helvetica", Font.PLAIN, 16));
+            recipesBtn[i].setPreferredSize(new Dimension(123,32));
+            recipesBtn[i].setHorizontalAlignment(JButton.CENTER);
+
+            recipe_panel.add(recipesBtn[i], gbc);
+            gbc.gridy++;
         }
 
         // set the center panel
@@ -136,6 +155,7 @@ public class RecipeUI extends JFrame implements ActionListener
 
         // add the center scroll panel to the frame
         center_scrollable = new JScrollPane(center_panel);
+        center_scrollable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         frame.add(center_scrollable, BorderLayout.CENTER);
 
         // add the navigation buttons to the frame
@@ -172,14 +192,29 @@ public class RecipeUI extends JFrame implements ActionListener
         // and display the corresponding recipe's instructions
         else
         {
-            for(int i = 0; i < recipes.length; i++){
-                if(buttonChosen.equals("Recipe " + i))
+            for(int i = 0; i < recipesBtn.length; i++){
+                if(buttonChosen.equals(satisfiedRecipes.get(i).getName()))
                 {
-                    System.out.println("You pressed Button: " + i);
+                    System.out.println("You pressed Button: " + satisfiedRecipes.get(i).getName());
+                    instructions.setText(satisfiedRecipes.get(i).getInstructions());
+                    instructions.setSize(center_scrollable.getSize());
+
+                    center_panel.add(instructions, BorderLayout.CENTER);
+                    center_panel.setAlignmentY(Component.CENTER_ALIGNMENT);
+                    center_panel.setVisible(true);
                 }
             }
 
         }
+    }
+
+
+    /**
+     *
+     */
+    public void initializeUI()
+    {
+
     }
 
 
