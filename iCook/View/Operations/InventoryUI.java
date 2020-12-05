@@ -18,8 +18,9 @@ import java.util.HashMap;
  */
 public class InventoryUI extends JFrame{
 
-
     private JFrame frame;
+    private JScrollPane available_ingredients_scrollable;
+    private JScrollPane inventory_scrollable;
 
     /*Left side of frame instance variables*/
     private JPanel mainleftPanel;
@@ -32,7 +33,6 @@ public class InventoryUI extends JFrame{
 
     JRadioButton[] ingredient_name_buttons; // = new JRadioButton[ingredientList.size()];
     JRadioButton [] ingredient_unit_buttons; //= new JRadioButton[ingredientList.size()];
-
 
     /*Right side of frame instance variables*/
     private JPanel mainrightPanel;
@@ -47,7 +47,6 @@ public class InventoryUI extends JFrame{
     private JButton home;
     private JButton recipes;
     private JButton update;
-
 
     private ServiceDispatcher serviceDispatcher;
 
@@ -111,8 +110,19 @@ public class InventoryUI extends JFrame{
         container.setLayout(new GridLayout(0,1));
 
         home = new JButton("Home");
+        home.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        home.setPreferredSize(new Dimension(144,32));
+        home.setHorizontalAlignment(JButton.CENTER);
+
         recipes = new JButton("Recipes");
+        recipes.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        recipes.setPreferredSize(new Dimension(144,32));
+        recipes.setHorizontalAlignment(JButton.CENTER);
+
         update = new JButton("Update");
+        update.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        update.setPreferredSize(new Dimension(144,32));
+        update.setHorizontalAlignment(JButton.CENTER);
 
         home.addActionListener(bl);
         recipes.addActionListener(bl);
@@ -122,7 +132,7 @@ public class InventoryUI extends JFrame{
         bottomPanel.add(recipes);
         bottomPanel.add(update);
 
-        bottomPanel.setLayout(new GridLayout(0, 6));
+        //bottomPanel.setLayout(new GridLayout(0, 6));
 
         JPanel rightPanel = new JPanel();
         rightPanel.setBackground(new Color(26, 27, 34));
@@ -178,7 +188,7 @@ public class InventoryUI extends JFrame{
                 ingredient_name_buttons[i].setText(ingredientList.get(i).getName());
                 ingredient_name_buttons[i].setFont(new Font("Arial", Font.PLAIN, 20));
                 ingredient_name_buttons[i].setBackground(new Color(26, 27, 34));
-                ingredient_name_buttons[i].setForeground(Color.WHITE);
+                ingredient_name_buttons[i].setForeground(new Color(249,250,244));
 
                 ingredient_name_buttons[i].addActionListener(rbl);
                 ingredient_name_buttons[i].setEnabled(true);
@@ -187,8 +197,8 @@ public class InventoryUI extends JFrame{
                 ingredient_unit_buttons[i] = new JRadioButton();
                 ingredient_unit_buttons[i].setText(ingredientList.get(i).getUnitOfMeasure());
                 ingredient_unit_buttons[i].setBackground(new Color(26, 27, 34));
-                ingredient_unit_buttons[i].setForeground(Color.WHITE);
-                ingredient_unit_buttons[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                ingredient_unit_buttons[i].setForeground(new Color(249,250,244));
+                ingredient_unit_buttons[i].setFont(new Font("Arial", Font.ITALIC, 20));
 
                 leftunitPanel.add(ingredient_unit_buttons[i]);
             }
@@ -272,7 +282,7 @@ public class InventoryUI extends JFrame{
                 ingredient_name_buttons[i].setText(ingredientList.get(i).getName());
                 ingredient_name_buttons[i].setFont(new Font("Arial", Font.PLAIN, 20));
                 ingredient_name_buttons[i].setBackground(new Color(26, 27, 34));
-                ingredient_name_buttons[i].setForeground(Color.WHITE);
+                ingredient_name_buttons[i].setForeground(new Color(249,250,244));
                 ingredient_name_buttons[i].addActionListener(rbl);
                 ingredient_name_buttons[i].setEnabled(true);
 
@@ -281,8 +291,8 @@ public class InventoryUI extends JFrame{
                 ingredient_unit_buttons[i] = new JRadioButton();
                 ingredient_unit_buttons[i].setText(ingredientList.get(i).getUnitOfMeasure());
                 ingredient_unit_buttons[i].setBackground(new Color(26, 27, 34));
-                ingredient_unit_buttons[i].setForeground(Color.WHITE);
-                ingredient_unit_buttons[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                ingredient_unit_buttons[i].setForeground(new Color(249,250,244));
+                ingredient_unit_buttons[i].setFont(new Font("Arial", Font.ITALIC, 20));
 
                 leftunitPanel.add(ingredient_unit_buttons[i]);
             }
@@ -342,7 +352,7 @@ public class InventoryUI extends JFrame{
                 currInventoryName[i].setText(userIngredientList.get(i).getName());
                 currInventoryName[i].setFont(new Font("Arial", Font.PLAIN, 20));
                 currInventoryName[i].setBackground(new Color(26, 27, 34));
-                currInventoryName[i].setForeground(Color.WHITE);
+                currInventoryName[i].setForeground(new Color(249,250,244));
 
                 ingredientPortion.add(currInventoryName[i]);
                 ingredientPortion.setBackground(new Color(26, 27, 34));
@@ -350,8 +360,8 @@ public class InventoryUI extends JFrame{
                 currInventoryUnits[i] = new JRadioButton();
                 currInventoryUnits[i].setText(userIngredientList.get(i).getUnitOfMeasure());
                 currInventoryUnits[i].setBackground(new Color(26, 27, 34));
-                currInventoryUnits[i].setForeground(Color.WHITE);
-                currInventoryUnits[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                currInventoryUnits[i].setForeground(new Color(249,250,244));
+                currInventoryUnits[i].setFont(new Font("Arial", Font.ITALIC, 20));
 
                 rightunitPanel.add(currInventoryUnits[i]);
             }
@@ -410,8 +420,18 @@ public class InventoryUI extends JFrame{
         paneltopLeft.add(test1, BorderLayout.CENTER);
         paneltopRight.add(test2, BorderLayout.CENTER);
 
+        // make left panel scrollable
+        available_ingredients_scrollable = new JScrollPane(mainleftPanel);
+        available_ingredients_scrollable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        available_ingredients_scrollable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // make left panel scrollable
+        inventory_scrollable = new JScrollPane(mainrightPanel);
+        inventory_scrollable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        inventory_scrollable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
         JSplitPane s1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, paneltopLeft, paneltopRight);
-        JSplitPane s2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainleftPanel, mainrightPanel);
+        JSplitPane s2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, available_ingredients_scrollable, inventory_scrollable);
         JSplitPane main_split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, s1, s2);
         JSplitPane bottom_split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, main_split, bottomPanel);
 
