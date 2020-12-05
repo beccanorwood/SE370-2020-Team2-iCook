@@ -119,13 +119,16 @@ public class ServiceDispatcher {
 
 
     /**
-     * Gets all of the system ingredients and stores them into an ArrayList of IngredientDisplayObjects
+     * Gets all of the ingredients that the user doesn't already have and stores them into an ArrayList of IngredientDisplayObjects
      *
-     * @return an ArrayList of IngredientDisplayObject representing all system ingredients (no quantity here)
+     * @return an ArrayList of IngredientDisplayObject representing all system ingredients the user doesn't have (no quantity here)
      */
-    public ArrayList<IngredientDisplayObject> getAllSystemIngredients()
+    public ArrayList<IngredientDisplayObject> getAvailableIngredients()
     {
-        // the ingredients will be stored in an ArrayList
+        // make sure we have the most up to date version of the user's ingredients
+        getUserIngredients();
+
+        // the available ingredients will be stored in an ArrayList
         ArrayList<IngredientDisplayObject> allIngredients = new ArrayList<>();
 
         // for every ingredient in the list of system ingredients
@@ -140,8 +143,27 @@ public class ServiceDispatcher {
             // store the Ingredient's unit of measure
             String unitOfMeasure = ingredient.getUnitOfMeasure();
 
-            // add a new IngredientDisplayObject to the ArrayList
-            allIngredients.add(new IngredientDisplayObject(ingredientID, name, unitOfMeasure));
+            // create a new IngredientDisplayObject
+            IngredientDisplayObject availableIngredient = new IngredientDisplayObject(ingredientID, name, unitOfMeasure);
+
+            // if the userIngredients list is empty, add all ingredients
+            if (userIngredients.isEmpty())
+                allIngredients.add(availableIngredient);
+
+            // otherwise filter the available ingredients to the user
+            else {
+                for (int i = 0; i < userIngredients.size(); i++)
+                {
+                    // if the ingredient is found in the user's inventory, do not add it to the return list
+                    if (availableIngredient.getName().equals(userIngredients.get(i).getUserIngredientName()))
+                        break;
+
+                    // else if the ingredient is not in the user's inventory && the ingredient isn't already in the returning list, add it
+                    else if (i == userIngredients.size() - 1 && !allIngredients.contains(availableIngredient))
+                        // add a new IngredientDisplayObject to the ArrayList
+                        allIngredients.add(availableIngredient);
+                }
+            }
         }
 
         // return the ArrayList

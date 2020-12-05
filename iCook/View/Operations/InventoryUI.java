@@ -89,47 +89,12 @@ public class InventoryUI extends JFrame{
         availableInventoryAmountBtns = new ArrayList<>();
 
         serviceDispatcher = new ServiceDispatcher();
-        ingredientList = serviceDispatcher.getAllSystemIngredients();
+        ingredientList = serviceDispatcher.getAvailableIngredients();
         userIngredientList = serviceDispatcher.getUserInventory();
 
         ArrayList<IngredientDisplayObject> temp = new ArrayList<>();
 
         DisplayFrame();
-
-    }
-
-
-    private ArrayList<IngredientDisplayObject> allAvailableIngredients(ArrayList<IngredientDisplayObject> currentInventory, ArrayList<IngredientDisplayObject> databaseInventory)
-    {
-        ArrayList<IngredientDisplayObject> temp = new ArrayList<>();
-        for(int i = 0; i < ingredientList.size(); i++){
-            temp.add(ingredientList.get(i));
-        }
-
-        System.out.println(temp.size());
-        System.out.println(ingredientList.size());
-
-        System.out.println(databaseInventory.size());
-        System.out.println(currentInventory.size());
-
-        for(int i = 0; i < ingredientList.size(); i++){
-            for(int j = 0; j < userIngredientList.size(); j++){
-                if(ingredientList.contains(userIngredientList)==true){
-                    if(ingredientList.get(i).getName().equals(userIngredientList.get(j))){
-                        temp.remove(temp.get(i));
-                    }
-                    else{
-                        continue;
-                    }
-                }
-            }
-        }
-
-        for(int i = 0; i < temp.size(); i++){
-            System.out.println(temp.get(i).getName());
-        }
-
-        return temp;
 
     }
 
@@ -288,7 +253,7 @@ public class InventoryUI extends JFrame{
              */
 
             //ArrayList<IngredientDisplayObject> userUpdatedList = updatedIngredients(userIngredientList, ingredientList);
-            ArrayList<IngredientDisplayObject> updatedAvailableIngredients = allAvailableIngredients(userIngredientList, ingredientList);
+            ArrayList<IngredientDisplayObject> updatedAvailableIngredients = ingredientList;
 
             /*Size for available ingredients*/
             int availableIngredientsSize = updatedAvailableIngredients.size();
