@@ -33,7 +33,7 @@ public class UserDAO extends BaseDAO {
      * @param ingredientID the ingredient's id
      * @param quantity the quantity of the ingredient that the user has
      */
-    private void addUserIngredient(int userID, int ingredientID, double quantity) {
+    private void addUserIngredient(int userID, int ingredientID, int quantity) {
         try {
             //create a new statement
             Statement statement = this.createStatement();
