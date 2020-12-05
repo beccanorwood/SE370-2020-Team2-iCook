@@ -6,7 +6,7 @@ package iCook.Model;
  * of the ingredient.
  *
  * @author Team 2
- * @version 12/1/2020
+ * @version 12/5/2020
  */
 public class UserIngredient {
 
@@ -38,25 +38,7 @@ public class UserIngredient {
 
 
     /**
-     * Get user ID
-     * @return userID
-     */
-    public int getUserID() {
-        return userID;
-    }
-
-
-    /**
-     * Set user ID
-     * @param userID int
-     */
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
-
-    /**
-     * Get user ingredient ID
+     * Get user ID of this particular UserIngredient
      * @return userIngredientID
      */
     public int getUserIngredientID() {
@@ -65,11 +47,11 @@ public class UserIngredient {
 
 
     /**
-     * Set user ingredient ID
-     * @param userIngredientID int
+     * Get user ID
+     * @return userID
      */
-    public void setUserIngredientID(int userIngredientID) {
-        this.userIngredientID = userIngredientID;
+    public int getUserID() {
+        return userID;
     }
 
 
@@ -83,29 +65,11 @@ public class UserIngredient {
 
 
     /**
-     * Set ingredient ID
-     * @param ingredientID int
-     */
-    public void setIngredientID(int ingredientID) {
-        this.ingredientID = ingredientID;
-    }
-
-
-    /**
      * Get quantity of ingredient
      * @return int
      */
     public int getQuantity() {
         return quantity;
-    }
-
-
-    /**
-     * Set quantity of ingredient
-     * @param quantity int
-     */
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
 
