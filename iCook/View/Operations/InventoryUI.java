@@ -37,8 +37,8 @@ public class InventoryUI extends JFrame{
     private JPanel[] btnContainer; //JPanel that holds each increment, decrement, and quantity button for the available ingredients
     private JPanel totalBtnContainer; //JPanel that holds all the separate button panels and aligns them in the middle of the available ingredient panel
 
-    JRadioButton[] ingredient_name_buttons; //Ingredients that user does not currently have in their inventory, but are available from the database
-    JRadioButton [] ingredient_unit_buttons; //Measurements corresponding to each available ingredient
+    JCheckBox[] ingredient_name_buttons; //Ingredients that user does not currently have in their inventory, but are available from the database
+    JLabel[] ingredient_unit_buttons; //Measurements corresponding to each available ingredient
 
 
 
@@ -185,7 +185,7 @@ public class InventoryUI extends JFrame{
         totalBtnContainerRight.setBackground(new Color(26, 27, 34));
 
         JLabel [] currInventoryName; //Array of labels that display the name of the user's current ingredient inventory
-        JRadioButton [] currInventoryUnits; //Array of RadioButtons that display the units of the user's current ingredient inventory
+        JLabel [] currInventoryUnits; //Array of RadioButtons that display the units of the user's current ingredient inventory
 
         if(userIngredientList.isEmpty()) {
 
@@ -194,15 +194,15 @@ public class InventoryUI extends JFrame{
                                     inventory is empty*/
             //==========================================================================
 
-            ingredient_name_buttons = new JRadioButton[ingredientList.size()];
-            ingredient_unit_buttons = new JRadioButton[ingredientList.size()];
+            ingredient_name_buttons = new JCheckBox[ingredientList.size()];
+            ingredient_unit_buttons = new JLabel[ingredientList.size()];
 
             availableIngredientsPanel.setLayout(new GridLayout(ingredientList.size(), 1));
             availableIngredientsUnits.setLayout(new GridLayout(ingredientList.size(), 1));
 
             // this is for the left panel names/units
             for (int i = 0; i < ingredientList.size(); i++) {
-                ingredient_name_buttons[i] = new JRadioButton();
+                ingredient_name_buttons[i] = new JCheckBox();
                 ingredient_name_buttons[i].setText(ingredientList.get(i).getName());
                 ingredient_name_buttons[i].setFont(new Font("Arial", Font.PLAIN, 20));
                 ingredient_name_buttons[i].setBackground(new Color(26, 27, 34));
@@ -212,7 +212,7 @@ public class InventoryUI extends JFrame{
                 ingredient_name_buttons[i].setEnabled(true);
                 availableIngredientsPanel.add(ingredient_name_buttons[i]);
 
-                ingredient_unit_buttons[i] = new JRadioButton();
+                ingredient_unit_buttons[i] = new JLabel();
                 ingredient_unit_buttons[i].setText(ingredientList.get(i).getUnitOfMeasure());
                 ingredient_unit_buttons[i].setBackground(new Color(26, 27, 34));
                 ingredient_unit_buttons[i].setForeground(new Color(249,250,244));
@@ -276,8 +276,8 @@ public class InventoryUI extends JFrame{
                             the user is missing from their inventory*/
             //==========================================================================
 
-            ingredient_name_buttons = new JRadioButton[ingredientList.size()];
-            ingredient_unit_buttons = new JRadioButton[ingredientList.size()];
+            ingredient_name_buttons = new JCheckBox[ingredientList.size()];
+            ingredient_unit_buttons = new JLabel[ingredientList.size()];
 
             incrementBtns = new JButton[ingredientList.size()];
             quantityBtns = new JButton[ingredientList.size()];
@@ -295,7 +295,7 @@ public class InventoryUI extends JFrame{
 
             // this is for the name / units for each ingredient in the left panel
             for(int i = 0; i < ingredientList.size(); i++){
-                ingredient_name_buttons[i] = new JRadioButton();
+                ingredient_name_buttons[i] = new JCheckBox();
                 ingredient_name_buttons[i].setText(ingredientList.get(i).getName());
                 ingredient_name_buttons[i].setFont(new Font("Arial", Font.PLAIN, 20));
                 ingredient_name_buttons[i].setBackground(new Color(26, 27, 34));
@@ -305,7 +305,7 @@ public class InventoryUI extends JFrame{
 
                 availableIngredientsPanel.add(ingredient_name_buttons[i]);
 
-                ingredient_unit_buttons[i] = new JRadioButton();
+                ingredient_unit_buttons[i] = new JLabel();
                 ingredient_unit_buttons[i].setText(ingredientList.get(i).getUnitOfMeasure());
                 ingredient_unit_buttons[i].setBackground(new Color(26, 27, 34));
                 ingredient_unit_buttons[i].setForeground(new Color(249,250,244));
@@ -351,7 +351,7 @@ public class InventoryUI extends JFrame{
 
             /*Right Panel Attributes*/
             currInventoryName = new JLabel[userIngredientList.size()];
-            currInventoryUnits = new JRadioButton[userIngredientList.size()];
+            currInventoryUnits = new JLabel[userIngredientList.size()];
             decreaseBtns = new JButton[userIngredientList.size()];
             amountBtns = new JButton[userIngredientList.size()];
             increaseBtns = new JButton[userIngredientList.size()];
@@ -374,7 +374,7 @@ public class InventoryUI extends JFrame{
                 ingredientPortion.add(currInventoryName[i]);
                 ingredientPortion.setBackground(new Color(26, 27, 34));
 
-                currInventoryUnits[i] = new JRadioButton();
+                currInventoryUnits[i] = new JLabel();
                 currInventoryUnits[i].setText(userIngredientList.get(i).getUnitOfMeasure());
                 currInventoryUnits[i].setBackground(new Color(26, 27, 34));
                 currInventoryUnits[i].setForeground(new Color(249,250,244));

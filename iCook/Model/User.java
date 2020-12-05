@@ -1,5 +1,4 @@
 package iCook.Model;
-import java.util.List;
 
 /**
  * User class that stores a user's id, username, and password
