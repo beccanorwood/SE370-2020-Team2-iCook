@@ -2,11 +2,12 @@ package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.DisplayObjects.IngredientDisplayObject;
+import iCook.View.Login.WelcomeUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -18,26 +19,40 @@ import java.util.Collections;
  */
 public class InventoryUI extends JFrame{
 
-    //Display dropbox containing list of available ingredients
-    //User selects and it gets added to their inventory
-    //Swing attributes
-    private final JPanel topPanel;
-    private final JPanel centerPanel;  //Selected ingredients that are displayed in center
-    private final JPanel rightPanel;
-    private final JPanel leftPanel;
-    private JPanel bottomPanel;
+
+    private JFrame frame;
+
+    /*Left side of frame instance variables*/
+    private JPanel mainleftPanel;
+    private JButton[] increment;
+    private JButton[] quantity;
+    private JButton[] decrement;
+
+    private JPanel[] btnContainer;
+    private JPanel totalBtnContainer;
+
+
+    /*Right side of frame instance variables*/
+    private JPanel mainrightPanel;
+    private JButton[] increase;
+    private JButton[] decrease;
+    private JButton[] amount;
+
+    private JPanel[] btnContainerRight;
+    private JPanel totalBtnContainerRight;
+
+    /*Bottom panel with Buttons instance variables*/
+    private JButton home;
     private JButton add;
-    private JButton recipesbtn;
+    private JButton recipes;
+    private JButton remove;
+    private JButton logout;
     private JButton update;
-    private JButton homeBtn;
-    private JButton increment;
-    private JButton amount;
-    private JButton decrement;//Always be current ingredient
-    private JRadioButton unitOfMeasure;
+
 
     private ServiceDispatcher serviceDispatcher;
 
-    private final ArrayList<IngredientDisplayObject> ingredientList;    // stores the system ingredients
+    private ArrayList<IngredientDisplayObject> ingredientList;    // stores the system ingredients
     private ArrayList<String> ingredientNames;                          // stores the name of system ingredients (stored in the dropdown menu)
 
     private ArrayList<IngredientDisplayObject> userIngredientList;      // stores the user's ingredients
@@ -48,35 +63,38 @@ public class InventoryUI extends JFrame{
     private JButton[] currInventoryIncrement;
     private JButton[] currInventoryDecrement;
 
-    private ArrayList<JButton> newlyAddedIncrementBtns; // list of newly created + buttons (whenever add button is pressed)
-    private ArrayList<JButton> newlyAddedDecrementBtns; // list of newly created - buttons (whenever add button is pressed)
+    private ArrayList<JButton> userInventoryIncrementBtns; // list of newly created + buttons (whenever add button is pressed)
+    private ArrayList<JButton> userInventoryDecrementBtns; // list of newly created - buttons (whenever add button is pressed)
+    private ArrayList<JButton> userInventoryQuantityBtns;
 
-    //private JPanel mainPanel;
-
-    //InitialSize of each panel's row & col
-    private int row;
-    private int col = 1;
-
-    //User's current ingredient count
-    private int ingCount = 0;
+    private ArrayList<JButton> availableInventoryIncrementBtns;
+    private ArrayList<JButton> availableInventoryDecrementBtns;
+    private ArrayList<JButton> availableInventoryAmountBtns;
 
     ButtonListener bl = new ButtonListener();
 
     public InventoryUI()
     {
         //mainPanel = new JPanel();
-        this.setSize(1024, 768);
+        //setLayout(new BorderLayout());
+        //this.setSize(1024, 768);
         //this.setResizable(false);
 
         // initialize instance variables
         addedIngredients = new ArrayList<>();
-        newlyAddedIncrementBtns = new ArrayList<>();
-        newlyAddedDecrementBtns = new ArrayList<>();
+        userInventoryIncrementBtns = new ArrayList<>();
+        userInventoryDecrementBtns = new ArrayList<>();
+        userInventoryQuantityBtns = new ArrayList<>();
+
+
+        availableInventoryIncrementBtns = new ArrayList<>();
+        availableInventoryDecrementBtns = new ArrayList<>();
+        availableInventoryAmountBtns = new ArrayList<>();
+
         serviceDispatcher = new ServiceDispatcher();
         ingredientList = serviceDispatcher.getAllSystemIngredients();
         ingredientNames = new ArrayList<>();
         userIngredientList = serviceDispatcher.getUserInventory();
-        row = userIngredientList.size();
 
         // for every ingredient in ingredientList, add its name to the ingredientNames ArrayList (drop down menu)
         for (IngredientDisplayObject ingredient : ingredientList)
@@ -99,319 +117,376 @@ public class InventoryUI extends JFrame{
             }
         }
 
-        // the default item for the dropdown list
-        ingredientNames.add("\"Select Ingredient\"");
-
         // sort the list of ingredient names
         Collections.sort(ingredientNames);
 
-        topPanel = new JPanel();
-        topPanel.setBackground(new Color(26, 27, 34));
+        DisplayFrame();
 
-        leftPanel = new JPanel();
-        leftPanel.setBackground(new Color(26, 27, 34));
-
-        centerPanel = new JPanel();
-        centerPanel.setBackground(new Color(26, 27, 34));
-
-        rightPanel = new JPanel();
-        rightPanel.setBackground(new Color(26, 27, 34));
-
-        bottomPanel = new JPanel();
-        bottomPanel.setBackground(new Color(26, 27, 34));
-
-        TopPanel(); //Top Panel isn't modular, just displays title
-
-        // display the user's inventory if they have ingredients already
-        if(userIngredientList.size() > 0)
-            CurrentInventory();
-
-        // display the panels for this frame
-        BottomPanel();
-        CreatePanels(row, col);
-        DisplayPanel();
     }
 
-    /*
-    * Adds names of ingredients to the left panel
-    * Adds quantity of ingredients to the center panel
-    * Adds units of measure of ingredients to the right panel
-    */
-    private void CurrentInventory()
+
+    private ArrayList<IngredientDisplayObject> allAvailableIngredients(ArrayList<IngredientDisplayObject> currentInventory, ArrayList<IngredientDisplayObject> databaseInventory)
     {
-        // *******************************************
-        // *** LEFT PANEL FOR EXISTING INGREDIENTS ***
-        // *******************************************
-
-        // Left Panel uses name of IngredientDisplayObject which is retrieved from userIngredientList
-        Box leftBox = Box.createVerticalBox();
-        JLabel[] currInventoryName = new JLabel[userIngredientList.size()];
-
-        leftPanel.setLayout(new GridLayout(row + 1, col));
-
-        for(int i = 0; i < userIngredientList.size(); i++){
-            currInventoryName[i] = new JLabel();
-            currInventoryName[i].setText(userIngredientList.get(i).getName());
-            currInventoryName[i].setForeground(Color.WHITE);
-            leftBox.add(currInventoryName[i]);
-            leftBox.add(Box.createVerticalStrut(10));
+        ArrayList<IngredientDisplayObject> temp = new ArrayList<>();
+        for(int i = 0; i < ingredientList.size(); i++){
+            temp.add(ingredientList.get(i));
         }
 
-        leftPanel.add(leftBox);
-        leftPanel.setBackground(new Color(26, 27, 34));
-
-        // *********************************************
-        // *** CENTER PANEL FOR EXISTING INGREDIENTS ***
-        // *********************************************
-
-        //Center Panel uses quantity of IngredientDisplayObject which is retrieved from userIngredientList
-        Box centerPanel_vbox = Box.createVerticalBox();
-
-        Box[] quantityBoxes = new Box[userIngredientList.size()];
-        currInventoryQuantity = new JButton[userIngredientList.size()];
-        currInventoryIncrement = new JButton[userIngredientList.size()];
-        currInventoryDecrement = new JButton[userIngredientList.size()];
-
-        centerPanel.setBackground(new Color(26, 27, 34));
-
-
-        for(int j = 0; j < userIngredientList.size(); j++){
-            currInventoryQuantity[j] = new JButton();
-            currInventoryDecrement[j] = new JButton("-");
-            currInventoryIncrement[j] = new JButton("+");
-
-            currInventoryIncrement[j].addActionListener(bl);
-            currInventoryDecrement[j].addActionListener(bl);
-
-            quantityBoxes[j] = Box.createHorizontalBox();
-
-            currInventoryQuantity[j].setText(String.valueOf(userIngredientList.get(j).getQuantity()));
-
-            quantityBoxes[j].add(currInventoryDecrement[j]);
-            quantityBoxes[j].add(Box.createHorizontalStrut(10));
-
-            quantityBoxes[j].add(currInventoryQuantity[j]);
-            quantityBoxes[j].add(Box.createHorizontalStrut(10));
-
-            quantityBoxes[j].add(currInventoryIncrement[j]);
-            quantityBoxes[j].add(Box.createHorizontalStrut(10));
-
-            centerPanel_vbox.add(quantityBoxes[j]);
-        }
-
-        centerPanel.add(centerPanel_vbox);
-
-        // ********************************************
-        // *** RIGHT PANEL FOR EXISTING INGREDIENTS ***
-        // ********************************************
-
-        //Right Panel uses unit of measure of IngredientDisplayObject which retrieved from userIngredientList
-        Box rightpanel_vbox = Box.createVerticalBox();
-        JRadioButton[] currInventoryUnit = new JRadioButton[userIngredientList.size()];
-
-        for(int k = 0; k < userIngredientList.size(); k++){
-            currInventoryUnit[k] = new JRadioButton();
-
-            currInventoryUnit[k].setText(userIngredientList.get(k).getUnitOfMeasure());
-
-            currInventoryUnit[k].setSelected(true);
-            currInventoryUnit[k].setForeground(Color.WHITE);
-            currInventoryUnit[k].setBackground(Color.BLACK);
-
-            rightpanel_vbox.add(currInventoryUnit[k]);
-            rightpanel_vbox.add(Box.createVerticalStrut(10));
-        }
-
-        rightPanel.add(rightpanel_vbox);
-        rightPanel.setBackground(new Color(26, 27, 34));
-
-        pack();
-    }
-
-    private void DisplayPanel()
-    {
-        setTitle("iCook");
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-
-        add(topPanel, BorderLayout.NORTH);
-
-        add(leftPanel, BorderLayout.WEST);
-        add(centerPanel, BorderLayout.CENTER);
-        add(rightPanel, BorderLayout.EAST);
-
-        //mainPanel.add(leftPanel, BorderLayout.WEST);
-        //mainPanel.add(centerPanel, BorderLayout.CENTER);
-        //mainPanel.add(rightPanel, BorderLayout.EAST);
-        //JScrollPane scroller = new JScrollPane(mainPanel);
-        //add(scroller);
-
-        add(bottomPanel, BorderLayout.SOUTH);
-        pack();
-        setVisible(true);
-    }
-
-    private void CreatePanels(int row, int col)
-    {
-        LeftPanel(row, col);
-    }
-
-
-    private void TopPanel()
-    {
-        //Top Panel displaying Title
-        JLabel title = new JLabel("Your Ingredient Inventory");
-        title.setFont(new Font("Helvetica", Font.BOLD, 40));
-        title.setForeground(new Color(249,250,244));
-
-        topPanel.setBackground(new Color(26, 27, 34));
-        topPanel.add(title);
-    }
-
-    private void LeftPanel(int row, int col)
-    {
-        //Left Panel displaying name of ingredient & dropdown menu
-        JComboBox ingredientChoices = new JComboBox(ingredientNames.toArray());
-        DropDownListener dl = new DropDownListener();
-        ingredientChoices.addActionListener(dl);
-
-        Box box = Box.createVerticalBox();
-
-        leftPanel.setLayout(new GridLayout(row , col));
-        leftPanel.setBorder(BorderFactory.createTitledBorder("Name"));
-        leftPanel.setBackground(new Color(26, 27, 34));
-
-
-        box.add(ingredientChoices);
-        box.add(Box.createVerticalStrut(10));
-
-        leftPanel.add(box);
-    }
-
-    private void CenterPanel(int row, int col, int count)
-    {
-        //Center Panel displaying amount of ingredient
-        Box center_box = Box.createHorizontalBox();
-        Box vertical_box = Box.createVerticalBox();
-
-        centerPanel.setLayout(new GridLayout(row , col));
-        centerPanel.setBackground(new Color(26, 27, 34));
-        centerPanel.setBorder(BorderFactory.createTitledBorder("Quantity"));
-
-        increment = new JButton("+");
-        increment.addActionListener(bl);
-
-        decrement = new JButton("-");
-        decrement.addActionListener(bl);
-
-        // add newly created buttons to list of newly created buttons
-        newlyAddedIncrementBtns.add(increment);
-        newlyAddedDecrementBtns.add(decrement);
-
-        amount = new JButton(String.valueOf(count));
-        amount.setBackground(new Color(26, 27, 34));
-
-        centerPanel.add(vertical_box);
-
-        center_box.add(decrement);
-        center_box.add(Box.createHorizontalStrut(10));
-
-        center_box.add(amount);
-        center_box.add(Box.createHorizontalStrut(10));
-
-        center_box.add(increment);
-
-        vertical_box.add(Box.createVerticalStrut(10));
-        vertical_box.add(center_box);
-
-        centerPanel.add(vertical_box);
-        centerPanel.updateUI();
-    }
-
-    private void RightPanel(int row, int col, String name)
-    {
-        //RightPanel displaying measurement
-        Box measure_Box = Box.createVerticalBox();
-        ButtonGroup bg = new ButtonGroup(); //Groups buttons together, if one is selected no others can be selected
-
-        rightPanel.setBackground(new Color(26, 27, 34));
-        rightPanel.setLayout(new GridLayout(row , col));
-        rightPanel.setBorder(BorderFactory.createTitledBorder("Unit"));
-        unitOfMeasure = new JRadioButton(name);
-        unitOfMeasure.setBackground(new Color(26, 27, 34));
-        unitOfMeasure.setForeground(new Color(249,250,244));
-        bg.add(unitOfMeasure);
-        measure_Box.add(unitOfMeasure);
-        measure_Box.add(Box.createVerticalStrut(10));
-
-        rightPanel.add(measure_Box);
-        rightPanel.updateUI();
-    }
-
-    private void BottomPanel()
-    {
-        //Bottom Panel displaying Buttons
-        bottomPanel = new JPanel();
-        bottomPanel.setBackground(new Color(26, 27, 34));
-
-        homeBtn = new JButton("Home");
-        homeBtn.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        homeBtn.setPreferredSize(new Dimension(144,32));
-
-        recipesbtn = new JButton("Recipes");
-        recipesbtn.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        recipesbtn.setPreferredSize(new Dimension(144,32));
-
-        add = new JButton("Add");
-        add.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        add.setPreferredSize(new Dimension(144,32));
-
-        update = new JButton("Update");
-        update.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        update.setPreferredSize(new Dimension(144,32));
-
-        add.addActionListener(bl);
-        recipesbtn.addActionListener(bl);
-        update.addActionListener(bl);
-        homeBtn.addActionListener(bl);
-
-        bottomPanel.add(homeBtn);
-        bottomPanel.add(recipesbtn);
-        bottomPanel.add(add);
-        bottomPanel.add(update);
-    }
-
-
-    //DropDownMenu Action Listener
-    private class DropDownListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            JComboBox src1 = (JComboBox) e.getSource();
-
-            //Loop to check through list of ingredients
-            //If ingredient is selected, it will be added to center panel
-            for(int i = 0; i < ingredientList.size(); i++) {
-                // get the ingredient at i
-                IngredientDisplayObject ingredient = ingredientList.get(i);
-
-                // if the selected item == the ingredient's name
-                if(src1.getSelectedItem() == (ingredient.getName())){
-                    // update the center panel to show the quantity and -/+ buttons
-                    // update the right panel to show the unit of measure
-                    CenterPanel(row, col, ingredient.getQuantity());
-                    RightPanel(row, col, ingredient.getUnitOfMeasure());
-                    pack();
-                    addedIngredients.add(ingredient);
-
-                    // testing purposes
-                    System.out.println("Selected Item: " + ingredient.getName());
-                    System.out.println("Unit of Measure: " + ingredient.getUnitOfMeasure());
+        System.out.println(temp.size());
+        System.out.println(ingredientList.size());
+
+        System.out.println(databaseInventory.size());
+        System.out.println(currentInventory.size());
+
+        for(int i = 0; i < ingredientList.size(); i++){
+            for(int j = 0; j < userIngredientList.size(); j++){
+                if(ingredientList.contains(userIngredientList)==true){
+                    if(ingredientList.get(i).getName().equals(userIngredientList.get(j))){
+                        temp.remove(temp.get(i));
+                    }
+                    else{
+                        continue;
+                    }
                 }
             }
         }
+
+        for(int i = 0; i < temp.size(); i++){
+            System.out.println(temp.get(i).getName());
+        }
+
+        return temp;
+
+    }
+
+    private void DisplayFrame()
+    {
+        frame = new JFrame();
+        JPanel container = new JPanel();
+        JPanel topPanel = new JPanel();
+        JPanel bottomPanel = new JPanel();
+
+        container.setLayout(new GridLayout(0,1));
+
+        add = new JButton("Add");
+        remove = new JButton("Remove");
+        update = new JButton("Update");
+        recipes = new JButton("Recipes");
+        home = new JButton("Home");
+        logout = new JButton("Logout");
+
+        add.addActionListener(bl);
+        remove.addActionListener(bl);
+        update.addActionListener(bl);
+        recipes.addActionListener(bl);
+        home.addActionListener(bl);
+        logout.addActionListener(bl);
+
+
+        bottomPanel.add(logout);
+        bottomPanel.add(home);
+        bottomPanel.add(add);
+        bottomPanel.add(remove);
+        bottomPanel.add(update);
+        bottomPanel.add(recipes);
+
+        bottomPanel.setLayout(new GridLayout(0, 6));
+
+
+        JRadioButton[] ingredient_name; // = new JRadioButton[ingredientList.size()];
+        JRadioButton [] units; //= new JRadioButton[ingredientList.size()];
+
+        JPanel panelThree = new JPanel(); //= new JPanel(new GridLayout(ingredientList.size(), 1));
+
+
+        JPanel leftunitPanel = new JPanel(); //= new JPanel(new GridLayout(ingredientList.size(),1));
+        JPanel rightunitPanel = new JPanel();
+
+
+        /*Array for ingredients that can be added (on left side of frame) */
+        mainleftPanel = new JPanel();
+
+        //==========================================================================
+
+        /*Arrays for user's current inventory (right side of frame) */
+        JPanel mainrightPanel = new JPanel();
+        mainrightPanel.setBackground(Color.BLACK);
+        JPanel ingredientPortion = new JPanel();
+        ingredientPortion.setBackground(Color.BLACK);
+        JPanel unitPortion = new JPanel();
+        unitPortion.setBackground(Color.BLACK);
+        JPanel[] btnContainerRight;
+        JPanel totalBtnContainerRight = new JPanel();
+        totalBtnContainerRight.setBackground(Color.BLACK);
+
+        JLabel [] currInventoryName;
+        JRadioButton [] currInventoryUnits;
+
+        JButton[] increase;
+        JButton[] amount;
+        JButton[] decrease;
+
+
+        JLabel title = new JLabel("Available Ingredients");
+        title.setFont(new Font("Helvetica", Font.BOLD, 19));
+
+
+        if(userIngredientList.isEmpty()) {
+
+            /*Left Panel Attributes*/
+
+            ingredient_name = new JRadioButton[ingredientList.size()];
+            units = new JRadioButton[ingredientList.size()];
+
+            panelThree.setLayout(new GridLayout(ingredientList.size(), 1));
+            leftunitPanel.setLayout(new GridLayout(ingredientList.size(), 1));
+
+
+            for (int i = 0; i < ingredientList.size(); i++) {
+                ingredient_name[i] = new JRadioButton();
+                ingredient_name[i].setText(ingredientList.get(i).getName());
+                ingredient_name[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                ingredient_name[i].setBackground(Color.BLACK);
+                ingredient_name[i].setForeground(Color.WHITE);
+                panelThree.add(ingredient_name[i]);
+                units[i] = new JRadioButton();
+                units[i].setText(ingredientList.get(i).getUnitOfMeasure());
+                units[i].setBackground(Color.BLACK);
+                units[i].setForeground(Color.WHITE);
+                units[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                panelThree.add(ingredient_name[i]);
+                leftunitPanel.add(units[i]);
+            }
+
+            increment = new JButton[ingredientList.size()];
+            quantity = new JButton[ingredientList.size()];
+            decrement = new JButton[ingredientList.size()];
+
+            btnContainer = new JPanel[ingredientList.size()];
+            totalBtnContainer = new JPanel(new GridLayout(ingredientList.size(), 1));
+            totalBtnContainer.setBackground(Color.DARK_GRAY);
+
+            for(int i = 0; i < btnContainer.length; i++){
+                decrement[i] = new JButton("-");
+                decrement[i].setFont(new Font("Arial", Font.PLAIN, 19));
+                decrement[i].setBackground(Color.BLACK);
+                decrement[i].setForeground(Color.WHITE);
+                quantity[i] = new JButton(" 0 ");
+                quantity[i].setFont(new Font("Arial", Font.PLAIN, 19));
+                quantity[i].setBackground(Color.BLACK);
+                quantity[i].setForeground(Color.WHITE);
+                increment[i] = new JButton("+");
+                increment[i].setFont(new Font("Arial", Font.PLAIN, 19));
+                increment[i].setBackground(Color.BLACK);
+                increment[i].setForeground(Color.WHITE);
+                btnContainer[i] = new JPanel(new GridLayout(1, 0));
+                btnContainer[i].add(decrement[i]);
+                btnContainer[i].add(quantity[i]);
+                btnContainer[i].add(increment[i]);
+
+
+                totalBtnContainer.add(btnContainer[i]);
+
+                decrement[i].addActionListener(bl);
+                increment[i].addActionListener(bl);
+                quantity[i].addActionListener(bl);
+
+                availableInventoryIncrementBtns.add(increment[i]);
+                availableInventoryAmountBtns.add(quantity[i]);
+                availableInventoryDecrementBtns.add(decrement[i]);
+            }
+
+        }
+        else{
+
+            /*Pass usersInventory to iCookingredientinventory & extract values
+            that user does not have and put into available ingredients array
+             */
+
+            //ArrayList<IngredientDisplayObject> userUpdatedList = updatedIngredients(userIngredientList, ingredientList);
+            ArrayList<IngredientDisplayObject> updatedAvailableIngredients = allAvailableIngredients(userIngredientList, ingredientList);
+
+            /*Size for available ingredients*/
+            int availableIngredientsSize = updatedAvailableIngredients.size();
+
+            /*Displays available ingredients on right side of jframe */
+            int inventorySize = ingredientList.size() - userIngredientList.size();
+
+            ingredient_name = new JRadioButton[availableIngredientsSize];
+            units = new JRadioButton[availableIngredientsSize];
+            increment = new JButton[availableIngredientsSize];
+            quantity = new JButton[availableIngredientsSize];
+            decrement = new JButton[availableIngredientsSize];
+
+            btnContainer = new JPanel[availableIngredientsSize];
+            totalBtnContainer = new JPanel(new GridLayout(availableIngredientsSize, 1));
+
+
+            panelThree.setLayout(new GridLayout(availableIngredientsSize, 1));
+            leftunitPanel.setLayout(new GridLayout(availableIngredientsSize, 1));
+
+            for(int i = 0; i < availableIngredientsSize; i++){
+                ingredient_name[i] = new JRadioButton();
+                ingredient_name[i].setText(updatedAvailableIngredients.get(i).getName());
+                ingredient_name[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                ingredient_name[i].setBackground(Color.BLACK);
+                ingredient_name[i].setForeground(Color.WHITE);
+                panelThree.add(ingredient_name[i]);
+                units[i] = new JRadioButton();
+                units[i].setText(updatedAvailableIngredients.get(i).getUnitOfMeasure());
+                units[i].setBackground(Color.BLACK);
+                units[i].setForeground(Color.WHITE);
+                units[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                leftunitPanel.add(units[i]);
+            }
+
+            for(int i = 0; i < btnContainer.length; i++){
+                decrement[i] = new JButton("-");
+                decrement[i].setFont(new Font("Arial", Font.PLAIN, 19));
+                decrement[i].setBackground(Color.BLACK);
+                decrement[i].setForeground(Color.WHITE);
+                quantity[i] = new JButton(" ");
+                quantity[i].setFont(new Font("Arial", Font.PLAIN, 19));
+                quantity[i].setBackground(Color.BLACK);
+                quantity[i].setForeground(Color.WHITE);
+                increment[i] = new JButton("+");
+                increment[i].setFont(new Font("Arial", Font.PLAIN, 19));
+                increment[i].setBackground(Color.BLACK);
+                increment[i].setForeground(Color.WHITE);
+                btnContainer[i] = new JPanel(new GridLayout(1, 0));
+                btnContainer[i].add(decrement[i]);
+                btnContainer[i].add(quantity[i]);
+                btnContainer[i].add(increment[i]);
+
+
+                totalBtnContainer.add(btnContainer[i]);
+
+                decrement[i].addActionListener(bl);
+                increment[i].addActionListener(bl);
+                quantity[i].addActionListener(bl);
+
+                availableInventoryIncrementBtns.add(increment[i]);
+                availableInventoryAmountBtns.add(quantity[i]);
+                availableInventoryDecrementBtns.add(decrement[i]);
+            }
+
+            /*Right Panel Attributes*/
+            currInventoryName = new JLabel[userIngredientList.size()];
+            currInventoryUnits = new JRadioButton[userIngredientList.size()];
+            decrease = new JButton[userIngredientList.size()];
+            amount = new JButton[userIngredientList.size()];
+            increase = new JButton[userIngredientList.size()];
+
+            rightunitPanel.setLayout(new GridLayout(userIngredientList.size(), 1));
+
+            ingredientPortion.setLayout(new GridLayout(userIngredientList.size(), 1));
+
+            btnContainerRight = new JPanel[userIngredientList.size()];
+            totalBtnContainerRight.setLayout(new GridLayout(userIngredientList.size(), 1));
+
+
+            for(int i = 0; i < userIngredientList.size(); i++){
+                currInventoryName[i] = new JLabel();
+                currInventoryName[i].setText(userIngredientList.get(i).getName());
+                currInventoryName[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                currInventoryName[i].setBackground(Color.BLACK);
+                currInventoryName[i].setForeground(Color.WHITE);
+                ingredientPortion.add(currInventoryName[i]);
+                ingredientPortion.setBackground(Color.BLACK);
+                currInventoryUnits[i] = new JRadioButton();
+                currInventoryUnits[i].setText(userIngredientList.get(i).getUnitOfMeasure());
+                currInventoryUnits[i].setBackground(Color.BLACK);
+                currInventoryUnits[i].setForeground(Color.WHITE);
+                currInventoryUnits[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                rightunitPanel.add(currInventoryUnits[i]);
+            }
+
+
+            for(int i = 0; i < userIngredientList.size(); i++){
+                decrease[i] = new JButton("-");
+                decrease[i].setFont(new Font("Arial", Font.PLAIN, 19));
+                decrease[i].setBackground(Color.BLACK);
+                decrease[i].setForeground(Color.WHITE);
+                amount[i] = new JButton(" ");
+                amount[i].setFont(new Font("Arial", Font.PLAIN, 19));
+                amount[i].setText(String.valueOf(userIngredientList.get(i).getQuantity()));
+                amount[i].setBackground(Color.BLACK);
+                amount[i].setForeground(Color.WHITE);
+                increase[i] = new JButton("+");
+                increase[i].setFont(new Font("Arial", Font.PLAIN, 19));
+                increase[i].setBackground(Color.BLACK);
+                increase[i].setForeground(Color.WHITE);
+                btnContainerRight[i] = new JPanel(new GridLayout(1, 0));
+                btnContainerRight[i].add(decrease[i]);
+                btnContainerRight[i].add(amount[i]);
+                btnContainerRight[i].add(increase[i]);
+
+                decrease[i].addActionListener(bl);
+                decrease[i].addActionListener(bl);
+                amount[i].addActionListener(bl);
+
+
+                totalBtnContainerRight.add(btnContainerRight[i]);
+
+                userInventoryIncrementBtns.add(decrease[i]);
+                userInventoryQuantityBtns.add(amount[i]);
+                userInventoryDecrementBtns.add(increase[i]);
+            }
+        }
+
+
+        JPanel paneltopLeft = new JPanel(new BorderLayout());
+        JLabel test1 = new JLabel("Available Ingredients");
+        test1.setFont(new Font("Helvetica", Font.BOLD, 22));
+        test1.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JPanel paneltopRight = new JPanel(new BorderLayout());
+        JLabel test2 = new JLabel("Your Ingredient Inventory");
+        test2.setFont(new Font("Helvetica", Font.BOLD, 22));
+        test2.setHorizontalAlignment(SwingConstants.CENTER);
+
+        paneltopLeft.add(test1, BorderLayout.CENTER);
+        paneltopRight.add(test2, BorderLayout.CENTER);
+
+
+        JSplitPane s1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, paneltopLeft, paneltopRight);
+        JSplitPane s2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainleftPanel, mainrightPanel);
+        JSplitPane main_split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, s1, s2);
+        JSplitPane bottom_split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, main_split, bottomPanel);
+
+
+        final boolean firstResize = true;
+
+        /* Action listener lines up the split panes to be centered as much as possible*/
+
+        s1.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                if(firstResize){
+                    s1.setDividerLocation(0.405);
+                    main_split.setDividerLocation(0.040);
+                }
+            }
+        });
+
+
+        /*Left Panel Layout */
+        mainleftPanel.add(panelThree, BorderLayout.WEST);
+        mainleftPanel.add(totalBtnContainer, BorderLayout.CENTER);
+        mainleftPanel.add(leftunitPanel, BorderLayout.EAST);
+        mainleftPanel.setBackground(Color.BLACK);
+
+        /*Right Panel Layout*/
+        mainrightPanel.add(ingredientPortion, BorderLayout.WEST);
+        mainrightPanel.add(totalBtnContainerRight, BorderLayout.CENTER);
+        mainrightPanel.add(rightunitPanel, BorderLayout.EAST);
+        mainrightPanel.setBackground(Color.BLACK);
+
+
+        frame.add(main_split, BorderLayout.CENTER);
+        frame.add(bottom_split, BorderLayout.SOUTH);
+        frame.setSize(1024, 768);
+        frame.setVisible(true);
 
     }
 
@@ -464,55 +539,63 @@ public class InventoryUI extends JFrame{
             // loop through array of increment buttons associated with existing ingredients
             for(int i = 0; i < userIngredientList.size(); i++)
             {
-                if(src2 == currInventoryIncrement[i])
+                if(src2 == availableInventoryIncrementBtns.get(i))
                 {
-                        updatedQuantity = updateUserIngredientQuantity(i, currInventoryIncrement[i]);
-                        currInventoryQuantity[i].setText(Integer.toString(updatedQuantity));
+                        updatedQuantity = updateUserIngredientQuantity(i, availableInventoryIncrementBtns.get(i));
+                        availableInventoryAmountBtns.get(i).setText(Integer.toString(updatedQuantity));
                         userIngredientList.get(i).setQuantity(updatedQuantity);
+                        setVisible(true);
+                        //userIngredientList.get(i).setQuantity(updatedQuantity);
                 }
             }
 
             // loop through array of decrement buttons associated with existing ingredients
             for(int i = 0; i < userIngredientList.size(); i++){
-                if(src2 == currInventoryDecrement[i])
+                if(src2 == availableInventoryDecrementBtns.get(i))
                 {
-                        updatedQuantity = updateUserIngredientQuantity(i, currInventoryDecrement[i]);
-                        currInventoryQuantity[i].setText(Integer.toString(updatedQuantity));
+                        updatedQuantity = updateUserIngredientQuantity(i, availableInventoryDecrementBtns.get(i));
+                        availableInventoryAmountBtns.get(i).setText(Integer.toString(updatedQuantity));
                         userIngredientList.get(i).setQuantity(updatedQuantity);
+                        setVisible(true);
+                        //userIngredientList.get(i).setQuantity(updatedQuantity);
                 }
             }
 
             // loop through every newly added inc button and set the quantity to its corresponding ingredient
             // in the addedIngredients List
-            for (int i = 0; i < addedIngredients.size(); i++)
+            for (int i = 0; i < userIngredientList.size(); i++)
             {
-                if(src2 == newlyAddedIncrementBtns.get(i))
+                if(src2 == userInventoryIncrementBtns.get(i))
                 {
                     System.out.println("Increment Button Pressed");
-                    updatedQuantity = updateNewIngredientQuantity(i, newlyAddedIncrementBtns.get(i));
-                    addedIngredients.get(i).setQuantity(updatedQuantity);
-                    amount.setText(String.valueOf(updatedQuantity));
+                    updatedQuantity = updateNewIngredientQuantity(i, userInventoryIncrementBtns.get(i));
+                    userInventoryQuantityBtns.get(i).setText(Integer.toString(updatedQuantity));
+                    userIngredientList.get(i).setQuantity(updatedQuantity);
+                    setVisible(true);
+                    //amount.setText(String.valueOf(updatedQuantity));
                 }
             }
 
             // loop through every newly added dec button and set the quantity to its corresponding ingredient
             // in the addedIngredients List
-            for (int i = 0; i < addedIngredients.size(); i++)
+            for (int i = 0; i < userInventoryDecrementBtns.size(); i++)
             {
-                if(src2 == newlyAddedDecrementBtns.get(i))
+                if(src2 == decrease[i])
                 {
                     System.out.println("Decrement Button Pressed");
-                    updatedQuantity = updateNewIngredientQuantity(i, newlyAddedDecrementBtns.get(i));
-                    addedIngredients.get(i).setQuantity(updatedQuantity);
-                    amount.setText(String.valueOf(updatedQuantity));
+                    updatedQuantity = updateNewIngredientQuantity(i, userInventoryDecrementBtns.get(i));
+                    userInventoryQuantityBtns.get(i).setText(Integer.toString(updatedQuantity));
+                    userIngredientList.get(i).setQuantity(updatedQuantity);
+                    setVisible(true);
+                    //amount.setText(String.valueOf(updatedQuantity));
                 }
             }
 
             // if the user clicked the search button
-            if(src2 == recipesbtn)
+            if(src2 == recipes)
             {
                 System.out.println("Recipes button pressed");
-                dispose();
+                frame.dispose();
                 new RecipeUI();
             }
 
@@ -527,7 +610,8 @@ public class InventoryUI extends JFrame{
                 serviceDispatcher.updateUserInventory(pendingIngredientList);
 
                 // refresh this page
-                dispose();
+                frame.setVisible(false);
+                frame.dispose();
                 new InventoryUI();
             }
 
@@ -535,19 +619,28 @@ public class InventoryUI extends JFrame{
             else if(src2 == add)
             {
                 System.out.println("Add Button Pressed");
-                row++;
-                ingCount = 0;
-                CreatePanels(row, col);
-                pack();
                 setVisible(true);
             }
 
             // else if the user clicked the home button
-            else if(src2 == homeBtn)
+            else if(src2 == home)
             {
                 //Instantiate home Class to display home GUI
-                dispose();
+                frame.setVisible(false);
+                frame.dispose();
                 new HomeUI(serviceDispatcher.getUserName());
+            }
+            else if(src2 == logout)
+            {
+                frame.setVisible(false);
+                frame.dispose();
+
+                // log the user out of their account
+                ServiceDispatcher servDis = new ServiceDispatcher();
+                servDis.logUserOut();
+
+                // take the user to the welcome page (start page)
+                new WelcomeUI();
             }
         }
     }
