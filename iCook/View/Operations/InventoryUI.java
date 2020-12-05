@@ -429,8 +429,9 @@ public class InventoryUI extends JFrame{
             @Override
             public void componentResized(ComponentEvent e) {
                 if(firstResize){
-                    s1.setDividerLocation(0.405);
-                    main_split.setDividerLocation(0.040);
+                    s1.setDividerLocation(0.5);
+                    s2.setDividerLocation(0.5);
+                    main_split.setDividerLocation(0.10);
                 }
             }
         });
