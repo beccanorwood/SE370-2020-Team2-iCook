@@ -9,6 +9,7 @@ import iCook.View.Login.WelcomeUI;
  */
 public class iCook
 {
+
     public static void main(String[] args)
     {
         new WelcomeUI();
