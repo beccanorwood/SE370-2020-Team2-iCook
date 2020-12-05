@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 /**
@@ -52,7 +51,6 @@ public class InventoryUI extends JFrame{
     private ServiceDispatcher serviceDispatcher;
 
     private ArrayList<IngredientDisplayObject> ingredientList;    // stores the system ingredients
-    private ArrayList<String> ingredientNames;                          // stores the name of system ingredients (stored in the dropdown menu)
 
     private ArrayList<IngredientDisplayObject> userIngredientList;      // stores the user's ingredients
     private ArrayList<IngredientDisplayObject> addedIngredients;        // stores newly added ingredients
@@ -92,32 +90,9 @@ public class InventoryUI extends JFrame{
 
         serviceDispatcher = new ServiceDispatcher();
         ingredientList = serviceDispatcher.getAllSystemIngredients();
-        ingredientNames = new ArrayList<>();
         userIngredientList = serviceDispatcher.getUserInventory();
 
-        // for every ingredient in ingredientList, add its name to the ingredientNames ArrayList (drop down menu)
-        for (IngredientDisplayObject ingredient : ingredientList)
-        {
-            if (userIngredientList.isEmpty())
-                ingredientNames.add(ingredient.getName());
-
-            else
-                {
-                // checks to see if the ingredient is in the user's inventory
-                for (int j = 0; j < userIngredientList.size(); j++)
-                {
-                    // if the ingredient is in the user's inventory, skip this ingredient (don't add it)
-                    if (ingredient.getName().equals(userIngredientList.get(j).getName()))
-                        break;
-                    // else if the ingredient is not in the user's ingredient list && the name list doesn't already contain it, add it
-                    else if (j == userIngredientList.size() - 1 && !ingredientNames.contains(ingredient.getName()))
-                        ingredientNames.add(ingredient.getName());
-                }
-            }
-        }
-
-        // sort the list of ingredient names
-        Collections.sort(ingredientNames);
+        ArrayList<IngredientDisplayObject> temp = new ArrayList<>();
 
         DisplayFrame();
 
@@ -281,7 +256,7 @@ public class InventoryUI extends JFrame{
                 decrement[i].setFont(new Font("Arial", Font.PLAIN, 19));
                 decrement[i].setForeground(new Color(26, 27, 34));
 
-                quantity[i] = new JButton(" 0 ");
+                quantity[i] = new JButton(" ");
                 quantity[i].setFont(new Font("Arial", Font.PLAIN, 19));
                 quantity[i].setForeground(new Color(26, 27, 34));
 
@@ -426,7 +401,7 @@ public class InventoryUI extends JFrame{
                 decrease[i].setFont(new Font("Arial", Font.PLAIN, 19));
                 decrease[i].setForeground(new Color(26, 27, 34));
 
-                amount[i] = new JButton(" ");
+                amount[i] = new JButton(String.valueOf(userIngredientList.get(i).getQuantity()));
                 amount[i].setFont(new Font("Arial", Font.PLAIN, 19));
                 amount[i].setText(String.valueOf(userIngredientList.get(i).getQuantity()));
                 amount[i].setForeground(new Color(26, 27, 34));
@@ -441,7 +416,7 @@ public class InventoryUI extends JFrame{
                 btnContainerRight[i].add(amount[i]);
                 btnContainerRight[i].add(increase[i]);
 
-                decrease[i].addActionListener(bl);
+                increase[i].addActionListener(bl);
                 decrease[i].addActionListener(bl);
                 amount[i].addActionListener(bl);
 
@@ -574,7 +549,13 @@ public class InventoryUI extends JFrame{
          * Updates the quantity of a newly added ingredient
          */
         private int updateNewIngredientQuantity(int index, JButton operation){
-            int currentQuantity = 0;
+            int currentQuantity;
+
+            if (availableInventoryAmountBtns.get(index).getText() == " ")
+                currentQuantity = 0;
+            else
+                currentQuantity = Integer.parseInt(availableInventoryAmountBtns.get(index).getText());
+
             int updatedQuantity = 0;
 
             if (operation.getText() == "+"){
@@ -618,10 +599,11 @@ public class InventoryUI extends JFrame{
 
             // loop through every newly added inc button and set the quantity to its corresponding ingredient
             // in the addedIngredients List
-            for (int i = 0; i < addedIngredients.size(); i++)
+            for (int i = 0; i < availableInventoryIncrementBtns.size(); i++)
             {
-                if(src2 == availableInventoryIncrementBtns.get(i))
+                if(src2 == availableInventoryIncrementBtns.get(i) && ingredient_name[i].isSelected())
                 {
+                    System.out.println("INC CLICK");
                     updatedQuantity = updateNewIngredientQuantity(i, availableInventoryIncrementBtns.get(i));
                     availableInventoryAmountBtns.get(i).setText(String.valueOf(updatedQuantity));
                     addedIngredients.get(i).setQuantity(updatedQuantity);
@@ -630,10 +612,11 @@ public class InventoryUI extends JFrame{
 
             // loop through every newly added dec button and set the quantity to its corresponding ingredient
             // in the addedIngredients List
-            for (int i = 0; i < addedIngredients.size(); i++)
+            for (int i = 0; i < availableInventoryDecrementBtns.size(); i++)
             {
-                if(src2 == availableInventoryDecrementBtns.get(i))
+                if(src2 == availableInventoryDecrementBtns.get(i) && ingredient_name[i].isSelected())
                 {
+                    System.out.println("DEC CLICK");
                     updatedQuantity = updateNewIngredientQuantity(i, availableInventoryDecrementBtns.get(i));
                     availableInventoryAmountBtns.get(i).setText(String.valueOf(updatedQuantity));
                     addedIngredients.get(i).setQuantity(updatedQuantity);
