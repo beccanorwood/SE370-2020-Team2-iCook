@@ -1,7 +1,7 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
-import iCook.View.DisplayObjects.IngredientDisplayObject;
+import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
 
 import javax.swing.*;
 import java.awt.*;

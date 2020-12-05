@@ -1,4 +1,4 @@
-package iCook.View.DisplayObjects;
+package iCook.View.Operations.DisplayObjects;
 
 /**
  * Display object for an ingredient used in the InventoryUI

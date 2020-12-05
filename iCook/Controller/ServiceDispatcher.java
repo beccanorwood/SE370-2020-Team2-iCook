@@ -1,7 +1,7 @@
 package iCook.Controller;
 
 import iCook.Model.*;
-import iCook.View.DisplayObjects.*;
+import iCook.View.Operations.DisplayObjects.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
