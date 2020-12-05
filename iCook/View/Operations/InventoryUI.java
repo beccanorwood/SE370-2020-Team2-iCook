@@ -43,10 +43,7 @@ public class InventoryUI extends JFrame{
 
     /*Bottom panel with Buttons instance variables*/
     private JButton home;
-    private JButton add;
     private JButton recipes;
-    private JButton remove;
-    private JButton logout;
     private JButton update;
 
 
@@ -177,27 +174,17 @@ public class InventoryUI extends JFrame{
 
         container.setLayout(new GridLayout(0,1));
 
-        add = new JButton("Add");
-        remove = new JButton("Remove");
-        update = new JButton("Update");
-        recipes = new JButton("Recipes");
         home = new JButton("Home");
-        logout = new JButton("Logout");
+        recipes = new JButton("Recipes");
+        update = new JButton("Update");
 
-        add.addActionListener(bl);
-        remove.addActionListener(bl);
-        update.addActionListener(bl);
-        recipes.addActionListener(bl);
         home.addActionListener(bl);
-        logout.addActionListener(bl);
+        recipes.addActionListener(bl);
+        update.addActionListener(bl);
 
-
-        bottomPanel.add(logout);
         bottomPanel.add(home);
-        bottomPanel.add(add);
-        bottomPanel.add(remove);
-        bottomPanel.add(update);
         bottomPanel.add(recipes);
+        bottomPanel.add(update);
 
         bottomPanel.setLayout(new GridLayout(0, 6));
 
@@ -629,53 +616,34 @@ public class InventoryUI extends JFrame{
             // if the user clicked the search button
             if(src2 == recipes)
             {
-                System.out.println("Recipes button pressed");
-                frame.dispose();
                 new RecipeUI();
+                frame.setVisible(false);
+                frame.dispose();
             }
 
             // else if the user clicked the update button
             else if(src2 == update)
             {
-                System.out.println("Update Button Pressed");
-
                 pendingIngredientList = new ArrayList<>();          // to be sent to the controller for processing
                 pendingIngredientList.addAll(userIngredientList);   // add the users ingredient list to the pending list
                 pendingIngredientList.addAll(addedIngredients);     // add the newly added ingredients to the pending list
                 serviceDispatcher.updateUserInventory(pendingIngredientList);
 
+                new InventoryUI();
+
                 // refresh this page
                 frame.setVisible(false);
                 frame.dispose();
-                new InventoryUI();
-            }
-
-            // else if the user clicked the add button
-            else if(src2 == add)
-            {
-                System.out.println("Add Button Pressed");
-                setVisible(true);
             }
 
             // else if the user clicked the home button
             else if(src2 == home)
             {
+                new HomeUI(serviceDispatcher.getUserName());
+
                 //Instantiate home Class to display home GUI
                 frame.setVisible(false);
                 frame.dispose();
-                new HomeUI(serviceDispatcher.getUserName());
-            }
-            else if(src2 == logout)
-            {
-                frame.setVisible(false);
-                frame.dispose();
-
-                // log the user out of their account
-                ServiceDispatcher servDis = new ServiceDispatcher();
-                servDis.logUserOut();
-
-                // take the user to the welcome page (start page)
-                new WelcomeUI();
             }
         }
     }
