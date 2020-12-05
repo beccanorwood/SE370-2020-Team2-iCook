@@ -249,6 +249,7 @@ public class InventoryUI extends JFrame{
                 ingredient_name[i].setBackground(new Color(26, 27, 34));
                 ingredient_name[i].setForeground(Color.WHITE);
                 ingredient_name[i].addActionListener(rbl);
+                ingredient_name[i].setEnabled(true);
 
                 panelThree.add(ingredient_name[i]);
 
@@ -340,6 +341,8 @@ public class InventoryUI extends JFrame{
                 ingredient_name[i].setFont(new Font("Arial", Font.PLAIN, 20));
                 ingredient_name[i].setBackground(new Color(26, 27, 34));
                 ingredient_name[i].setForeground(Color.WHITE);
+                ingredient_name[i].addActionListener(rbl);
+                ingredient_name[i].setEnabled(true);
 
                 panelThree.add(ingredient_name[i]);
 
@@ -542,6 +545,7 @@ public class InventoryUI extends JFrame{
                 }
             }
         }
+
     }
 
 
@@ -589,6 +593,7 @@ public class InventoryUI extends JFrame{
 
             JButton src2 = (JButton) e.getSource();
             int updatedQuantity = 0;
+
 
             // loop through array of increment buttons associated with existing ingredients
             for(int i = 0; i < userIngredientList.size(); i++)
