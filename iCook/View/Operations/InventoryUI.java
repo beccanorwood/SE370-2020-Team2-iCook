@@ -373,7 +373,7 @@ public class InventoryUI extends JFrame{
 
                 increase[i] = new JButton("+");
                 increase[i].setFont(new Font("Arial", Font.PLAIN, 19));
-                increment[i].setForeground(new Color(26, 27, 34));
+                increase[i].setForeground(new Color(26, 27, 34));
 
                 btnContainerRight[i] = new JPanel(new GridLayout(1, 0));
                 btnContainerRight[i].setBackground(new Color(26, 27, 34));
