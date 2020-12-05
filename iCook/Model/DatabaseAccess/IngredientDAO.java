@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
- * @version 12/1/2020
+ * @version 12/5/2020
  */
 public class IngredientDAO extends BaseDAO {
 
@@ -19,33 +19,6 @@ public class IngredientDAO extends BaseDAO {
      * Constructor
      */
     public IngredientDAO() {
-    }
-
-
-    /**
-     * Performs a SQL statement to return the name field from the ingredients table with a given id
-     *
-     * @param id the id of the ingredient whose name we want to get
-     * @return the name field of the ingredient
-     */
-    public String getIngredientName(int id) {
-        try {
-            //create a new statement
-            Statement statement = this.createStatement();
-
-            // perform the query
-            ResultSet rs = statement.executeQuery("SELECT name FROM ingredients WHERE id = '" + id + "' ");
-            rs.next();  // move the 'cursor' to the first row (ALWAYS NEED THIS WHEN QUERYING)
-
-            // return the quantity field of the specified ingredient
-            return rs.getString("name");
-        }
-
-        catch (SQLException throwables)
-        {
-            throwables.printStackTrace();
-            return null;
-        }
     }
 
 
