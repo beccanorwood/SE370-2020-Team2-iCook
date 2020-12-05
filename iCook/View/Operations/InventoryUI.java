@@ -2,7 +2,6 @@ package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.DisplayObjects.IngredientDisplayObject;
-import iCook.View.Login.WelcomeUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +29,9 @@ public class InventoryUI extends JFrame{
 
     private JPanel[] btnContainer;
     private JPanel totalBtnContainer;
+
+    JRadioButton[] ingredient_name; // = new JRadioButton[ingredientList.size()];
+    JRadioButton [] units; //= new JRadioButton[ingredientList.size()];
 
 
     /*Right side of frame instance variables*/
@@ -69,6 +71,7 @@ public class InventoryUI extends JFrame{
     private ArrayList<JButton> availableInventoryAmountBtns;
 
     ButtonListener bl = new ButtonListener();
+    RadioButtonListener rbl = new RadioButtonListener();
 
     public InventoryUI()
     {
@@ -189,9 +192,6 @@ public class InventoryUI extends JFrame{
         bottomPanel.setLayout(new GridLayout(0, 6));
 
 
-        JRadioButton[] ingredient_name; // = new JRadioButton[ingredientList.size()];
-        JRadioButton [] units; //= new JRadioButton[ingredientList.size()];
-
         JPanel panelThree = new JPanel(); //= new JPanel(new GridLayout(ingredientList.size(), 1));
         panelThree.setBackground(new Color(26, 27, 34));
 
@@ -248,6 +248,7 @@ public class InventoryUI extends JFrame{
                 ingredient_name[i].setFont(new Font("Arial", Font.PLAIN, 20));
                 ingredient_name[i].setBackground(new Color(26, 27, 34));
                 ingredient_name[i].setForeground(Color.WHITE);
+                ingredient_name[i].addActionListener(rbl);
 
                 panelThree.add(ingredient_name[i]);
 
@@ -513,6 +514,37 @@ public class InventoryUI extends JFrame{
     }
 
 
+    private class RadioButtonListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            //Loop to check through list of ingredients
+            //If ingredient is selected, it will be added to center panel
+            for(int i = 0; i < ingredient_name.length; i++)
+            {
+                // if the selected item == the ingredient's name
+                if (ingredient_name[i].isSelected())
+                {
+                    // get the ingredient at i
+                    IngredientDisplayObject ingredient = ingredientList.get(i);
+                    String selectedIngredient = ingredient_name[i].getText();
+
+                    if(selectedIngredient == ingredient.getName())
+                    {
+                        // add ingredient to list of new ingredient for user
+                        addedIngredients.add(ingredient);
+
+                        // testing purposes
+                        System.out.println("Selected Item: " + ingredient.getName());
+                        System.out.println("Unit of Measure: " + ingredient.getUnitOfMeasure());
+                    }
+                }
+            }
+        }
+    }
+
+
     // ActionListeners for search, add, update, and home buttons
     private class ButtonListener implements ActionListener
     {
@@ -520,7 +552,7 @@ public class InventoryUI extends JFrame{
         * Updates the quantity of an ingredient that was already in the user's inventory
         */
         private int updateUserIngredientQuantity(int index, JButton operation){
-            int currentQuantity = Integer.parseInt(currInventoryQuantity[index].getText());
+            int currentQuantity = Integer.parseInt(userInventoryQuantityBtns.get(index).getText());
             int updatedQuantity = 0;
 
             if (operation.getText() == "+"){
@@ -538,7 +570,7 @@ public class InventoryUI extends JFrame{
          * Updates the quantity of a newly added ingredient
          */
         private int updateNewIngredientQuantity(int index, JButton operation){
-            int currentQuantity = addedIngredients.get(index).getQuantity();
+            int currentQuantity = 0;
             int updatedQuantity = 0;
 
             if (operation.getText() == "+"){
@@ -561,55 +593,45 @@ public class InventoryUI extends JFrame{
             // loop through array of increment buttons associated with existing ingredients
             for(int i = 0; i < userIngredientList.size(); i++)
             {
-                if(src2 == availableInventoryIncrementBtns.get(i))
+                if(src2 == userInventoryIncrementBtns.get(i))
                 {
-                        updatedQuantity = updateUserIngredientQuantity(i, availableInventoryIncrementBtns.get(i));
-                        availableInventoryAmountBtns.get(i).setText(Integer.toString(updatedQuantity));
+                        updatedQuantity = updateUserIngredientQuantity(i, userInventoryIncrementBtns.get(i));
+                        userInventoryQuantityBtns.get(i).setText(String.valueOf(updatedQuantity));
                         userIngredientList.get(i).setQuantity(updatedQuantity);
-                        setVisible(true);
-                        //userIngredientList.get(i).setQuantity(updatedQuantity);
                 }
             }
 
             // loop through array of decrement buttons associated with existing ingredients
             for(int i = 0; i < userIngredientList.size(); i++){
-                if(src2 == availableInventoryDecrementBtns.get(i))
+                if(src2 == userInventoryDecrementBtns.get(i))
                 {
-                        updatedQuantity = updateUserIngredientQuantity(i, availableInventoryDecrementBtns.get(i));
-                        availableInventoryAmountBtns.get(i).setText(Integer.toString(updatedQuantity));
+                        updatedQuantity = updateUserIngredientQuantity(i, userInventoryDecrementBtns.get(i));
+                        userInventoryQuantityBtns.get(i).setText(String.valueOf(updatedQuantity));
                         userIngredientList.get(i).setQuantity(updatedQuantity);
-                        setVisible(true);
-                        //userIngredientList.get(i).setQuantity(updatedQuantity);
                 }
             }
 
             // loop through every newly added inc button and set the quantity to its corresponding ingredient
             // in the addedIngredients List
-            for (int i = 0; i < userIngredientList.size(); i++)
+            for (int i = 0; i < addedIngredients.size(); i++)
             {
-                if(src2 == userInventoryIncrementBtns.get(i))
+                if(src2 == availableInventoryIncrementBtns.get(i))
                 {
-                    System.out.println("Increment Button Pressed");
-                    updatedQuantity = updateNewIngredientQuantity(i, userInventoryIncrementBtns.get(i));
-                    userInventoryQuantityBtns.get(i).setText(Integer.toString(updatedQuantity));
-                    userIngredientList.get(i).setQuantity(updatedQuantity);
-                    setVisible(true);
-                    //amount.setText(String.valueOf(updatedQuantity));
+                    updatedQuantity = updateNewIngredientQuantity(i, availableInventoryIncrementBtns.get(i));
+                    availableInventoryAmountBtns.get(i).setText(String.valueOf(updatedQuantity));
+                    addedIngredients.get(i).setQuantity(updatedQuantity);
                 }
             }
 
             // loop through every newly added dec button and set the quantity to its corresponding ingredient
             // in the addedIngredients List
-            for (int i = 0; i < userInventoryDecrementBtns.size(); i++)
+            for (int i = 0; i < addedIngredients.size(); i++)
             {
-                if(src2 == decrease[i])
+                if(src2 == availableInventoryDecrementBtns.get(i))
                 {
-                    System.out.println("Decrement Button Pressed");
-                    updatedQuantity = updateNewIngredientQuantity(i, userInventoryDecrementBtns.get(i));
-                    userInventoryQuantityBtns.get(i).setText(Integer.toString(updatedQuantity));
-                    userIngredientList.get(i).setQuantity(updatedQuantity);
-                    setVisible(true);
-                    //amount.setText(String.valueOf(updatedQuantity));
+                    updatedQuantity = updateNewIngredientQuantity(i, availableInventoryDecrementBtns.get(i));
+                    availableInventoryAmountBtns.get(i).setText(String.valueOf(updatedQuantity));
+                    addedIngredients.get(i).setQuantity(updatedQuantity);
                 }
             }
 
