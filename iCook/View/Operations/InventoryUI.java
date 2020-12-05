@@ -563,7 +563,6 @@ public class InventoryUI extends JFrame{
             {
                 if(src2 == availableInventoryIncrementBtns.get(i) && ingredient_name_buttons[i].isSelected())
                 {
-                    System.out.println("INC CLICK");
                     updatedQuantity = updateNewIngredientQuantity(i, availableInventoryIncrementBtns.get(i));
                     availableInventoryAmountBtns.get(i).setText(String.valueOf(updatedQuantity));
                     addedIngredients.get(ingredientList.get(i).getName()).setQuantity(updatedQuantity);
@@ -576,7 +575,6 @@ public class InventoryUI extends JFrame{
             {
                 if(src2 == availableInventoryDecrementBtns.get(i) && ingredient_name_buttons[i].isSelected())
                 {
-                    System.out.println("DEC CLICK");
                     updatedQuantity = updateNewIngredientQuantity(i, availableInventoryDecrementBtns.get(i));
                     availableInventoryAmountBtns.get(i).setText(String.valueOf(updatedQuantity));
                     addedIngredients.get(ingredientList.get(i).getName()).setQuantity(updatedQuantity);
