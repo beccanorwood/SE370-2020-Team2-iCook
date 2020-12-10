@@ -5,8 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import iCook.Controller.ServiceDispatcher;
-import iCook.View.Operations.HomeUI;
 
+/**
+ * User interface for the login page. A user can login to iCook with their existing account.
+ *
+ * @author Team 2
+ * @version 12/10/2020
+ */
 public class LoginUI extends JFrame implements ActionListener {
 
     private JFrame login_frame;
@@ -17,6 +22,10 @@ public class LoginUI extends JFrame implements ActionListener {
     private GridBagConstraints constraints;
 
     public LoginUI() {
+
+        // Create ServiceDispatcher instance
+        serviceDispatcher = new ServiceDispatcher();
+
         //Need text fields for username & password
         login_frame = new JFrame("iCook");
         login_frame.setSize(1024, 768);
@@ -104,13 +113,9 @@ public class LoginUI extends JFrame implements ActionListener {
         noAccountFound.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
 
-        // user clicks on "Back"
-        if (btn_Selection.equals("Back")) {
-            new WelcomeUI();
-
-            login_frame.setVisible(false);
-            login_frame.dispose();
-        }
+        // the user wants to go back to the WelcomeUI
+        if (btn_Selection.equals("Back"))
+            serviceDispatcher.gotoWelcome(login_frame);
 
         // user clicks on "Login"
         else if (btn_Selection.equals("Login")) {
@@ -123,19 +128,12 @@ public class LoginUI extends JFrame implements ActionListener {
             System.out.println("User name: " + username);
             System.out.println("Password: " + password);
 
-            // Create ServiceDispatcher instance
-            serviceDispatcher = new ServiceDispatcher();
-
             // try to login with given credentials
             // if valid, send them to home page
-
             if ( serviceDispatcher.login(username, password) ) {
                 System.out.println("Successfully logged in");
                 serviceDispatcher.displayUser();
-
-                new HomeUI(username);
-                login_frame.setVisible(false);
-                login_frame.dispose();
+                serviceDispatcher.gotoHome(username, login_frame);
             }
 
             // else, display an error

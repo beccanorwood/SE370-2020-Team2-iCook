@@ -1,8 +1,13 @@
 package iCook.Controller;
 
 import iCook.Model.*;
+import iCook.View.Login.*;
+import iCook.View.Operations.HomeUI;
+import iCook.View.Operations.InventoryUI;
+import iCook.View.Operations.RecipeUI;
 import iCook.View.Operations.DisplayObjects.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,7 +15,7 @@ import java.util.HashMap;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 12/1/2020
+ * @version 12/10/2020
  */
 public class ServiceDispatcher {
 
@@ -287,6 +292,115 @@ public class ServiceDispatcher {
     public void logUserOut()
     {
         user.deleteUserObject();
+    }
+
+
+    /**
+     * Creates a new instance of WelcomeUI. This is the only entry point for iCook.
+     * (Starts the application)
+     */
+    public void startProgram()
+    {
+        new WelcomeUI();
+    }
+
+
+    /**
+     * Ends the program from the WelcomeUI
+     * (Used in the WelcomeUI)
+     *
+     * @param frame the frame of the UI we are currently on and want to dispose of
+     */
+    public void quitProgram(JFrame frame)
+    {
+        frame.setVisible(false);
+        frame.dispose();
+        System.exit(0);
+    }
+
+
+    /**
+     * Creates a new instance of WelcomeUI and disposes of the current UI we are on
+     * (Used in LoginUI && SignUpUI && HomeUI)
+     *
+     * @param frame the frame of the UI we are currently on and want to dispose of
+     */
+    public void gotoWelcome(JFrame frame)
+    {
+        new WelcomeUI();
+        frame.setVisible(false);
+        frame.dispose();
+    }
+
+
+    /**
+     * Creates a new instance of LoginUI and disposes of the current UI we are on
+     * (Used in the WelcomeUI)
+     *
+     * @param frame the frame of the UI we are currently on and want to dispose of
+     */
+    public void gotoLogin(JFrame frame)
+    {
+        new LoginUI();
+        frame.setVisible(false);
+        frame.dispose();
+    }
+
+
+    /**
+     * Creates a new instance of SignUpUI and disposes of the current UI we are on
+     * (Used in the WelcomeUI)
+     *
+     * @param frame the frame of the UI we are currently on and want to dispose of
+     */
+    public void gotoSignup(JFrame frame)
+    {
+        new SignUpUI();
+        frame.setVisible(false);
+        frame.dispose();
+    }
+
+
+    /**
+     * Creates a new instance of HomeUI and disposes of the current UI we are on
+     * (Used in LoginUI && SignUpUI && InventoryUI && RecipeUI)
+     *
+     * @param username the username of the user being directed to HomeUI
+     * @param frame the frame of the UI we are currently on and want to dispose of
+     */
+    public void gotoHome(String username, JFrame frame)
+    {
+        new HomeUI(username);
+        frame.setVisible(false);
+        frame.dispose();
+    }
+
+
+    /**
+     * Creates a new instance of RecipeUI and disposes of the current UI we are on
+     * (Used in HomeUI && InventoryUI)
+     *
+     * @param frame the frame of the UI we are currently on and want to dispose of
+     */
+    public void gotoRecipes(JFrame frame)
+    {
+        new RecipeUI();
+        frame.setVisible(false);
+        frame.dispose();
+    }
+
+
+    /**
+     * Creates a new instance of InventoryUI and disposes of the current UI we are on
+     * (Used in HomeUI && RecipeUI && InventoryUI)
+     *
+     * @param frame the frame of the UI we are currently on and want to dispose of
+     */
+    public void gotoInventory(JFrame frame)
+    {
+        new InventoryUI();
+        frame.setVisible(false);
+        frame.dispose();
     }
 
 

@@ -6,8 +6,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import iCook.Controller.ServiceDispatcher;
-import iCook.View.Operations.HomeUI;
 
+/**
+ * User interface for the sign up screen. A user can create a new account for iCook by entering
+ * a desired username and password. Checks are in place to ensure a user cannot sign up with
+ * a username that is already in use.
+ *
+ * @author Team 2
+ * @version 12/10/2020
+ */
 public class SignUpUI extends JFrame implements ActionListener
 {
     private JFrame signup_frame;
@@ -19,6 +26,9 @@ public class SignUpUI extends JFrame implements ActionListener
 
     public SignUpUI()
     {
+        // Create ServiceDispatcher
+        serviceDispatcher = new ServiceDispatcher();
+
         signup_frame = new JFrame("iCook");
         signup_frame.setSize(1024, 768);
         signup_frame.setLocationRelativeTo(null);
@@ -92,13 +102,9 @@ public class SignUpUI extends JFrame implements ActionListener
     {
         String btn_Selection = e.getActionCommand();
 
+        // the user wants to go back to the WelcomeUI
         if(btn_Selection.equals("Back"))
-        {
-            new WelcomeUI();
-
-            signup_frame.setVisible(false);
-            signup_frame.dispose();
-        }
+            serviceDispatcher.gotoWelcome(signup_frame);
 
         // user click on "Create Account"
         else if (btn_Selection.equals("Create Account"))
@@ -125,24 +131,15 @@ public class SignUpUI extends JFrame implements ActionListener
 
             else
             {
-                // Create ServiceDispatcher
-                serviceDispatcher = new ServiceDispatcher();
-
                 // try to sign the user in, store the result in message
                 String message = serviceDispatcher.signUp(username, password);
 
                 // if creation was successful, check to see if they're logged in
                 if (username.equals(message))
                 {
-                    // if the user is logged in, go to next page
+                    // if the user is logged in, go to HomeUI
                     if (serviceDispatcher.isLoggedIn())
-                    {
-                        //serviceDispatcher.displayUser();
-                        new HomeUI(username);
-
-                        signup_frame.setVisible(false);
-                        signup_frame.dispose();
-                    }
+                        serviceDispatcher.gotoHome(username, signup_frame);
                 }
                 // if the creation was not successful, display the error
                 else {

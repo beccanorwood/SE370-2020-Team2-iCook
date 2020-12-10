@@ -13,13 +13,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
 /**
  * User interface for user's to view recipes they can cook based on their inventory. Users can click on a recipe they
  * wish to create and view its instructions. If a user does not have a sufficient inventory for any recipes, a message will be displayed
  *
  * @author Team 2
- * @version 12/4/2020
+ * @version 12/10/2020
  */
 public class RecipeUI extends JFrame implements ActionListener
 {
@@ -234,21 +233,17 @@ public class RecipeUI extends JFrame implements ActionListener
         String buttonChosen = e.getActionCommand();
 
         //Create 3 separate cases for each actionEvent to populate the proper JFrame
+
+        // take user to HomeUI
         if(buttonChosen.equals("Home"))
         {
-            //Instantiate home Class to display home GUI
-            new HomeUI(serviceDispatcher.getUserName());
-
-            //Close initial login page
-            frame.setVisible(false);
-            frame.dispose();
+            serviceDispatcher.gotoHome(serviceDispatcher.getUserName(), frame);
         }
 
+        // take user to InventoryUI
         else if(buttonChosen.equals("Inventory"))
         {
-            new InventoryUI();
-            frame.setVisible(false);
-            frame.dispose();
+            serviceDispatcher.gotoInventory(frame);
         }
 
         // this is where we will figure out what button they pressed

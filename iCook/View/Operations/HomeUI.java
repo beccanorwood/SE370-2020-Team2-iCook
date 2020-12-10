@@ -1,7 +1,6 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
-import iCook.View.Login.WelcomeUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,14 +11,24 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * User interface for iCook's "home" page (Displayed when a user successfully logs in).
+ * A user can chose to go to the inventory page, recipes page, or logout from this screen.
+ *
+ * @author Team 2
+ * @version 12/10/2020
+ */
 public class HomeUI extends JFrame implements ActionListener {
     //User Home Page with two buttons
     //Search and My Inventory
     private BufferedImage img;
     private final JFrame homeframe;
+    private ServiceDispatcher serviceDispatcher;
 
     public HomeUI(String userName)
     {
+        serviceDispatcher = new ServiceDispatcher();
+
         homeframe = new JFrame("iCook");
         JPanel homepanel = new JPanel(new GridBagLayout());
 
@@ -103,25 +112,18 @@ public class HomeUI extends JFrame implements ActionListener {
         //User goes to view all recipes if search is clicked, otherwise they view their inventory
         //and add, update, or delete ingredients
 
-        if(btn.equals("Logout")){
-            // log the user out of their account
-            ServiceDispatcher servDis = new ServiceDispatcher();
-            servDis.logUserOut();
-
-            // take the user to the welcome page (start page)
-            new WelcomeUI();
-            homeframe.setVisible(false);
-            homeframe.dispose();
+        if(btn.equals("Logout")) {
+            // log the user out of their account && take them back to WelcomeUI
+            serviceDispatcher.logUserOut();
+            serviceDispatcher.gotoWelcome(homeframe);
         }
-        else if(btn.equals("Recipes")){
-            new RecipeUI();
-            homeframe.setVisible(false);
-            homeframe.dispose();
+        // take the user to RecipeUI
+        else if(btn.equals("Recipes")) {
+            serviceDispatcher.gotoRecipes(homeframe);
         }
-        else{
-            new InventoryUI();
-            homeframe.setVisible(false);
-            homeframe.dispose();
+        // take the user to InventoryUI
+        else {
+            serviceDispatcher.gotoInventory(homeframe);
         }
     }
 

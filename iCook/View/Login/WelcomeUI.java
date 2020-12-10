@@ -1,5 +1,7 @@
 package iCook.View.Login;
 
+import iCook.Controller.ServiceDispatcher;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -9,14 +11,24 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * User interface for iCook's starting screen. This is the very first screen a user will see when starting iCook.
+ * The applications alternative mode of termination is located on this screen via the "Quit" button.
+ *
+ * @author Team 2
+ * @version 12/10/2020
+ */
 public class WelcomeUI extends JFrame implements ActionListener
 {
     private JFrame frame;
     private JPanel panel;
     private BufferedImage img;
+    private ServiceDispatcher serviceDispatcher;
 
     public WelcomeUI() //Constructor will display initial login screen to user
     {
+        serviceDispatcher = new ServiceDispatcher();
+
         frame = new JFrame("iCook");
         frame.setSize(1024, 768);
         frame.setLocationRelativeTo(null);
@@ -94,27 +106,14 @@ public class WelcomeUI extends JFrame implements ActionListener
         //Create 3 separate classes for each actionEvent to populate the proper JFrame
 
         if(buttonChosen.equals("Login")){
-            //Instantiate Login Class to display login GUI
-            new LoginUI();
-
-            //Close initial login page
-            frame.setVisible(false);
-            frame.dispose();
+            serviceDispatcher.gotoLogin(frame);
         }
         else if(buttonChosen.equals("Signup")){
-            //Sign Up class will display and user can create account
-            new SignUpUI();
-
-            //Close home page
-            //SignUp class
-            frame.setVisible(false);
-            frame.dispose();
+            serviceDispatcher.gotoSignup(frame);
         }
         else if (buttonChosen.equals("Quit"))
         {
-            frame.setVisible(false);
-            frame.dispose();
-            System.exit(0);
+            serviceDispatcher.quitProgram(frame);
         }
     }
 }

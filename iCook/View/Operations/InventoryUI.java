@@ -10,11 +10,13 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 /**
+ * User interface for user's to view their inventory. Two panels are presented to the user, the left panel shows
+ * ingredients available to the user to select from, the right panel shows the users current inventory. A user
+ * can add,remove, and update ingredients in their inventory on this page.
  *
  * @author Team 2
- * @version 12/5/2020
+ * @version 12/10/2020
  */
 public class InventoryUI extends JFrame{
 
@@ -695,12 +697,11 @@ public class InventoryUI extends JFrame{
                 }
             }
 
-            // if the user clicked the search button
+            // if the user clicked the recipes button
             if(src2 == recipes)
             {
-                new RecipeUI();
-                frame.setVisible(false);
-                frame.dispose();
+                // go to RecipeUI
+                serviceDispatcher.gotoRecipes(frame);
             }
 
             // else if the user clicked the update button
@@ -711,21 +712,15 @@ public class InventoryUI extends JFrame{
                 pendingIngredientList.addAll(addedIngredients.values());     // add the newly added ingredients to the pending list
                 serviceDispatcher.updateUserInventory(pendingIngredientList);
 
-                new InventoryUI();
-
-                // refresh this page
-                frame.setVisible(false);
-                frame.dispose();
+                // re-instantiate the InventoryUI to reflect changes
+                serviceDispatcher.gotoInventory(frame);
             }
 
             // else if the user clicked the home button
             else if(src2 == home)
             {
-                new HomeUI(serviceDispatcher.getUserName());
-
-                //Instantiate home Class to display home GUI
-                frame.setVisible(false);
-                frame.dispose();
+                // go back to HomeUI
+                serviceDispatcher.gotoHome(serviceDispatcher.getUserName(), frame);
             }
         }
     }
