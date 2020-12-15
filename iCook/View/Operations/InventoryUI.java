@@ -16,10 +16,9 @@ import java.util.HashMap;
  * can add,remove, and update ingredients in their inventory on this page.
  *
  * @author Team 2
- * @version 12/10/2020
+ * @version 12/14/2020
  */
 public class InventoryUI extends JFrame{
-
 
     //Inventory UI frame that holds all inventory panels//
 
@@ -43,19 +42,13 @@ public class InventoryUI extends JFrame{
     JLabel[] ingredient_unit_buttons; //Measurements corresponding to each available ingredient
 
 
-
     //User's ingredient inventory instance variables //
 
     /*Right side of frame instance variables*/
 
-
-    private JPanel mainrightPanel; //Right half of JFrame
     private JButton[] increaseBtns; //Buttons that the user selects to update the quantity currently in their inventory by increasing the value
     private JButton[] decreaseBtns; //Buttons that the user selects to update the quantity currently in their inventory by decreasing the value
     private JButton[] amountBtns; //Buttons that changes value depending upon the increase/decrease values
-
-    private JPanel[] btnContainerRight;
-    private JPanel totalBtnContainerRight;
 
     /*Bottom panel with Buttons instance variables*/
     private JButton home;

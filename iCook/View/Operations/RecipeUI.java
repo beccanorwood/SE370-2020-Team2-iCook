@@ -3,14 +3,10 @@ package iCook.View.Operations;
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.Operations.DisplayObjects.RecipeDisplayObject;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +14,7 @@ import java.util.ArrayList;
  * wish to create and view its instructions. If a user does not have a sufficient inventory for any recipes, a message will be displayed
  *
  * @author Team 2
- * @version 12/10/2020
+ * @version 12/14/2020
  */
 public class RecipeUI extends JFrame implements ActionListener
 {
@@ -34,7 +30,6 @@ public class RecipeUI extends JFrame implements ActionListener
     private JTextArea instructions;
 
     private JPanel bottom_panel;
-    private BufferedImage img;
     private JButton[] recipesBtn;
     private ServiceDispatcher serviceDispatcher;
 
@@ -74,38 +69,22 @@ public class RecipeUI extends JFrame implements ActionListener
         JLabel iCook = new JLabel("Recipes in your market");
         iCook.setFont(new Font("Helvetica", Font.BOLD, 40));
         iCook.setForeground(new Color(249,250,244));
-        ImageIcon logo;
-
-        try
-        {
-            img = ImageIO.read(new File("iCook_Logo.png"));
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-
-        logo = new ImageIcon(img);
-
-        // get the logo
-        JLabel iCookLogo = new JLabel();
-        iCookLogo.setIcon(logo);
 
         // populate the header
         toppanel = new JPanel();
         toppanel.setBackground(new Color(26, 27, 34));
         toppanel.add(iCook);
-        //toppanel.add(iCookLogo);
 
         // *********************************************
         // *** Recipe panel & buttons worked on here ***
         // *********************************************
 
         // numOfRecipes will be the size of the array returned from the controller containing recipes
-        if(satisfiedRecipes == null || satisfiedRecipes.isEmpty()){
+        if(satisfiedRecipes == null || satisfiedRecipes.isEmpty())
             numOfRecipes = 0;
-        } else {
+        else
             numOfRecipes = satisfiedRecipes.size();
-        }
+
         // create the recipe panel (this stores all recipe buttons)
         recipe_panel = new JPanel(new GridBagLayout());
         recipe_panel.setBackground(new Color(26, 27, 34));
