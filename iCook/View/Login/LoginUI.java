@@ -10,7 +10,7 @@ import iCook.Controller.ServiceDispatcher;
  * User interface for the login page. A user can login to iCook with their existing account.
  *
  * @author Team 2
- * @version 12/10/2020
+ * @version 04/09/2021
  */
 public class LoginUI extends JFrame implements ActionListener {
 
@@ -21,20 +21,21 @@ public class LoginUI extends JFrame implements ActionListener {
     private ServiceDispatcher serviceDispatcher;
     private GridBagConstraints constraints;
 
-    public LoginUI() {
+    public LoginUI(JFrame frame) {
 
         // Create ServiceDispatcher instance
         serviceDispatcher = new ServiceDispatcher();
 
         //Need text fields for username & password
-        login_frame = new JFrame("iCook");
+        login_frame = frame;
+        login_frame.setTitle("iCook");
         login_frame.setSize(1024, 768);
-        login_frame.setLocationRelativeTo(null);
         login_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         login_frame.setLayout(new BorderLayout());
         login_frame.setResizable(false);
 
         login_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
+
         constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(15, 10, 15, 10);
@@ -91,6 +92,11 @@ public class LoginUI extends JFrame implements ActionListener {
         login_panel.add(login, constraints);
 
         login_panel.setBackground(new Color(26, 27, 34));
+
+        //Clean up contents from WelcomeUI panel
+        login_panel.revalidate();
+        login_panel.repaint();
+
         login_frame.add(login_panel);
         login_frame.setVisible(true);
 

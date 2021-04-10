@@ -16,7 +16,7 @@ import java.io.IOException;
  * The applications alternative mode of termination is located on this screen via the "Quit" button.
  *
  * @author Team 2
- * @version 12/10/2020
+ * @version 04/09/2021
  */
 public class WelcomeUI extends JFrame implements ActionListener
 {
@@ -25,16 +25,21 @@ public class WelcomeUI extends JFrame implements ActionListener
     private BufferedImage img;
     private ServiceDispatcher serviceDispatcher;
 
-    public WelcomeUI() //Constructor will display initial login screen to user
+    /**
+     * Second constructor for WelcomeUI with parameters to switch smoothly between UI's without creating new panels
+     *
+     * @author Team 2
+     * @version 04/09/2020
+     */
+
+    public WelcomeUI(JFrame frame)
     {
         serviceDispatcher = new ServiceDispatcher();
 
-        frame = new JFrame("iCook");
-        frame.setSize(1024, 768);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
-        frame.setResizable(false);
+        this.frame = frame;
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setLayout(new BorderLayout());
+        this.frame.setResizable(false);
 
         panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
         GridBagConstraints constraints = new GridBagConstraints();
@@ -47,7 +52,7 @@ public class WelcomeUI extends JFrame implements ActionListener
 
         constraints.gridx = 3;
         constraints.gridy = 0;
-        panel.add(iCook, constraints);
+        this.panel.add(iCook, constraints);
 
         try{
             img = ImageIO.read(new File("iCook_Logo.png"));
@@ -62,7 +67,7 @@ public class WelcomeUI extends JFrame implements ActionListener
         iCookLogo.setIcon(logo);
 
         constraints.gridx = 4;
-        panel.add(iCookLogo, constraints);
+        this.panel.add(iCookLogo, constraints);
 
         JButton login = new JButton("Login");
         login.setFont(new Font("Helvetica", Font.PLAIN, 20));
@@ -82,19 +87,19 @@ public class WelcomeUI extends JFrame implements ActionListener
 
         constraints.gridx = 3;
         constraints.gridy = 3;
-        panel.add(login, constraints);
+        this.panel.add(login, constraints);
 
         constraints.gridx = 3;
         constraints.gridy = 6;
-        panel.add(signup, constraints);
+        this.panel.add(signup, constraints);
 
         constraints.gridx = 3;
         constraints.gridy = 9;
-        panel.add(quit, constraints);
+        this.panel.add(quit, constraints);
 
-        panel.setBackground(new Color(26, 27, 34));
-        frame.add(panel);
-        frame.setVisible(true);
+        this.panel.setBackground(new Color(26, 27, 34));
+        this.frame.add(panel);
+        this.frame.setVisible(true);
 
     }
 

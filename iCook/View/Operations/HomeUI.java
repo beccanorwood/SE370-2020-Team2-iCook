@@ -16,27 +16,27 @@ import java.io.IOException;
  * A user can chose to go to the inventory page, recipes page, or logout from this screen.
  *
  * @author Team 2
- * @version 12/10/2020
+ * @version 04/09/2021
  */
 public class HomeUI extends JFrame implements ActionListener {
     //User Home Page with two buttons
     //Search and My Inventory
     private BufferedImage img;
-    private final JFrame homeframe;
+    private JFrame homeframe;
+    private JPanel homepanel;
     private ServiceDispatcher serviceDispatcher;
 
-    public HomeUI(String userName)
+    public HomeUI(String userName, JFrame frame)
     {
         serviceDispatcher = new ServiceDispatcher();
 
-        homeframe = new JFrame("iCook");
-        JPanel homepanel = new JPanel(new GridBagLayout());
+        homeframe = frame;
+        homepanel = new JPanel(new GridBagLayout());
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(26, 27, 34));
 
         homeframe.setSize(1024, 768);
-        homeframe.setLocationRelativeTo(null);
         homeframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         homeframe.setLayout(new BorderLayout());
 
@@ -115,7 +115,7 @@ public class HomeUI extends JFrame implements ActionListener {
         if(btn.equals("Logout")) {
             // log the user out of their account && take them back to WelcomeUI
             serviceDispatcher.logUserOut();
-            serviceDispatcher.gotoWelcome(homeframe);
+            serviceDispatcher.gotoWelcome(homeframe); //WelcomeUI with JPanel & JFrame as parameters
         }
         // take the user to RecipeUI
         else if(btn.equals("Recipes")) {

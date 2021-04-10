@@ -15,9 +15,9 @@ import java.util.HashMap;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 12/10/2020
+ * @version 04/09/2021
  */
-public class ServiceDispatcher {
+public class ServiceDispatcher extends JFrame{
 
     // user need to be static (not unique for each ServiceDispatcher object)
     private static User user = null;
@@ -301,7 +301,14 @@ public class ServiceDispatcher {
      */
     public void startProgram()
     {
-        new WelcomeUI();
+        //First java frame is created and will be passed between classes within the View Package
+
+        JFrame initial_frame = new JFrame();
+        initial_frame.setTitle("iCook");
+        initial_frame.setSize(1024, 768);
+        initial_frame.setLocationRelativeTo(null);
+
+        new WelcomeUI(initial_frame);
     }
 
 
@@ -327,9 +334,8 @@ public class ServiceDispatcher {
      */
     public void gotoWelcome(JFrame frame)
     {
-        new WelcomeUI();
-        frame.setVisible(false);
-        frame.dispose();
+        frame.getContentPane().removeAll();
+        new WelcomeUI(frame);
     }
 
 
@@ -341,9 +347,8 @@ public class ServiceDispatcher {
      */
     public void gotoLogin(JFrame frame)
     {
-        new LoginUI();
-        frame.setVisible(false);
-        frame.dispose();
+        frame.getContentPane().removeAll(); //Clear contents of Welcome UI panel
+        new LoginUI(frame); //Panel and frame passed to constructor of UI's to create a smooth transition
     }
 
 
@@ -355,9 +360,8 @@ public class ServiceDispatcher {
      */
     public void gotoSignup(JFrame frame)
     {
-        new SignUpUI();
-        frame.setVisible(false);
-        frame.dispose();
+        frame.getContentPane().removeAll(); //Clear contents of Welcome UI panel
+        new SignUpUI(frame); //Panel and frame passed to constructor of UI's to create a smooth transition
     }
 
 
@@ -370,10 +374,10 @@ public class ServiceDispatcher {
      */
     public void gotoHome(String username, JFrame frame)
     {
-        new HomeUI(username);
-        frame.setVisible(false);
-        frame.dispose();
+        frame.getContentPane().removeAll();
+        new HomeUI(username, frame);
     }
+
 
 
     /**
@@ -384,9 +388,8 @@ public class ServiceDispatcher {
      */
     public void gotoRecipes(JFrame frame)
     {
-        new RecipeUI();
-        frame.setVisible(false);
-        frame.dispose();
+        frame.getContentPane().removeAll();
+        new RecipeUI(frame);
     }
 
 
@@ -398,9 +401,8 @@ public class ServiceDispatcher {
      */
     public void gotoInventory(JFrame frame)
     {
-        new InventoryUI();
-        frame.setVisible(false);
-        frame.dispose();
+        frame.getContentPane().removeAll();
+        new InventoryUI(frame);
     }
 
 

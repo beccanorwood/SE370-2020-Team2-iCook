@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * wish to create and view its instructions. If a user does not have a sufficient inventory for any recipes, a message will be displayed
  *
  * @author Team 2
- * @version 12/14/2020
+ * @version 04/09/2021
  */
 public class RecipeUI extends JFrame implements ActionListener
 {
@@ -36,7 +36,7 @@ public class RecipeUI extends JFrame implements ActionListener
     private ArrayList<RecipeDisplayObject> satisfiedRecipes;
     private int numOfRecipes;
 
-    public RecipeUI()
+    public RecipeUI(JFrame frame)
     {
         // use the service dispatcher to get the recipe list for the logged in user
         serviceDispatcher = new ServiceDispatcher();
@@ -55,12 +55,11 @@ public class RecipeUI extends JFrame implements ActionListener
         instructions.setForeground(new Color(249,250,244));
 
         // set the frame up
-        frame = new JFrame("iCook");
-        frame.setSize(1024, 768);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
-        frame.setResizable(false);
+        this.frame = frame;
+        this.frame.setSize(1024, 768);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setLayout(new BorderLayout());
+        this.frame.setResizable(false);
 
         // ***********************************
         // *** Top panel is worked on here ***
@@ -153,25 +152,25 @@ public class RecipeUI extends JFrame implements ActionListener
         // **********************************
 
         // add the header to the frame
-        frame.add(toppanel, BorderLayout.NORTH);
+        this.frame.add(toppanel, BorderLayout.NORTH);
 
         // add the left scroll panel to the frame
         recipe_scrollable = new JScrollPane(recipe_panel);
         recipe_scrollable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         recipe_scrollable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        frame.add(recipe_scrollable, BorderLayout.WEST);
+        this.frame.add(recipe_scrollable, BorderLayout.WEST);
 
         // add the center scroll panel to the frame
         center_scrollable = new JScrollPane(center_panel);
         center_scrollable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         center_scrollable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        frame.add(center_scrollable, BorderLayout.CENTER);
+        this.frame.add(center_scrollable, BorderLayout.CENTER);
 
         // add the navigation buttons to the frame
-        frame.add(bottom_panel, BorderLayout.SOUTH);
+        this.frame.add(bottom_panel, BorderLayout.SOUTH);
 
         // set frame to visible
-        frame.setVisible(true);
+        this.frame.setVisible(true);
 
         // ***************************
         // *** Error handling here ***
@@ -216,6 +215,7 @@ public class RecipeUI extends JFrame implements ActionListener
         // take user to HomeUI
         if(buttonChosen.equals("Home"))
         {
+            frame.getContentPane().removeAll();
             serviceDispatcher.gotoHome(serviceDispatcher.getUserName(), frame);
         }
 

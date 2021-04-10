@@ -13,7 +13,7 @@ import iCook.Controller.ServiceDispatcher;
  * a username that is already in use.
  *
  * @author Team 2
- * @version 12/10/2020
+ * @version 04/09/2021
  */
 public class SignUpUI extends JFrame implements ActionListener
 {
@@ -24,19 +24,20 @@ public class SignUpUI extends JFrame implements ActionListener
     private ServiceDispatcher serviceDispatcher;
     private GridBagConstraints constraints;
 
-    public SignUpUI()
+    public SignUpUI(JFrame frame)
     {
         // Create ServiceDispatcher
         serviceDispatcher = new ServiceDispatcher();
 
-        signup_frame = new JFrame("iCook");
+        signup_frame = frame;
+        signup_frame.setTitle("iCook");
         signup_frame.setSize(1024, 768);
-        signup_frame.setLocationRelativeTo(null);
         signup_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         signup_frame.setLayout(new BorderLayout());
         signup_frame.setResizable(false);
 
         signup_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
+
         constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(15, 10, 15, 10);
@@ -93,6 +94,11 @@ public class SignUpUI extends JFrame implements ActionListener
         constraints.gridx = 4;
         signup_panel.add(create, constraints);
         signup_panel.setBackground(new Color(26, 27, 34));
+
+        //Clean up contents from WelcomeUI panel
+        signup_panel.revalidate();
+        signup_panel.repaint();
+
         signup_frame.add(signup_panel);
         signup_frame.setVisible(true);
     }

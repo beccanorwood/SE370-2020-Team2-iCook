@@ -16,7 +16,7 @@ import java.util.HashMap;
  * can add,remove, and update ingredients in their inventory on this page.
  *
  * @author Team 2
- * @version 12/14/2020
+ * @version 04/09/2021
  */
 public class InventoryUI extends JFrame{
 
@@ -31,6 +31,8 @@ public class InventoryUI extends JFrame{
     /*Left side of frame instance variables*/
 
     private JPanel mainleftPanel; //left half of JFrame
+    private JPanel mainrightPanel; //right half of JFrame
+
     private JButton[] incrementBtns; //Buttons that user selects to increase amount of ingredient not in their inventory
     private JButton[] quantityBtns; //Button that changes value dependent upon the increment/decrement buttons
     private JButton[] decrementBtns; //Button that user selects to decrease the amount of an ingredient not in their inventory
@@ -75,7 +77,7 @@ public class InventoryUI extends JFrame{
     ButtonListener bl = new ButtonListener(); //Inner Action Listener Class for InventoryUI buttons
     CheckBoxListener cbl = new CheckBoxListener(); //Inner Action Listener Class for InventoryUI radioButtons
 
-    public InventoryUI()
+    public InventoryUI(JFrame frame)
     {
         addedIngredients = new HashMap<>();
         userInventoryIncrementBtns = new ArrayList<>();
@@ -90,17 +92,17 @@ public class InventoryUI extends JFrame{
         ingredientList = serviceDispatcher.getAvailableIngredients();
         userIngredientList = serviceDispatcher.getUserInventory();
 
-        DisplayFrame();
+        DisplayFrame(frame);
     }
 
-    private void DisplayFrame()
+    private void DisplayFrame(JFrame frame)
     {
-        frame = new JFrame();
-        frame.setSize(1024, 768);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
-        frame.setResizable(false);
+        this.frame = frame;
+        this.frame.setSize(1024, 768);
+        //this.frame.setLocationRelativeTo(null);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setLayout(new BorderLayout());
+        this.frame.setResizable(false);
 
         JPanel topPanel = new JPanel(); //Panel displaying labels for each panel
         JPanel bottomPanel = new JPanel(); //Panel displaying buttons to update their inventory, go to recipe page, or the home page
@@ -176,7 +178,7 @@ public class InventoryUI extends JFrame{
 
         //Components that are added to the right half of the jframe
 
-        JPanel mainrightPanel = new JPanel(new GridBagLayout()); //Right panel, displaying user's inventory
+        mainrightPanel = new JPanel(new GridBagLayout()); //Right panel, displaying user's inventory
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.VERTICAL;
