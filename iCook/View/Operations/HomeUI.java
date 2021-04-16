@@ -16,7 +16,7 @@ import java.io.IOException;
  * A user can chose to go to the inventory page, recipes page, or logout from this screen.
  *
  * @author Team 2
- * @version 04/09/2021
+ * @version 04/16/2021
  */
 public class HomeUI extends JFrame implements ActionListener {
     //User Home Page with two buttons

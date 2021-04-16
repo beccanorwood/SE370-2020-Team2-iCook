@@ -15,7 +15,7 @@ import java.util.Map;
  * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
- * @version 12/1/2020
+ * @version 4/16/2021
  */
 public class UserDAO extends BaseDAO {
 
@@ -188,9 +188,10 @@ public class UserDAO extends BaseDAO {
 
             while (rs.next()) {
                 int id = rs.getInt("id");
+                boolean is_admin = rs.getBoolean("is_admin");
 
                 // create the user singleton (SHOULD BE THE ONLY PLACE THIS HAPPENS)
-                User user = User.getUser(id, username, password);
+                User user = User.getUser(id, username, password, is_admin);
             }
         }
 

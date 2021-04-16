@@ -15,7 +15,7 @@ import java.util.HashMap;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 04/09/2021
+ * @version 04/16/2021
  */
 public class ServiceDispatcher extends JFrame{
 
@@ -57,6 +57,7 @@ public class ServiceDispatcher extends JFrame{
             // initialize the user SINGLETON here
             // initialize the user's list of ingredient here (1st time)
             user = User.getUser();
+            assert user != null;
             userIngredients = facade.getUserIngredients(user.getId());
             return true;
         }
@@ -119,7 +120,19 @@ public class ServiceDispatcher extends JFrame{
      */
     public boolean isLoggedIn()
     {
-        return ( user == null ) ? false : true;
+        return user != null;
+    }
+
+
+    /**
+     * Returns the boolean value indicating whether or not the current user
+     * is an admin or not.
+     *
+     * @return true if the user is an admin, false otherwise
+     */
+    public boolean isUserAdmin()
+    {
+        return user.isAdmin();
     }
 
 

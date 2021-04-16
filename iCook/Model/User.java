@@ -1,11 +1,11 @@
 package iCook.Model;
 
 /**
- * User class that stores a user's id, username, and password
+ * User class that stores a user's id, username, password, and admin access.
  * Uses the Singleton Pattern - only 1 user should exists in runtime
  *
  * @author Team 2
- * @version 11/29/2020
+ * @version 4/16/2021
  */
 public class User {
 
@@ -17,15 +17,17 @@ public class User {
     private int id;             // id that is stored in the database
     private String userName;    // the username of this user
     private String password;    // the password of this user
+    private boolean is_admin;   // indicates if the user has admin access
 
 
     /**
      * Constructor - 4 variables must be passed in
      */
-    private User(int id, String userName, String password) {
+    private User(int id, String userName, String password, boolean is_admin) {
         this.id = id;
         this.userName = userName;
         this.password = password;
+        this.is_admin = is_admin;
         //this.userIngredients = userIngredients;
     }
 
@@ -37,12 +39,12 @@ public class User {
      * If the singleton exists, return the object
      * else, create a new user object and return it
      */
-    public static User getUser(int id, String userName, String password)
+    public static User getUser(int id, String userName, String password, boolean is_admin)
     {
         if (userObject == null)
         {
-            userObject = new User(id, userName, password);
-            System.out.println("User created\n");
+            userObject = new User(id, userName, password, is_admin);
+            System.out.println("User singleton initialized\n");
         }
 
         return userObject;
@@ -98,6 +100,15 @@ public class User {
     public int getId()
     {
         return id;
+    }
+
+
+    /**
+     * Returns true if the user is an admin, false otherwise
+     */
+    public boolean isAdmin()
+    {
+        return is_admin;
     }
 
 
