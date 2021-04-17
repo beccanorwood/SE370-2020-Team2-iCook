@@ -34,7 +34,7 @@ public class HomeUI extends JFrame implements ActionListener {
         homepanel = new JPanel(new GridBagLayout());
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(new Color(26, 27, 34));
+        buttonPanel.setBackground(new Color(26,27,34));
 
         homeframe.setSize(1024, 768);
         homeframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,7 +58,7 @@ public class HomeUI extends JFrame implements ActionListener {
         pic.setIcon(logo);
 
         JLabel welcome = new JLabel("Hi " + userName + "!"); //Welcome label
-        welcome.setFont(new Font("Helvetica", Font.BOLD, 54)); //Size, Color, etc
+        welcome.setFont(new Font("Helvetica", Font.BOLD, 60)); //Size, Color, etc
         welcome.setForeground(Color.WHITE);
 
         constraints.gridx = 4;
@@ -70,12 +70,27 @@ public class HomeUI extends JFrame implements ActionListener {
         homepanel.add(pic, constraints);
 
         // Buttons
+        JButton admin = new JButton("Admin");
+        admin.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        admin.setPreferredSize(new Dimension(144,35));
+
+        /*
+        Admin button will be displayed for certain users
+         */
+        if (serviceDispatcher.isUserAdmin()) {
+            constraints.gridx = 4;
+            constraints.gridy = 1;
+            admin.setVisible(true);
+            homepanel.add(buttonPanel.add(admin), constraints);
+        }
+
+
         JButton myInventory = new JButton("Inventory");
         myInventory.setFont(new Font("Helvetica", Font.PLAIN, 20));
         myInventory.setPreferredSize(new Dimension(144,35));
 
         constraints.gridx = 4;
-        constraints.gridy = 1;
+        constraints.gridy = 2;
         homepanel.add(buttonPanel.add(myInventory), constraints);
 
         JButton recipes = new JButton("Recipes");
@@ -83,17 +98,18 @@ public class HomeUI extends JFrame implements ActionListener {
         recipes.setPreferredSize(new Dimension(144,35));
 
         constraints.gridx = 4;
-        constraints.gridy = 2;
-        homepanel.add(recipes, constraints);
+        constraints.gridy = 3;
+        homepanel.add(buttonPanel.add(recipes), constraints);
 
         JButton logout = new JButton("Logout");
         logout.setFont(new Font("Helvetica", Font.PLAIN, 20));
         logout.setPreferredSize(new Dimension(144,35));
 
         constraints.gridx = 4;
-        constraints.gridy = 3;
+        constraints.gridy = 4;
         homepanel.add(buttonPanel.add(logout), constraints);
 
+        admin.addActionListener(this);
         recipes.addActionListener(this);
         myInventory.addActionListener(this);
         logout.addActionListener(this);
@@ -120,6 +136,9 @@ public class HomeUI extends JFrame implements ActionListener {
         // take the user to RecipeUI
         else if(btn.equals("Recipes")) {
             serviceDispatcher.gotoRecipes(homeframe);
+        }
+        else if(btn.equals("Admin")) {
+            //serviceDispatcher.gotoAdmin(homeframe);
         }
         // take the user to InventoryUI
         else {

@@ -22,6 +22,7 @@ public class WelcomeUI extends JFrame implements ActionListener
 {
     private JFrame frame;
     private JPanel panel;
+    private GradientPaint gp;
     private BufferedImage img;
     private ServiceDispatcher serviceDispatcher;
 
@@ -48,6 +49,7 @@ public class WelcomeUI extends JFrame implements ActionListener
 
         JLabel iCook = new JLabel("Welcome to iCook!");
         iCook.setFont(new Font("Helvetica", Font.BOLD, 54));
+
         iCook.setForeground(new Color(249,250,244));
 
         constraints.gridx = 3;
@@ -98,6 +100,7 @@ public class WelcomeUI extends JFrame implements ActionListener
         this.panel.add(quit, constraints);
 
         this.panel.setBackground(new Color(26, 27, 34));
+
         this.frame.add(panel);
         this.frame.setVisible(true);
 
