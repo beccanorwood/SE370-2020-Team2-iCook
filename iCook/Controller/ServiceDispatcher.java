@@ -18,7 +18,7 @@ import java.util.HashMap;
  * @author Team 2
  * @version 04/16/2021
  */
-public class ServiceDispatcher extends JFrame{
+public class ServiceDispatcher {
 
     // user need to be static (not unique for each ServiceDispatcher object)
     private static User user = null;
@@ -392,12 +392,12 @@ public class ServiceDispatcher extends JFrame{
         new HomeUI(username, frame);
     }
 
+
     public void gotoAdmin(JFrame frame)
     {
         frame.getContentPane().removeAll();
         new AdminUI(frame);
     }
-
 
 
     /**
