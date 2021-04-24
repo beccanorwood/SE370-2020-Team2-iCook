@@ -26,8 +26,8 @@ public class LoginUI extends JFrame implements ActionListener {
         // Create ServiceDispatcher instance
         serviceDispatcher = new ServiceDispatcher();
 
-        //Need text fields for username & password
         login_frame = frame;
+
         login_frame.setTitle("iCook");
         login_frame.setSize(1024, 768);
         login_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

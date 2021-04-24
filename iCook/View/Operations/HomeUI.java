@@ -46,7 +46,7 @@ public class HomeUI extends JFrame implements ActionListener {
 
         //iCook Logo
         try{
-            img = ImageIO.read(new File("iCook_Logo.png"));
+            img = ImageIO.read(new File("iCook_Logo(125).png"));
         }
         catch(IOException e){
             e.printStackTrace();

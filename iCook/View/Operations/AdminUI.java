@@ -3,22 +3,39 @@ package iCook.View.Operations;
 import iCook.Controller.ServiceDispatcher;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AdminUI extends JFrame {
+
+/**
+ * AdminUI
+ *
+ * @author Team 2
+ * @version 04/23/2021
+ */
+
+
+public class AdminUI {
+
     // instance variables
     private JFrame frame;
     private ServiceDispatcher serviceDispatcher;
 
-    private JPanel mainPanel;
-    private JScrollPane scrollPane;
+    private JPanel mainPanel; //Main panel for all elements
+    private JScrollPane scrollPane; //Scroll Panel
+    private JPanel containerPanel;//Panel that holds row of buttons to add ingredients
 
-    private JPanel namePanel;
-    private JPanel instrPanel;
-    private JPanel buttonsPanel;
-    private JPanel ingredientPanel;
+    private GridBagConstraints gbc;
+
+    private JLabel nameLabel;
+    private JTextField nameTxtField;
+    private JLabel instrLabel;
+    private JTextArea instrTxtField;
+    private JButton submitBtn;
+
+    private JPanel ingredientPanel; //Panel that holds the 4 buttons in bottoms row for adding ingredients
 
     private int numOfIngredients; // keeps track of how many ingredient rows we have
 
@@ -28,74 +45,18 @@ public class AdminUI extends JFrame {
 
         // set the frame up
         this.frame = frame;
+        this.frame.setResizable(false);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // set up the main panel
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(0,1));
+        // set up the container panel
+        containerPanel = new JPanel();
+        containerPanel.setLayout(new GridLayout(0,1)); //Panel for Buttons on bottom to dynamically add/remove
 
-        // set up the main scroll pane
-        scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        // ********************************
-        // Setting up the Recipe Name panel
-        // ********************************
-        namePanel = new JPanel();
-        namePanel.setSize(1024,150);
-
-        JLabel nameLabel = new JLabel("Recipe:");
-        nameLabel.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        namePanel.add(nameLabel, BorderLayout.WEST);
-
-        JTextField nameTxtField = new JTextField(30);
-        nameTxtField.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        nameTxtField.setPreferredSize(new Dimension(30, 40));
-        namePanel.add(nameTxtField, BorderLayout.WEST);
-
-        mainPanel.add(namePanel, BorderLayout.WEST);
-
-        // ****************************************
-        // Setting up the Recipe Instructions panel
-        // ****************************************
-        instrPanel = new JPanel();
-        instrPanel.setSize(1024,150);
-
-        JLabel instrLabel = new JLabel("Instructions:");
-        instrLabel.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        instrPanel.add(instrLabel, BorderLayout.WEST);
-
-        JTextArea instrTxtField = new JTextArea(10, 30);
-        instrTxtField.setFont(new Font("Helvetica", Font.PLAIN, 20));
-
-        JScrollPane textScroll = new JScrollPane(instrTxtField);
-        textScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        textScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        instrPanel.add(textScroll);
-
-        mainPanel.add(instrPanel, BorderLayout.WEST);
-
-        // *************
-        // Buttons panel
-        // *************
-        buttonsPanel = new JPanel();
-        buttonsPanel.setSize(1024,150);
-
-        ButtonGroup radioBtnGroup = new ButtonGroup();
-
-        JRadioButton publishedButton = new JRadioButton("Published");
-        radioBtnGroup.add(publishedButton);
-        buttonsPanel.add(publishedButton);
-
-        JRadioButton notPublishedButton = new JRadioButton("Not Published");
-        radioBtnGroup.add(notPublishedButton);
-        buttonsPanel.add(notPublishedButton);
-
-        JButton submitBtn = new JButton("Submit");
-        buttonsPanel.add(submitBtn);
-
-        mainPanel.add(buttonsPanel, BorderLayout.WEST);
+        // ******************
+        // Main Panel Set Up
+        // ******************
+        setupMainPanel();
 
         // ********************
         // 1st Ingredient Panel
@@ -106,29 +67,114 @@ public class AdminUI extends JFrame {
         // ********************************************
         // Set frame visible at end to show all changes
         // ********************************************
-        this.frame.add(scrollPane);
         this.frame.setVisible(true);
         scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMinimum());
     }
 
+    private void setupMainPanel()
+    {
+        //******************************************
+        //Initialize variables for main panel
+        //******************************************
 
-//    @Override
-//    public void actionPerformed(ActionEvent e) {
-//        String btn = e.getActionCommand();
-//
-//        if (btn.equals("+")) {
-//            addIngredientRow();
-//        } else if (btn.equals("-")) {
-//            removeIngredientRow(e);
-//        }
-//
-//    }
+        nameLabel = new JLabel("Recipe:");
+        nameLabel.setText("Recipe");
+        nameLabel.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        nameLabel.setForeground(Color.decode("#ffffff"));
+
+        nameTxtField = new JTextField(30);
+        nameTxtField.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        nameTxtField.setPreferredSize(new Dimension(30, 40));
+
+        instrLabel = new JLabel("Instructions:");
+        instrLabel.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        instrLabel.setForeground(Color.decode("#ffffff"));
+
+        instrTxtField = new JTextArea(12, 35);
+        instrTxtField.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        instrTxtField.setPreferredSize(new Dimension(30,30));
 
 
+        //******************************************
+        //Container Panel(Main Panel) initialization
+        //******************************************
+
+        gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(7,10,7,10);
+
+        mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(Color.decode("#23272A"));
+        mainPanel.setSize(1024, 768);
+
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+
+        //*****************************
+        //Add components to main panel
+        //*****************************
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        centerPanel.add(nameLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+
+        centerPanel.add(nameTxtField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        centerPanel.add(instrLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        centerPanel.add(instrTxtField, gbc);
+
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        submitBtn = new JButton("Submit");
+        centerPanel.add(submitBtn, gbc);
+
+        ButtonGroup radioBtnGroup = new ButtonGroup();
+
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+
+        JRadioButton publishedButton = new JRadioButton("Published");
+        publishedButton.setBackground((Color.decode("#23272A")));
+        publishedButton.setForeground(Color.decode("#ffffff"));
+        radioBtnGroup.add(publishedButton);
+        centerPanel.add(publishedButton, gbc);
+
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+
+        JRadioButton notPublishedButton = new JRadioButton("Not Published");
+        notPublishedButton.setBackground((Color.decode("#23272A")));
+        notPublishedButton.setForeground(Color.decode("#ffffff"));
+        radioBtnGroup.add(notPublishedButton);
+        centerPanel.add(notPublishedButton, gbc);
+
+        centerPanel.setBackground((Color.decode("#23272A")));
+        mainPanel.add(centerPanel);
+
+        scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        this.frame.add(scrollPane, BorderLayout.CENTER);
+    }
+
+
+    /*
+    Method that dynamically adds/removes an ingredient row
+     */
     private void addIngredientRow() {
         // create a new panel for additional ingredient
-        ingredientPanel = new JPanel(new GridLayout(1, 4));
-        ingredientPanel.setSize(1024,20);
+        ingredientPanel = new JPanel(new GridLayout(1, 5, 10, 0));
+        ingredientPanel.setBackground((Color.decode("#23272A")));
+
 
         // create the add button
         JButton addButton = new JButton("+");
@@ -165,8 +211,13 @@ public class AdminUI extends JFrame {
         ingredientPanel.add(list);
         ingredientPanel.add(quantity);
 
+        //Empty border that formats the buttons on the bottom to be centered with the
+        //recipe text fields and instructions text fields
+        ingredientPanel.setBorder(new EmptyBorder(2,166,2,260));
+
         // add everything to the main panel
-        mainPanel.add(ingredientPanel);
+        containerPanel.add(ingredientPanel);
+        mainPanel.add(containerPanel, BorderLayout.SOUTH);
         numOfIngredients++;
 
         // dynamically update the frame
@@ -179,7 +230,7 @@ public class AdminUI extends JFrame {
 
     private void removeIngredientRow(ActionEvent e) {
         // remove the ingredientPanel containing the sub button that was pressed
-        mainPanel.remove((((JButton)e.getSource()).getParent()));
+        containerPanel.remove((((JButton)e.getSource()).getParent()));
 
         // dynamically update the frame
         frame.revalidate();

@@ -15,9 +15,12 @@ public class iCook
 {
     public static void main(String[] args)
     {
-//        ServiceDispatcher serviceDispatcher = new ServiceDispatcher();
-//        serviceDispatcher.startProgram();
+        //ServiceDispatcher serviceDispatcher = new ServiceDispatcher();
+        //serviceDispatcher.startProgram();
 
+        // **************************
+        // Temp test code for Admin UI
+        // ***************************
         JFrame initial_frame = new JFrame();
         initial_frame.setTitle("iCook");
         initial_frame.setSize(1024, 768);
