@@ -2,7 +2,6 @@ package iCook.Controller;
 
 import iCook.Model.*;
 import iCook.View.Login.*;
-import iCook.View.Operations.AdminUI;
 import iCook.View.Operations.HomeUI;
 import iCook.View.Operations.InventoryUI;
 import iCook.View.Operations.RecipeUI;
@@ -395,8 +394,8 @@ public class ServiceDispatcher {
 
     public void gotoAdmin(JFrame frame)
     {
-        frame.getContentPane().removeAll();
-        new AdminUI(frame);
+//        frame.getContentPane().removeAll();
+//        new AdminUI(frame);
     }
 
 
