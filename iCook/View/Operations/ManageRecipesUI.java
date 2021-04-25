@@ -98,7 +98,7 @@ public class ManageRecipesUI extends JPanel {
                     JTable target = (JTable)e.getSource();
                     int row = target.getSelectedRow();  // gets the selected row
                     int column = 0;                     // get the first column containing the recipe's id
-                    JOptionPane.showMessageDialog(null, table.getValueAt(row, column)); // get the value of a row and column.
+                    //JOptionPane.showMessageDialog(null, table.getValueAt(row, column)); // get the value of a row and column.
                     serviceDispatcher.gotoModifyRecipeUI(Integer.parseInt((String)table.getValueAt(row,column)));
                 }
             }
