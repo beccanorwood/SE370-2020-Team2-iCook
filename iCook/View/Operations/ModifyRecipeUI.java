@@ -21,6 +21,7 @@ public class ModifyRecipeUI extends JPanel {
 
     private JPanel mainPanel;       //Main panel for all elements
     private JScrollPane scrollPane; //Scroll Panel
+    private JPanel centerPanel;
     private JPanel containerPanel;  //Panel that holds row of buttons to add ingredients
 
     private GridBagConstraints gbc;
@@ -29,6 +30,7 @@ public class ModifyRecipeUI extends JPanel {
     private JTextField nameTxtField;
     private JLabel instrLabel;
     private JTextArea instrTxtField;
+    private JButton back;
     private JButton submitBtn;
 
     private JPanel ingredientPanel; // Panel that holds the 4 buttons in bottoms row for adding ingredients
@@ -117,7 +119,6 @@ public class ModifyRecipeUI extends JPanel {
 
         instrTxtField = new JTextArea(12, 30);
         instrTxtField.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        //instrTxtField.setPreferredSize(new Dimension(30,30));
         JScrollPane txtScroll = new JScrollPane(instrTxtField);
         txtScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -132,7 +133,7 @@ public class ModifyRecipeUI extends JPanel {
         mainPanel.setBackground(Color.decode("#23272A"));
         mainPanel.setSize(1024, 768);
 
-        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel = new JPanel(new GridBagLayout());
 
         //*****************************
         // Add components to main panel
@@ -156,6 +157,11 @@ public class ModifyRecipeUI extends JPanel {
         centerPanel.add(txtScroll, gbc);
 
         gbc.gridx = 2;
+        gbc.gridy = 1;
+        back = new JButton("Back");
+        centerPanel.add(back, gbc);
+
+        gbc.gridx = 3;
         gbc.gridy = 1;
         submitBtn = new JButton("Submit");
         centerPanel.add(submitBtn, gbc);
@@ -231,13 +237,19 @@ public class ModifyRecipeUI extends JPanel {
         ingredientPanel.add(list);
         ingredientPanel.add(quantity);
 
-        //Empty border that formats the buttons on the bottom to be centered with the
-        //recipe text fields and instructions text fields
-        ingredientPanel.setBorder(new EmptyBorder(2,166,2,260));
+        //Empty border that adds padding between ever new ingredient row
+        ingredientPanel.setBorder(new EmptyBorder(5,0,5,0));
 
         // add everything to the main panel
         containerPanel.add(ingredientPanel);
-        mainPanel.add(containerPanel, BorderLayout.SOUTH);
+
+        //Position "add ingredient" panel to be just underneath the instruction text area
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+
+        centerPanel.add(containerPanel, gbc);
+        mainPanel.add(centerPanel);
+
         numOfIngredients++;
 
         // dynamically update the frame

@@ -22,6 +22,7 @@ public class RecipeUI extends JPanel implements ActionListener
 {
     // instance variables
     private JPanel toppanel;
+    private JLabel iCook;
 
     private JPanel recipe_panel;
     private JScrollPane recipe_scrollable;
@@ -32,6 +33,10 @@ public class RecipeUI extends JPanel implements ActionListener
 
     private JPanel bottom_panel;
     private JButton[] recipesBtn;
+
+    private JButton modifyRecipe;
+    private String selectedRecipe;
+
     private ServiceDispatcher serviceDispatcher;
 
     private ArrayList<RecipeDisplayObject> satisfiedRecipes;
@@ -59,7 +64,7 @@ public class RecipeUI extends JPanel implements ActionListener
         // *** Top panel is worked on here ***
         // ***********************************
 
-        JLabel iCook = new JLabel("Recipes in your market");
+        iCook = new JLabel("Recipes in your market");
         iCook.setFont(new Font("Helvetica", Font.BOLD, 40));
         iCook.setForeground(new Color(249,250,244));
 
@@ -131,15 +136,22 @@ public class RecipeUI extends JPanel implements ActionListener
         inv.setFont(new Font("Helvetica", Font.PLAIN, 16));
         inv.setPreferredSize(new Dimension(144,32));
 
+        modifyRecipe = new JButton("Modify Recipe");
+        modifyRecipe.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        modifyRecipe.setPreferredSize(new Dimension(144,32));
+        modifyRecipe.setVisible(false);
+
         // make them work
         home.addActionListener(this);
         inv.addActionListener(this);
+        modifyRecipe.addActionListener(this);
 
         // set the bottom panel to contain the navigation buttons
         bottom_panel = new JPanel();
         bottom_panel.setBackground(new Color(26, 27, 34));
         bottom_panel.add(home);
         bottom_panel.add(inv);
+        bottom_panel.add(modifyRecipe);
 
         // **********************************
         // *** Adding all panels to frame ***
@@ -218,6 +230,15 @@ public class RecipeUI extends JPanel implements ActionListener
             serviceDispatcher.gotoInventory();
         }
 
+        // makes text area with recipe instructions editable
+        else if(buttonChosen.equals("Modify Recipe"))
+        {
+            instructions.setEditable(true);
+            iCook.setText("Modify " + selectedRecipe);
+            instructions.setBackground((Color.decode("#30323f")));
+            center_panel.setBackground((Color.decode("#30323f")));
+        }
+
         // this is where we will figure out what button they pressed
         // and display the corresponding recipe's instructions
         else
@@ -225,9 +246,13 @@ public class RecipeUI extends JPanel implements ActionListener
             for(int i = 0; i < recipesBtn.length; i++) {
                 if (buttonChosen.equals(satisfiedRecipes.get(i).getName())) {
                     System.out.println("You pressed Button: " + satisfiedRecipes.get(i).getName());
+                    selectedRecipe = satisfiedRecipes.get(i).getName();
                     instructions.setText(satisfiedRecipes.get(i).getInstructions());
                     instructions.setSize(740, 900);
                     instructions.setCaretPosition(0);
+
+                    //Enable modify recipe button to be visible
+                    modifyRecipe.setVisible(true);
 
                     GridBagConstraints gbc = new GridBagConstraints();
                     gbc.anchor = GridBagConstraints.CENTER;
