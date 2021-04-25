@@ -3,7 +3,6 @@ package iCook.View.Operations;
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.Operations.DisplayObjects.*;
 
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -22,10 +21,10 @@ public class ModifyRecipeUI extends JPanel {
     // instance variables
     private ServiceDispatcher serviceDispatcher;
 
-    private JPanel mainPanel;       //Main panel for all elements
-    private JScrollPane scrollPane; //Scroll Panel
+    private JPanel mainPanel;       // Main panel for all elements
+    private JScrollPane scrollPane; // Scroll Panel
     private JPanel centerPanel;
-    private JPanel containerPanel;  //Panel that holds row of buttons to add ingredients
+    private JPanel containerPanel;  // Panel that holds row of buttons to add ingredients
 
     private GridBagConstraints gbc;
 
@@ -34,22 +33,35 @@ public class ModifyRecipeUI extends JPanel {
     private JLabel instrLabel;
     private JTextArea instrTxtField;
 
+    private ButtonGroup radioBtnGroup;
+    private JRadioButton publishedButton;
+    private JRadioButton notPublishedButton;
+
     private JButton backBtn;
     private JButton submitBtn;
 
-    private JPanel ingredientPanel;             // Panel that holds the 4 buttons in bottoms row for adding ingredients
+    private JPanel ingredientPanel;             // Panel that holds the 4 elements in bottom rows for ingredients
+    private ArrayList<JPanel> all_ingredient_panels;
+
     private boolean isFirstIngredient = true;   // at least 1 ingredient is required for all recipes (1st panel cannot be removed)
     private int numOfIngredients;               // keeps track of how many ingredient rows we have
 
-    private RecipeDisplayObject recipe; // used if the admin is modifying an existing recipe
-    private ArrayList<IngredientDisplayObject> recipe_ingredients; // used if the admin is modifying an existing recipe
+    private ArrayList<IngredientDisplayObject> system_ingredients;  // list of all system ingredients
+    private JComboBox ing_list; // combo box containing all of the system's ingredients
+
+    private RecipeDisplayObject recipe;                             // used if the admin is modifying an existing recipe
+    private ArrayList<IngredientDisplayObject> recipe_ingredients;  // used if the admin is modifying an existing recipe
 
 
     /**
      * Constructor - for brand new recipe
      */
     public ModifyRecipeUI() {
-        serviceDispatcher = new ServiceDispatcher();
+        // initialize instance variables here
+        serviceDispatcher = new ServiceDispatcher();    // create the ServiceDispatcher
+        system_ingredients = serviceDispatcher.getSystemIngredientDisplayObjects(); // get the list of system ingredients
+        all_ingredient_panels = new ArrayList<>();
+
         this.setLayout(new BorderLayout());
 
         // set up the container panel
@@ -75,14 +87,17 @@ public class ModifyRecipeUI extends JPanel {
 
 
     /**
-     * Constructor - 1 parameter for existing recipe
+     * Constructor - 1 parameter
+     *
+     * @param recipeID id of the selected recipe to modify/edit
      */
     public ModifyRecipeUI(int recipeID) {
-        serviceDispatcher = new ServiceDispatcher();
+        // initialize instance variables here
+        serviceDispatcher = new ServiceDispatcher();    // create the ServiceDispatcher
+        system_ingredients = serviceDispatcher.getSystemIngredientDisplayObjects(); // get the list of system ingredients
         recipe = serviceDispatcher.getRecipeDisplayObject(recipeID);    // get the recipe display object
-        recipe_ingredients = recipe.getIngredients();
-
-        System.out.println(recipe_ingredients.size());
+        recipe_ingredients = recipe.getIngredients();   // get the recipe's ingredient list
+        all_ingredient_panels = new ArrayList<>();
 
         this.setLayout(new BorderLayout());
 
@@ -96,7 +111,7 @@ public class ModifyRecipeUI extends JPanel {
         setupMainPanel_filled();
 
         // ******************************
-        // n number of Ingredient Panel
+        // n number of Ingredient Panels
         // ******************************
         for (IngredientDisplayObject ing : recipe.getIngredients())
             addRecipeIngredientRow(ing);
@@ -168,6 +183,12 @@ public class ModifyRecipeUI extends JPanel {
         gbc.gridy = 1;
         centerPanel.add(txtScroll, gbc);
 
+        // add the radio button group here
+        createRadioButtons();
+
+        // add the submit button here
+        createSubmitButton();
+
         gbc.gridx = 2;
         gbc.gridy = 1;
         backBtn = new JButton("Back");
@@ -178,31 +199,6 @@ public class ModifyRecipeUI extends JPanel {
             }
         });
         centerPanel.add(backBtn, gbc);
-
-        gbc.gridx = 3;
-        gbc.gridy = 1;
-        submitBtn = new JButton("Submit");
-        centerPanel.add(submitBtn, gbc);
-
-        ButtonGroup radioBtnGroup = new ButtonGroup();
-
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        JRadioButton publishedButton = new JRadioButton("Published");
-        publishedButton.setBackground((Color.decode("#23272A")));
-        publishedButton.setForeground(Color.decode("#ffffff"));
-        radioBtnGroup.add(publishedButton);
-        centerPanel.add(publishedButton, gbc);
-
-        gbc.gridx = 3;
-        gbc.gridy = 0;
-        JRadioButton notPublishedButton = new JRadioButton("Not Published");
-        notPublishedButton.setBackground((Color.decode("#23272A")));
-        notPublishedButton.setForeground(Color.decode("#ffffff"));
-        radioBtnGroup.add(notPublishedButton);
-        centerPanel.add(notPublishedButton, gbc);
-
-        notPublishedButton.setSelected(true);
 
         centerPanel.setBackground((Color.decode("#23272A")));
         mainPanel.add(centerPanel);
@@ -276,6 +272,12 @@ public class ModifyRecipeUI extends JPanel {
         gbc.gridy = 1;
         centerPanel.add(txtScroll, gbc);
 
+        // add the radio button group here
+        createRadioButtons();
+
+        // add the submit button here
+        createSubmitButton();
+
         gbc.gridx = 2;
         gbc.gridy = 1;
         backBtn = new JButton("Back");
@@ -286,36 +288,6 @@ public class ModifyRecipeUI extends JPanel {
             }
         });
         centerPanel.add(backBtn, gbc);
-
-        gbc.gridx = 3;
-        gbc.gridy = 1;
-        submitBtn = new JButton("Submit");
-        centerPanel.add(submitBtn, gbc);
-
-        ButtonGroup radioBtnGroup = new ButtonGroup();
-
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        JRadioButton publishedButton = new JRadioButton("Published");
-        publishedButton.setBackground((Color.decode("#23272A")));
-        publishedButton.setForeground(Color.decode("#ffffff"));
-        radioBtnGroup.add(publishedButton);
-        centerPanel.add(publishedButton, gbc);
-
-        gbc.gridx = 3;
-        gbc.gridy = 0;
-        JRadioButton notPublishedButton = new JRadioButton("Not Published");
-        notPublishedButton.setBackground((Color.decode("#23272A")));
-        notPublishedButton.setForeground(Color.decode("#ffffff"));
-        radioBtnGroup.add(notPublishedButton);
-        centerPanel.add(notPublishedButton, gbc);
-
-        // set the correct radio button based on the publish status
-        if (recipe.isPublished()) {
-            publishedButton.setSelected(true);
-        } else {
-            notPublishedButton.setSelected(true);
-        }
 
         centerPanel.setBackground((Color.decode("#23272A")));
         mainPanel.add(centerPanel);
@@ -357,10 +329,8 @@ public class ModifyRecipeUI extends JPanel {
             isFirstIngredient = false;
         }
 
-        // get the list of ingredients here
-        // and store them in a combo box
-        String [] ingredients = getIngredientsList();
-        JComboBox list = new JComboBox(ingredients);
+        // create the combo box here
+        createComboBox();
 
         // create the text field for quantity input
         JTextField quantity = new JTextField();
@@ -370,7 +340,7 @@ public class ModifyRecipeUI extends JPanel {
         // add everything to the newly created panel
         ingredientPanel.add(addButton);
         ingredientPanel.add(subButton);
-        ingredientPanel.add(list);
+        ingredientPanel.add(ing_list);
         ingredientPanel.add(quantity);
 
         //Empty border that adds padding between ever new ingredient row
@@ -387,6 +357,9 @@ public class ModifyRecipeUI extends JPanel {
         mainPanel.add(centerPanel);
 
         numOfIngredients++;
+
+        // add this ingredient panel to the list containing all of them
+        all_ingredient_panels.add(ingredientPanel);
 
         // dynamically update the frame
         // (added row will show immediately)
@@ -430,11 +403,9 @@ public class ModifyRecipeUI extends JPanel {
             isFirstIngredient = false;
         }
 
-        // get the list of ingredients here
-        // and store them in a combo box
-        String [] ingredients = getIngredientsList();
-        JComboBox list = new JComboBox(ingredients);
-        list.setSelectedItem(ingredient.getName()); // set the ingredient to already be populated in this drop down
+        // create the combo box here
+        createComboBox();
+        ing_list.setSelectedItem(ingredient.getName()); // set the ingredient to already be populated in this drop down
 
         // create the text field for quantity input
         JTextField quantity = new JTextField();
@@ -445,7 +416,7 @@ public class ModifyRecipeUI extends JPanel {
         // add everything to the newly created panel
         ingredientPanel.add(addButton);
         ingredientPanel.add(subButton);
-        ingredientPanel.add(list);
+        ingredientPanel.add(ing_list);
         ingredientPanel.add(quantity);
 
         //Empty border that adds padding between ever new ingredient row
@@ -463,6 +434,9 @@ public class ModifyRecipeUI extends JPanel {
 
         numOfIngredients++;
 
+        // add this ingredient panel to the list containing all of them
+        all_ingredient_panels.add(ingredientPanel);
+
         // dynamically update the frame
         // (added row will show immediately)
         this.revalidate();
@@ -478,6 +452,9 @@ public class ModifyRecipeUI extends JPanel {
         // remove the ingredientPanel containing the sub button that was pressed
         containerPanel.remove((((JButton)e.getSource()).getParent()));
 
+        // remove the ingredientPanel from the list of all ingredient panels
+        all_ingredient_panels.remove((((JButton)e.getSource()).getParent()));
+
         // dynamically update the frame
         this.revalidate();
         this.repaint();
@@ -485,24 +462,109 @@ public class ModifyRecipeUI extends JPanel {
 
 
     /**
+     * Defines the submit button used in the center panel
+     */
+    private void createSubmitButton() {
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        submitBtn = new JButton("Submit");
+        submitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (publishedButton.isSelected()) {
+
+                } else {
+                    // things we need to send to the db
+                    String recipe_name = nameTxtField.getText();
+                    String recipe_instructions = instrTxtField.getText();
+                    boolean recipe_status = publishedButton.isSelected();
+
+                    // loop every ingredient panel we have
+                    for (int i = 0; i < all_ingredient_panels.size(); i++) {
+                        // get every panels component
+                        Component[] components = all_ingredient_panels.get(i).getComponents();
+
+                        for (Component c : components) {
+                            // if the current component is the JComboBox, print the selected ingredient.
+                            if (c instanceof JComboBox) {
+                                System.out.println(((JComboBox<?>) c).getSelectedItem());
+                            }
+                            // if the current component is the JTextField, print the quantity.
+                            else if (c instanceof JTextField) {
+                                System.out.println(((JTextField) c).getText());
+                            }
+                        } // end of for loop (components)
+
+                    } // end of for loop (all_ingredient_panels)
+                }
+            }
+        });
+
+        centerPanel.add(submitBtn, gbc);
+    }
+
+
+    /**
+     * Defines the radio button group used in the center panel
+     */
+    private void createRadioButtons() {
+        radioBtnGroup = new ButtonGroup();
+
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        publishedButton = new JRadioButton("Published");
+        publishedButton.setBackground((Color.decode("#23272A")));
+        publishedButton.setForeground(Color.decode("#ffffff"));
+        radioBtnGroup.add(publishedButton);
+        centerPanel.add(publishedButton, gbc);
+
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        notPublishedButton = new JRadioButton("Not Published");
+        notPublishedButton.setBackground((Color.decode("#23272A")));
+        notPublishedButton.setForeground(Color.decode("#ffffff"));
+        radioBtnGroup.add(notPublishedButton);
+        centerPanel.add(notPublishedButton, gbc);
+
+        // if this is a new recipe being created, the recipe is not published automatically
+        if (recipe == null) {
+            notPublishedButton.setSelected(true);
+        } else {
+            // set the correct radio button based on the publish status of the recipe
+            if (recipe.isPublished()) {
+                publishedButton.setSelected(true);
+            } else {
+                notPublishedButton.setSelected(true);
+            }
+        }
+    }
+
+
+    /**
+     * Defines the combo box used in the center panel
+     */
+    private void createComboBox() {
+        // get the list of ingredients and store them in a combo box
+        ing_list = new JComboBox(getIngredientsList());
+    }
+
+
+    /**
      * Returns a String[] containing all of the system's ingredient's names
      */
     private String[] getIngredientsList() {
-        // local variable to be returned
-        ArrayList<IngredientDisplayObject> sys_ings = serviceDispatcher.getSystemIngredientDisplayObjects();
-
         // create a new String array that includes all of the systems ingredients
-        String [] ing_display = new String[sys_ings.size()+1];
+        String [] ing_display = new String[system_ingredients.size()+1];
 
         // first selection should be ""
         ing_display[0] = "";
 
         // populate the ingredients
         for (int i = 1; i < ing_display.length; i++)
-            ing_display[i] = sys_ings.get(i-1).getName();
+            ing_display[i] = system_ingredients.get(i-1).getName();
 
         // since we are starting at 1, we need to get the last sys_ing into the String array
-        ing_display[ing_display.length-1] = sys_ings.get(sys_ings.size()-1).getName();
+        ing_display[ing_display.length-1] = system_ingredients.get(system_ingredients.size()-1).getName();
 
         return ing_display;
     }
