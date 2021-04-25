@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
- * @version 12/5/2020
+ * @version 4/25/2021
  */
 public class IngredientDAO extends BaseDAO {
 

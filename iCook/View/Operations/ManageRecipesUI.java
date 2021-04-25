@@ -16,7 +16,7 @@ import java.util.Vector;
  * An Admin can create a new recipe from this GUI or modify existing recipes.
  *
  * @author Team 2
- * @version 04/23/2021
+ * @version 04/25/2021
  */
 public class ManageRecipesUI extends JPanel {
     // instance variables

@@ -216,10 +216,33 @@ public class ServiceDispatcher {
     /**
      * Initializes systemIngredients with an ArrayList containing Ingredient objects
      */
-    private void getSystemIngredients()
-    {
+    private void getSystemIngredients() {
         systemIngredients = facade.getSystemIngredients();
     }
+
+
+    /**
+     * Return an ArrayList of IngredientDisplayObjects representing the system's ingredients
+     *
+     * @return List of IngredientDisplayObjects representing the system's ingredients
+     */
+    public ArrayList<IngredientDisplayObject> getSystemIngredientDisplayObjects() {
+        // list we are going to return
+        ArrayList<IngredientDisplayObject> ingredientDisplayObjects = new ArrayList<>();
+
+        // get the list of system ingredients from the system
+        ArrayList<Ingredient> ingredients = facade.getSystemIngredients();
+
+        // for every system ingredient, convert it into an IngredientDisplayObject and add it
+        // to the array list
+        for (Ingredient ing : ingredients) {
+            ingredientDisplayObjects.add(new IngredientDisplayObject(ing.getIngredientID(),
+                    ing.getIngredientName(), ing.getUnitOfMeasure(), 0));
+        }
+
+        return ingredientDisplayObjects;
+    }
+
 
 
     /**
