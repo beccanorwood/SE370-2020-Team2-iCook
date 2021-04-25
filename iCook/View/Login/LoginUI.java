@@ -12,27 +12,17 @@ import iCook.Controller.ServiceDispatcher;
  * @author Team 2
  * @version 04/09/2021
  */
-public class LoginUI extends JFrame implements ActionListener {
-
-    private JFrame login_frame;
+public class LoginUI extends JPanel implements ActionListener {
     private JPanel login_panel;
     private JTextField userName_field;
     private JPasswordField passwordField;
     private ServiceDispatcher serviceDispatcher;
     private GridBagConstraints constraints;
 
-    public LoginUI(JFrame frame) {
-
+    public LoginUI() {
         // Create ServiceDispatcher instance
         serviceDispatcher = new ServiceDispatcher();
-
-        login_frame = frame;
-
-        login_frame.setTitle("iCook");
-        login_frame.setSize(1024, 768);
-        login_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        login_frame.setLayout(new BorderLayout());
-        login_frame.setResizable(false);
+        this.setLayout(new BorderLayout());
 
         login_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
 
@@ -97,9 +87,7 @@ public class LoginUI extends JFrame implements ActionListener {
         login_panel.revalidate();
         login_panel.repaint();
 
-        login_frame.add(login_panel);
-        login_frame.setVisible(true);
-
+        this.add(login_panel);
     }
 
     @Override
@@ -121,7 +109,7 @@ public class LoginUI extends JFrame implements ActionListener {
 
         // the user wants to go back to the WelcomeUI
         if (btn_Selection.equals("Back"))
-            serviceDispatcher.gotoWelcome(login_frame);
+            serviceDispatcher.gotoWelcome();
 
         // user clicks on "Login"
         else if (btn_Selection.equals("Login")) {
@@ -139,20 +127,20 @@ public class LoginUI extends JFrame implements ActionListener {
             if ( serviceDispatcher.login(username, password) ) {
                 System.out.println("Successfully logged in");
                 serviceDispatcher.displayUser();
-                serviceDispatcher.gotoHome(username, login_frame);
+                serviceDispatcher.gotoHome();
             }
 
             // else, display an error
             else {
                 if(username.isBlank() || password.isBlank()){
                     southPanel.add(emptyFields);
-                    login_frame.add(southPanel,BorderLayout.SOUTH);
-                    login_frame.setVisible(true);
+                    this.add(southPanel,BorderLayout.SOUTH);
+                    this.setVisible(true);
                 }
                 else {
                     southPanel.add(noAccountFound);
-                    login_frame.add(southPanel, BorderLayout.SOUTH);
-                    login_frame.setVisible(true);
+                    this.add(southPanel, BorderLayout.SOUTH);
+                    this.setVisible(true);
                 }
             }
         }

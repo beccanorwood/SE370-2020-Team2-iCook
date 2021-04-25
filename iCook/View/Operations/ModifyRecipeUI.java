@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
  * @author Team 2
  * @version 04/24/2021
  */
-public class ModifyRecipeUI extends JFrame {
+public class ModifyRecipeUI extends JPanel {
     // instance variables
     private ServiceDispatcher serviceDispatcher;
 
@@ -36,18 +36,41 @@ public class ModifyRecipeUI extends JFrame {
 
 
     /**
-     * Constructor
+     * Constructor - for brand new recipe
      */
     public ModifyRecipeUI() {
-        // set up the serviceDispatcher
         serviceDispatcher = new ServiceDispatcher();
+        this.setLayout(new BorderLayout());
 
-        // set the frame up
-        this.setTitle("iCook");
-        this.setSize(1024, 768);
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // set up the container panel
+        containerPanel = new JPanel();
+        containerPanel.setLayout(new GridLayout(0,1)); //Panel for Buttons on bottom to dynamically add/remove
+
+        // ******************
+        // Main Panel Set Up
+        // ******************
+        setupMainPanel();
+
+        // ********************
+        // 1st Ingredient Panel
+        // ********************
+        numOfIngredients = 1;
+        addIngredientRow();
+
+        // ********************************************
+        // Set frame visible at end to show all changes
+        // ********************************************
+        this.setVisible(true);
+        scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMinimum());
+    }
+
+
+    /**
+     * Constructor - 1 parameter for existing recipe
+     */
+    public ModifyRecipeUI(int recipeID) {
+        serviceDispatcher = new ServiceDispatcher();
+        this.setLayout(new BorderLayout());
 
         // set up the container panel
         containerPanel = new JPanel();

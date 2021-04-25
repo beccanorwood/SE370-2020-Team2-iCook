@@ -15,26 +15,18 @@ import iCook.Controller.ServiceDispatcher;
  * @author Team 2
  * @version 04/09/2021
  */
-public class SignUpUI extends JFrame implements ActionListener
+public class SignUpUI extends JPanel implements ActionListener
 {
-    private JFrame signup_frame;
     private JPanel signup_panel;
     private JTextField userName_field;
     private JPasswordField passwordField;
     private ServiceDispatcher serviceDispatcher;
     private GridBagConstraints constraints;
 
-    public SignUpUI(JFrame frame)
-    {
+    public SignUpUI() {
         // Create ServiceDispatcher
         serviceDispatcher = new ServiceDispatcher();
-
-        signup_frame = frame;
-        signup_frame.setTitle("iCook");
-        signup_frame.setSize(1024, 768);
-        signup_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        signup_frame.setLayout(new BorderLayout());
-        signup_frame.setResizable(false);
+        this.setLayout(new BorderLayout());
 
         signup_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
 
@@ -99,8 +91,7 @@ public class SignUpUI extends JFrame implements ActionListener
         signup_panel.revalidate();
         signup_panel.repaint();
 
-        signup_frame.add(signup_panel);
-        signup_frame.setVisible(true);
+        this.add(signup_panel);
     }
 
     @Override
@@ -110,7 +101,7 @@ public class SignUpUI extends JFrame implements ActionListener
 
         // the user wants to go back to the WelcomeUI
         if(btn_Selection.equals("Back"))
-            serviceDispatcher.gotoWelcome(signup_frame);
+            serviceDispatcher.gotoWelcome();
 
         // user click on "Create Account"
         else if (btn_Selection.equals("Create Account"))
@@ -131,8 +122,8 @@ public class SignUpUI extends JFrame implements ActionListener
                 blank_error_p.add(blank_error);
                 blank_error_p.setBackground(new Color(26, 27, 34));
 
-                signup_frame.add(blank_error_p, BorderLayout.SOUTH);
-                signup_frame.setVisible(true);
+                this.add(blank_error_p, BorderLayout.SOUTH);
+                this.setVisible(true);
             }
 
             else
@@ -145,7 +136,7 @@ public class SignUpUI extends JFrame implements ActionListener
                 {
                     // if the user is logged in, go to HomeUI
                     if (serviceDispatcher.isLoggedIn())
-                        serviceDispatcher.gotoHome(username, signup_frame);
+                        serviceDispatcher.gotoHome();
                 }
                 // if the creation was not successful, display the error
                 else {
@@ -158,8 +149,8 @@ public class SignUpUI extends JFrame implements ActionListener
                     blank_error.setFont(new Font("Helvetica", Font.PLAIN, 20));
                     blank_error_p.setBackground(new Color(26, 27, 34));
 
-                    signup_frame.add(blank_error_p, BorderLayout.SOUTH);
-                    signup_frame.setVisible(true);
+                    this.add(blank_error_p, BorderLayout.SOUTH);
+                    this.setVisible(true);
                 }
             }
         }

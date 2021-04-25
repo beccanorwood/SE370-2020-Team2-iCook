@@ -2,23 +2,21 @@ package iCook.Controller;
 
 import iCook.Model.*;
 import iCook.View.Login.*;
-import iCook.View.Operations.HomeUI;
-import iCook.View.Operations.InventoryUI;
-import iCook.View.Operations.RecipeUI;
+import iCook.View.Operations.*;
 import iCook.View.Operations.DisplayObjects.*;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Vector;
 
 /**
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 04/16/2021
+ * @version 04/24/2021
  */
 public class ServiceDispatcher {
-
     // user need to be static (not unique for each ServiceDispatcher object)
     private static User user = null;
 
@@ -27,20 +25,46 @@ public class ServiceDispatcher {
     private ArrayList<Ingredient> systemIngredients;
     private ArrayList<UserIngredient> userIngredients;
 
+    // all UI elements needed
+    private static JFrame frame;
+//    private WelcomeUI welcomeUI;
+//    private LoginUI loginUI;
+//    private SignUpUI signUpUI;
+//    private HomeUI homeUI;
+//    private ManageRecipesUI manageRecipesUI;
+//    private ModifyRecipeUI modifyRecipeUI;
+//    private InventoryUI inventoryUI;
+//    private RecipeUI recipeUI;
+
 
     /**
      * Constructor - initializes instance variables.
      * Calls getSystemIngredients to populate systemIngredients.
      * Calls getUserIngredients to populate userIngredients.
      */
-    public ServiceDispatcher()
-    {
+    public ServiceDispatcher() {
         facade = new Facade();
         systemIngredients = new ArrayList<>();
         userIngredients = new ArrayList<>();
         getSystemIngredients();
         getUserIngredients();
     }
+
+
+//    private void setupLoginUI() {
+//        welcomeUI = new WelcomeUI();
+//        loginUI = new LoginUI();
+//        signUpUI = new SignUpUI();
+//    }
+//
+//
+//    private void setupOperationUIs() {
+//        homeUI = new HomeUI();
+//        manageRecipesUI = new ManageRecipesUI();
+//        modifyRecipeUI = new ModifyRecipeUI();
+//        inventoryUI = new InventoryUI();
+//        recipeUI = new RecipeUI();
+//    }
 
 
     /**
@@ -287,8 +311,10 @@ public class ServiceDispatcher {
 
             // for every Recipe object, create a RecipeDisplayObject and add it to
             // the ArrayList to be returned
-            for (Recipe recipe : recipes)
-                display_recipes.add(new RecipeDisplayObject(recipe.getRecipeID(), recipe.getRecipeName(), recipe.getinstructions()));
+            for (Recipe recipe : recipes) {
+                display_recipes.add(new RecipeDisplayObject(recipe.getRecipeID(),
+                        recipe.getRecipeName(), recipe.getInstructions(), recipe.getIngredientDisplayObjects()));
+            }
 
             // return the list of available recipes
             return display_recipes;
@@ -302,9 +328,18 @@ public class ServiceDispatcher {
     /**
      * Logs the user out of their account. Deletes the User Singleton.
      */
-    public void logUserOut()
-    {
+    public void logUserOut() {
         user.deleteUserObject();
+    }
+
+
+    /**
+     * Sends a Request to the Facade to return a Vector containing iCook's recipes.
+     *
+     * @return a Vector containing vectors (each inner vector contains a recipe's info).
+     */
+    public Vector<Vector> getRecipes() {
+        return facade.getRecipes();
     }
 
 
@@ -312,16 +347,20 @@ public class ServiceDispatcher {
      * Creates a new instance of WelcomeUI. This is the only entry point for iCook.
      * (Starts the application)
      */
-    public void startProgram()
-    {
-        //First java frame is created and will be passed between classes within the View Package
+    public void startProgram() {
+//        // when program first starts, create the login UIs
+//        setupLoginUI();
 
-        JFrame initial_frame = new JFrame();
-        initial_frame.setTitle("iCook");
-        initial_frame.setSize(1024, 768);
-        initial_frame.setLocationRelativeTo(null);
+        // First java frame is created and will be passed between classes within the View Package
+        frame = new JFrame();
+        frame.setTitle("iCook");
+        frame.setSize(1024, 768);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setVisible(true);
 
-        new WelcomeUI(initial_frame);
+        gotoWelcome();
     }
 
 
@@ -329,10 +368,8 @@ public class ServiceDispatcher {
      * Ends the program from the WelcomeUI
      * (Used in the WelcomeUI)
      *
-     * @param frame the frame of the UI we are currently on and want to dispose of
      */
-    public void quitProgram(JFrame frame)
-    {
+    public void quitProgram() {
         frame.setVisible(false);
         frame.dispose();
         System.exit(0);
@@ -342,86 +379,102 @@ public class ServiceDispatcher {
     /**
      * Creates a new instance of WelcomeUI and disposes of the current UI we are on
      * (Used in LoginUI && SignUpUI && HomeUI)
-     *
-     * @param frame the frame of the UI we are currently on and want to dispose of
      */
-    public void gotoWelcome(JFrame frame)
-    {
+    public void gotoWelcome() {
         frame.getContentPane().removeAll();
-        new WelcomeUI(frame);
+        frame.getContentPane().add(new WelcomeUI());
+        frame.setVisible(true);
     }
 
 
     /**
      * Creates a new instance of LoginUI and disposes of the current UI we are on
      * (Used in the WelcomeUI)
-     *
-     * @param frame the frame of the UI we are currently on and want to dispose of
      */
-    public void gotoLogin(JFrame frame)
-    {
-        frame.getContentPane().removeAll(); //Clear contents of Welcome UI panel
-        new LoginUI(frame); //Panel and frame passed to constructor of UI's to create a smooth transition
+    public void gotoLogin() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(new LoginUI());
+        frame.setVisible(true);
     }
 
 
     /**
      * Creates a new instance of SignUpUI and disposes of the current UI we are on
      * (Used in the WelcomeUI)
-     *
-     * @param frame the frame of the UI we are currently on and want to dispose of
      */
-    public void gotoSignup(JFrame frame)
-    {
-        frame.getContentPane().removeAll(); //Clear contents of Welcome UI panel
-        new SignUpUI(frame); //Panel and frame passed to constructor of UI's to create a smooth transition
+    public void gotoSignup() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(new SignUpUI());
+        frame.setVisible(true);
     }
 
 
     /**
      * Creates a new instance of HomeUI and disposes of the current UI we are on
      * (Used in LoginUI && SignUpUI && InventoryUI && RecipeUI)
-     *
-     * @param username the username of the user being directed to HomeUI
-     * @param frame the frame of the UI we are currently on and want to dispose of
      */
-    public void gotoHome(String username, JFrame frame)
-    {
+    public void gotoHome() {
+//        // user is now logged in, create the operation UIs
+//        setupOperationUIs();
+
         frame.getContentPane().removeAll();
-        new HomeUI(username, frame);
+        frame.getContentPane().add(new HomeUI());
+        frame.setVisible(true);
     }
 
 
-    public void gotoAdmin(JFrame frame)
-    {
-//        frame.getContentPane().removeAll();
-//        new AdminUI(frame);
+    /**
+     * Creates a new instance of ManageRecipesUI and disposes of the current UI we are on
+     * (Used in HomeUI)
+     */
+    public void gotoManageRecipesUI() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(new ManageRecipesUI());
+        frame.setVisible(true);
+    }
+
+
+    /**
+     * Creates a new instance of ModifyRecipeUI and disposes of the current UI we are on
+     * (Used in ManageRecipesUI)
+     */
+    public void gotoModifyRecipeUI() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(new ModifyRecipeUI());
+        frame.setVisible(true);
+    }
+
+
+    /**
+     * Creates a new instance of ModifyRecipeUI and disposes of the current UI we are on
+     * (Used in ManageRecipesUI -- USED FOR EXISTING RECIPES)
+     */
+    public void gotoModifyRecipeUI(int recipeID) {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(new ModifyRecipeUI(recipeID));
+        frame.setVisible(true);
     }
 
 
     /**
      * Creates a new instance of RecipeUI and disposes of the current UI we are on
      * (Used in HomeUI && InventoryUI)
-     *
-     * @param frame the frame of the UI we are currently on and want to dispose of
      */
-    public void gotoRecipes(JFrame frame)
-    {
+    public void gotoRecipes() {
         frame.getContentPane().removeAll();
-        new RecipeUI(frame);
+        frame.getContentPane().add(new RecipeUI());
+        frame.setVisible(true);
     }
 
 
     /**
      * Creates a new instance of InventoryUI and disposes of the current UI we are on
      * (Used in HomeUI && RecipeUI && InventoryUI)
-     *
-     * @param frame the frame of the UI we are currently on and want to dispose of
      */
-    public void gotoInventory(JFrame frame)
-    {
+    public void gotoInventory() {
         frame.getContentPane().removeAll();
-        new InventoryUI(frame);
+        frame.getContentPane().add(new InventoryUI());
+        frame.setVisible(true);
     }
 
 

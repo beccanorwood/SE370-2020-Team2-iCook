@@ -5,28 +5,27 @@ package iCook.Model;
  * required of the ingredient for said recipe.
  *
  * @Author: Team 2
- * @Date: 11/29/2020
+ * @Date: 4/24/2021
  */
 public class RecipeIngredient {
-
     // instance variables
     private int recipeIngredientID; // ID associated with given recipeIngredient within the database
-    private int ingredientID;       // ID associated with given ingredient within the database
-    private int recipeID;           // ID associated with given recipe within the database
-    private double quantity;        // number of ingredient type necessary
+    private Ingredient ingredient;  // Ingredient associated with the recipeIngredient
+    private Recipe recipe;          // Recipe associated with the recipeIngredient
+    private int quantity;           // required quantity of this ingredient for the recipe
 
 
     /**
      * Constructor
-     * @param ingredientID
-     * @param recipeID
      * @param recipeIngredientID
+     * @param ingredient
+     * @param recipe
      * @param quantity
      */
-    public RecipeIngredient(int ingredientID,  int recipeID, int recipeIngredientID, double quantity) {
-        this.ingredientID = ingredientID;
-        this.recipeID = recipeID;
+    public RecipeIngredient(int recipeIngredientID, Ingredient ingredient, Recipe recipe, int quantity) {
         this.recipeIngredientID = recipeIngredientID;
+        this.ingredient = ingredient;
+        this.recipe = recipe;
         this.quantity = quantity;
     }
 
@@ -36,38 +35,23 @@ public class RecipeIngredient {
     }
 
 
-    public void setRecipeIngredientID(int ingredientID) {
-        this.ingredientID = ingredientID;
+    public Ingredient getIngredient() {
+        return ingredient;
     }
 
 
-    public int getRecipeID() {
-        return recipeID;
+    public Recipe getRecipe() {
+        return recipe;
     }
 
 
-    public void setRecipeID(int recipeID) {
-        this.recipeID = recipeID;
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
     }
 
 
-    public int getIngredientID() {
-        return ingredientID;
-    }
-
-
-    public void setIngredientID(int ingredientID) {
-        this.ingredientID = ingredientID;
-    }
-
-
-    public double getQuantity() {
+    public int getQuantity() {
         return quantity;
-    }
-
-
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
     }
 
 

@@ -1,6 +1,8 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.Model.Ingredient;
+import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
 import iCook.View.Operations.DisplayObjects.RecipeDisplayObject;
 
 import javax.swing.*;
@@ -16,10 +18,9 @@ import java.util.ArrayList;
  * @author Team 2
  * @version 04/09/2021
  */
-public class RecipeUI extends JFrame implements ActionListener
+public class RecipeUI extends JPanel implements ActionListener
 {
     // instance variables
-    private JFrame frame;
     private JPanel toppanel;
 
     private JPanel recipe_panel;
@@ -36,10 +37,10 @@ public class RecipeUI extends JFrame implements ActionListener
     private ArrayList<RecipeDisplayObject> satisfiedRecipes;
     private int numOfRecipes;
 
-    public RecipeUI(JFrame frame)
-    {
+    public RecipeUI() {
         // use the service dispatcher to get the recipe list for the logged in user
         serviceDispatcher = new ServiceDispatcher();
+        this.setLayout(new BorderLayout());
         satisfiedRecipes = serviceDispatcher.getSatisfiedRecipes();
 
         // **************************************************
@@ -53,13 +54,6 @@ public class RecipeUI extends JFrame implements ActionListener
         instructions.setFont(new Font("Helvetica", Font.PLAIN, 22));
         instructions.setBackground(new Color(26, 27, 34));
         instructions.setForeground(new Color(249,250,244));
-
-        // set the frame up
-        this.frame = frame;
-        this.frame.setSize(1024, 768);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setLayout(new BorderLayout());
-        this.frame.setResizable(false);
 
         // ***********************************
         // *** Top panel is worked on here ***
@@ -152,25 +146,25 @@ public class RecipeUI extends JFrame implements ActionListener
         // **********************************
 
         // add the header to the frame
-        this.frame.add(toppanel, BorderLayout.NORTH);
+        this.add(toppanel, BorderLayout.NORTH);
 
         // add the left scroll panel to the frame
         recipe_scrollable = new JScrollPane(recipe_panel);
         recipe_scrollable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         recipe_scrollable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        this.frame.add(recipe_scrollable, BorderLayout.WEST);
+        this.add(recipe_scrollable, BorderLayout.WEST);
 
         // add the center scroll panel to the frame
         center_scrollable = new JScrollPane(center_panel);
         center_scrollable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         center_scrollable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        this.frame.add(center_scrollable, BorderLayout.CENTER);
+        this.add(center_scrollable, BorderLayout.CENTER);
 
         // add the navigation buttons to the frame
-        this.frame.add(bottom_panel, BorderLayout.SOUTH);
+        this.add(bottom_panel, BorderLayout.SOUTH);
 
         // set frame to visible
-        this.frame.setVisible(true);
+        this.setVisible(true);
 
         // ***************************
         // *** Error handling here ***
@@ -215,14 +209,13 @@ public class RecipeUI extends JFrame implements ActionListener
         // take user to HomeUI
         if(buttonChosen.equals("Home"))
         {
-            frame.getContentPane().removeAll();
-            serviceDispatcher.gotoHome(serviceDispatcher.getUserName(), frame);
+            serviceDispatcher.gotoHome();
         }
 
         // take user to InventoryUI
         else if(buttonChosen.equals("Inventory"))
         {
-            serviceDispatcher.gotoInventory(frame);
+            serviceDispatcher.gotoInventory();
         }
 
         // this is where we will figure out what button they pressed

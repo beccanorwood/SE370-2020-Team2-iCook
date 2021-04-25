@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Vector;
 
 /**
  * User interface for Admins to manage the recipes within iCook's database.
@@ -17,14 +18,14 @@ import java.awt.event.MouseEvent;
  * @author Team 2
  * @version 04/23/2021
  */
-public class ManageRecipesUI extends JFrame {
+public class ManageRecipesUI extends JPanel {
     // instance variables
     private ServiceDispatcher serviceDispatcher;
     private JPanel mainPanel;
     private GridBagConstraints gbc;
     private JTable table;
-    private String[] columnNames;
-    private Object[][] data;
+    private Vector<String> columnNames;
+    private Vector<Vector> data;
 
     // constants for color scheme
     private final Color BG = new Color(26, 27, 34);
@@ -35,6 +36,8 @@ public class ManageRecipesUI extends JFrame {
      * Constructor
      */
     public ManageRecipesUI() {
+        serviceDispatcher = new ServiceDispatcher();
+        this.setLayout(new BorderLayout());
         initialize();
     }
 
@@ -43,18 +46,10 @@ public class ManageRecipesUI extends JFrame {
      * Initializes the frame's contents
      */
     public void initialize() {
-        // instantiate the serviceDispatcher to get data
-        serviceDispatcher = new ServiceDispatcher();
-
         // set the frame up
-        this.setTitle("iCook");
-        this.setSize(1024, 768);
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new FlowLayout(FlowLayout.CENTER, 0,60));
-        this.getContentPane().setBackground(BG);
-        this.getContentPane().setForeground(FG);
+        this.setBackground(BG);
+        this.setForeground(FG);
 
         // set up the main panel
         mainPanel = new JPanel(new GridBagLayout());
@@ -73,7 +68,10 @@ public class ManageRecipesUI extends JFrame {
         gbc.gridy = 0;
 
         // instantiate column names
-        columnNames = new String[]{"Id", "Recipe", "Published"};
+        columnNames = new Vector<>();
+        columnNames.addElement("Id");
+        columnNames.addElement("Recipe");
+        columnNames.addElement("Published");
 
         // instantiate the data
         data = getData();
@@ -101,6 +99,7 @@ public class ManageRecipesUI extends JFrame {
                     int row = target.getSelectedRow();  // gets the selected row
                     int column = 0;                     // get the first column containing the recipe's id
                     JOptionPane.showMessageDialog(null, table.getValueAt(row, column)); // get the value of a row and column.
+                    serviceDispatcher.gotoModifyRecipeUI(Integer.parseInt((String)table.getValueAt(row,column)));
                 }
             }
         });
@@ -113,6 +112,7 @@ public class ManageRecipesUI extends JFrame {
         addBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                serviceDispatcher.gotoModifyRecipeUI();
             }
         });
         addBtn.setPreferredSize(new Dimension(150,32));
@@ -125,7 +125,7 @@ public class ManageRecipesUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // back button goes to the HomeUI
-                //serviceDispatcher.gotoHome(serviceDispatcher.getUserName(), ManageRecipesUI.this);
+                serviceDispatcher.gotoHome();
             }
         });
         backBtn.setPreferredSize(new Dimension(100,32));
@@ -141,15 +141,8 @@ public class ManageRecipesUI extends JFrame {
     /**
      * Returns the data to be displayed in the table.
      */
-    private Object[][] getData() {
-        Object[][] tempData = new Object[][] {
-                {"1", "Cake", "\u2713"},
-                {"4", "Eggs", ""},
-                {"11", "Waffles", ""},
-                {"92", "Soup", "\u2713"},
-        };
-
-        return tempData;
+    private Vector<Vector> getData() {
+        return serviceDispatcher.getRecipes();
     }
 
 }

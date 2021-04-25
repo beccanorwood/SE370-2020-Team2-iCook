@@ -19,9 +19,7 @@ import java.io.IOException;
  * @author Team 2
  * @version 04/09/2021
  */
-public class WelcomeUI extends JFrame implements ActionListener
-{
-    private JFrame frame;
+public class WelcomeUI extends JPanel implements ActionListener {
     private JPanel panel;
     private JLabel iCook;
     private JButton login;
@@ -33,20 +31,12 @@ public class WelcomeUI extends JFrame implements ActionListener
 
 
     /**
-     * WelcomeUI
-     *
-     * @author Team 2
-     * @version 04/23/2021
+     * Constructor
      */
-
-    public WelcomeUI(JFrame frame)
-    {
+    public WelcomeUI() {
         serviceDispatcher = new ServiceDispatcher();
+        this.setLayout(new BorderLayout());
 
-        this.frame = frame;
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setLayout(new BorderLayout());
-        this.frame.setResizable(false);
 
         /*
         Splits frame into two panels vertically
@@ -71,10 +61,8 @@ public class WelcomeUI extends JFrame implements ActionListener
         //*****************************
         componentEffects();
 
-
         this.panel.setBackground((Color.decode("#838996")));
-        this.frame.add(this.panel, BorderLayout.CENTER);
-        this.frame.setVisible(true);
+        this.add(this.panel, BorderLayout.CENTER);
     }
 
 
@@ -213,14 +201,14 @@ public class WelcomeUI extends JFrame implements ActionListener
         //Create 3 separate classes for each actionEvent to populate the proper JFrame
 
         if(buttonChosen.equals("Login")){
-            serviceDispatcher.gotoLogin(frame);
+            serviceDispatcher.gotoLogin();
         }
         else if(buttonChosen.equals("Signup")){
-            serviceDispatcher.gotoSignup(frame);
+            serviceDispatcher.gotoSignup();
         }
         else if (buttonChosen.equals("Quit"))
         {
-            serviceDispatcher.quitProgram(frame);
+            serviceDispatcher.quitProgram();
         }
     }
 }

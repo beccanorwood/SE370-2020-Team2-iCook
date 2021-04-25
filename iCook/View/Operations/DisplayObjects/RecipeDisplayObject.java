@@ -1,10 +1,12 @@
 package iCook.View.Operations.DisplayObjects;
 
+import java.util.ArrayList;
+
 /**
  * Display object for a recipe used in the RecipeUI
  *
  * @Author: Team 2
- * @Date: 12/1/2020
+ * @Date: 4/24/2021
  */
 public class RecipeDisplayObject {
 
@@ -12,6 +14,7 @@ public class RecipeDisplayObject {
     private int recipeID;
     private String name;
     private String instructions;
+    private ArrayList<IngredientDisplayObject> ingredients;
 
 
     /**
@@ -21,11 +24,12 @@ public class RecipeDisplayObject {
      * @param name the name of the recipe
      * @param instructions the instructions of the recipe
      */
-    public RecipeDisplayObject(int recipeID, String name, String instructions)
+    public RecipeDisplayObject(int recipeID, String name, String instructions, ArrayList<IngredientDisplayObject> ingredients)
     {
         this.recipeID = recipeID;
         this.name = name;
         this.instructions = instructions;
+        this.ingredients = ingredients;
     }
 
 
@@ -59,6 +63,17 @@ public class RecipeDisplayObject {
     public String getInstructions()
     {
         return instructions;
+    }
+
+
+    /**
+     * Getter for the ingredients of the recipe
+     *
+     * @return an ArrayList containing the corresponding ingredients for this recipe
+     */
+    public ArrayList<IngredientDisplayObject> getIngredients()
+    {
+        return ingredients;
     }
 
 

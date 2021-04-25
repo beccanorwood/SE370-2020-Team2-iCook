@@ -4,6 +4,7 @@ import iCook.Model.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Vector;
 
 /**
  * Central class for all DAO classes. Has access to all DAO classes.
@@ -118,6 +119,17 @@ public class Facade {
     public ArrayList<Recipe> getSatisfiedRecipes(ArrayList<UserIngredient> userIngredients)
     {
         return recipeDAO.getSatisfiedRecipes(userIngredients);
+    }
+
+
+    /**
+     * Sends a Request to the RecipeDAO to get a list of iCook's recipes.
+     *
+     * @return a Vector containing vectors (each inner vector contains a recipe's info).
+     */
+    public Vector<Vector> getRecipes()
+    {
+        return recipeDAO.getRecipes();
     }
 
 

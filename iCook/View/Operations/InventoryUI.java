@@ -18,11 +18,8 @@ import java.util.HashMap;
  * @author Team 2
  * @version 04/09/2021
  */
-public class InventoryUI extends JFrame{
-
+public class InventoryUI extends JPanel {
     //Inventory UI frame that holds all inventory panels//
-
-    private JFrame frame;
     private JScrollPane available_ingredients_scrollable;
     private JScrollPane inventory_scrollable;
 
@@ -77,8 +74,10 @@ public class InventoryUI extends JFrame{
     ButtonListener bl = new ButtonListener(); //Inner Action Listener Class for InventoryUI buttons
     CheckBoxListener cbl = new CheckBoxListener(); //Inner Action Listener Class for InventoryUI radioButtons
 
-    public InventoryUI(JFrame frame)
+    public InventoryUI()
     {
+        this.setLayout(new BorderLayout());
+
         addedIngredients = new HashMap<>();
         userInventoryIncrementBtns = new ArrayList<>();
         userInventoryDecrementBtns = new ArrayList<>();
@@ -92,18 +91,11 @@ public class InventoryUI extends JFrame{
         ingredientList = serviceDispatcher.getAvailableIngredients();
         userIngredientList = serviceDispatcher.getUserInventory();
 
-        DisplayFrame(frame);
+        Display();
     }
 
-    private void DisplayFrame(JFrame frame)
+    private void Display()
     {
-        this.frame = frame;
-        this.frame.setSize(1024, 768);
-        //this.frame.setLocationRelativeTo(null);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setLayout(new BorderLayout());
-        this.frame.setResizable(false);
-
         JPanel topPanel = new JPanel(); //Panel displaying labels for each panel
         JPanel bottomPanel = new JPanel(); //Panel displaying buttons to update their inventory, go to recipe page, or the home page
 
@@ -552,11 +544,8 @@ public class InventoryUI extends JFrame{
         mainrightPanel.setBackground(new Color(26, 27, 34));
 
 
-        frame.add(main_split, BorderLayout.CENTER);
-        frame.add(bottom_split, BorderLayout.SOUTH);
-        frame.setSize(1024, 768);
-        frame.setVisible(true);
-
+        this.add(main_split, BorderLayout.CENTER);
+        this.add(bottom_split, BorderLayout.SOUTH);
     }
 
 
@@ -696,7 +685,7 @@ public class InventoryUI extends JFrame{
             if(src2 == recipes)
             {
                 // go to RecipeUI
-                serviceDispatcher.gotoRecipes(frame);
+                serviceDispatcher.gotoRecipes();
             }
 
             // else if the user clicked the update button
@@ -708,14 +697,14 @@ public class InventoryUI extends JFrame{
                 serviceDispatcher.updateUserInventory(pendingIngredientList);
 
                 // re-instantiate the InventoryUI to reflect changes
-                serviceDispatcher.gotoInventory(frame);
+                serviceDispatcher.gotoInventory();
             }
 
             // else if the user clicked the home button
             else if(src2 == home)
             {
                 // go back to HomeUI
-                serviceDispatcher.gotoHome(serviceDispatcher.getUserName(), frame);
+                serviceDispatcher.gotoHome();
             }
         }
     }

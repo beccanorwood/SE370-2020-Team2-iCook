@@ -18,27 +18,20 @@ import java.io.IOException;
  * @author Team 2
  * @version 04/16/2021
  */
-public class HomeUI extends JFrame implements ActionListener {
+public class HomeUI extends JPanel implements ActionListener {
     //User Home Page with two buttons
     //Search and My Inventory
     private BufferedImage img;
-    private JFrame homeframe;
     private JPanel homepanel;
     private ServiceDispatcher serviceDispatcher;
 
-    public HomeUI(String userName, JFrame frame)
-    {
+    public HomeUI() {
         serviceDispatcher = new ServiceDispatcher();
-
-        homeframe = frame;
+        this.setLayout(new BorderLayout());
         homepanel = new JPanel(new GridBagLayout());
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(26,27,34));
-
-        homeframe.setSize(1024, 768);
-        homeframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        homeframe.setLayout(new BorderLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
@@ -57,7 +50,7 @@ public class HomeUI extends JFrame implements ActionListener {
         JLabel pic = new JLabel();
         pic.setIcon(logo);
 
-        JLabel welcome = new JLabel("Hi " + userName + "!"); //Welcome label
+        JLabel welcome = new JLabel("Hi " + serviceDispatcher.getUserName() + "!"); //Welcome label
         welcome.setFont(new Font("Helvetica", Font.BOLD, 60)); //Size, Color, etc
         welcome.setForeground(Color.WHITE);
 
@@ -70,9 +63,9 @@ public class HomeUI extends JFrame implements ActionListener {
         homepanel.add(pic, constraints);
 
         // Buttons
-        JButton admin = new JButton("Admin");
-        admin.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        admin.setPreferredSize(new Dimension(144,35));
+        JButton manageBtn = new JButton("Manage");
+        manageBtn.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        manageBtn.setPreferredSize(new Dimension(144,35));
 
         /*
         Admin button will be displayed for certain users
@@ -80,10 +73,9 @@ public class HomeUI extends JFrame implements ActionListener {
         if (serviceDispatcher.isUserAdmin()) {
             constraints.gridx = 4;
             constraints.gridy = 1;
-            admin.setVisible(true);
-            homepanel.add(buttonPanel.add(admin), constraints);
+            manageBtn.setVisible(true);
+            homepanel.add(buttonPanel.add(manageBtn), constraints);
         }
-
 
         JButton myInventory = new JButton("Inventory");
         myInventory.setFont(new Font("Helvetica", Font.PLAIN, 20));
@@ -109,15 +101,15 @@ public class HomeUI extends JFrame implements ActionListener {
         constraints.gridy = 4;
         homepanel.add(buttonPanel.add(logout), constraints);
 
-        admin.addActionListener(this);
+        manageBtn.addActionListener(this);
         recipes.addActionListener(this);
         myInventory.addActionListener(this);
         logout.addActionListener(this);
 
         homepanel.setBackground(new Color(26, 27, 34));
-        homeframe.add(homepanel, BorderLayout.CENTER);
-        homeframe.add(buttonPanel, BorderLayout.SOUTH);
-        homeframe.setVisible(true);
+        this.add(homepanel, BorderLayout.CENTER);
+        this.add(buttonPanel, BorderLayout.SOUTH);
+        this.setVisible(true);
     }
 
     @Override
@@ -128,21 +120,21 @@ public class HomeUI extends JFrame implements ActionListener {
         //User goes to view all recipes if search is clicked, otherwise they view their inventory
         //and add, update, or delete ingredients
 
-        if(btn.equals("Logout")) {
+        if (btn.equals("Logout")) {
             // log the user out of their account && take them back to WelcomeUI
             serviceDispatcher.logUserOut();
-            serviceDispatcher.gotoWelcome(homeframe); //WelcomeUI with JPanel & JFrame as parameters
+            serviceDispatcher.gotoWelcome(); //WelcomeUI with JPanel & JFrame as parameters
         }
         // take the user to RecipeUI
-        else if(btn.equals("Recipes")) {
-            serviceDispatcher.gotoRecipes(homeframe);
+        else if (btn.equals("Recipes")) {
+            serviceDispatcher.gotoRecipes();
         }
-        else if(btn.equals("Admin")) {
-            //serviceDispatcher.gotoAdmin(homeframe);
+        else if (btn.equals("Manage")) {
+            serviceDispatcher.gotoManageRecipesUI();
         }
         // take the user to InventoryUI
-        else {
-            serviceDispatcher.gotoInventory(homeframe);
+        else if (btn.equals("Inventory")){
+            serviceDispatcher.gotoInventory();
         }
     }
 
