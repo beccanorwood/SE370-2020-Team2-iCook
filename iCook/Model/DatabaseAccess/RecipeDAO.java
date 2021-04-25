@@ -19,7 +19,7 @@ import java.util.Vector;
  * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
- * @version 4/24/2021
+ * @version 4/25/2021
  */
 public class RecipeDAO extends BaseDAO {
 
@@ -55,7 +55,7 @@ public class RecipeDAO extends BaseDAO {
                 user_inventory.put(userIngredient.getIngredientID(), userIngredient.getQuantity());
 
             // do 1 query to get the info needed from the recipe_ingredients & recipes tables
-            ResultSet rs = statement.executeQuery("SELECT R.name, R.instruction, RI.recipe_id, " +
+            ResultSet rs = statement.executeQuery("SELECT R.name, R.instruction, RI.recipe_id, R.published, " +
                                                         "group_concat( RI.ingredient_id ) as ingredient_ids, " +
                                                         "group_concat( RI.ingredient_quantity ) as ingredient_quantities, " +
                                                         "group_concat( I.name ) as ingredient_names, " +
@@ -63,6 +63,7 @@ public class RecipeDAO extends BaseDAO {
                                                         "FROM recipe_ingredients RI, recipes R, ingredients I " +
                                                         "WHERE RI.recipe_id = R.id " +
                                                         "AND I.id = RI.ingredient_id " +
+                                                        "AND R.published = 1 " +
                                                         "GROUP BY R.id");
 
             // do this for every row returned from query (aka every recipe)
@@ -122,7 +123,7 @@ public class RecipeDAO extends BaseDAO {
                     Ingredient ingredient = new Ingredient(key, ingredient_names_map.get(key), ingredient_units_map.get(key));
 
                     // add a new recipe ingredient object to the array list of all the recipe's ingredients
-                    ingredients.add(new RecipeIngredient(entry.getKey(), ingredient, null, entry.getValue()));
+                    ingredients.add(new RecipeIngredient(entry.getKey(), ingredient, entry.getValue()));
 
                     // if the user inventory doesn't contain a required recipe ingredient
                     // this recipe cannot be satisfied, go to next recipe
@@ -140,9 +141,10 @@ public class RecipeDAO extends BaseDAO {
                 int recipe_id = rs.getInt("recipe_id");
                 String recipe_name = rs.getString("name");
                 String recipe_instruction = rs.getString("instruction");
+                boolean isPublished = rs.getBoolean("published");
 
                 // add a new Recipe object to the recipes list
-                satisfiedRecipes.add(new Recipe(recipe_id, recipe_name, recipe_instruction, ingredients));
+                satisfiedRecipes.add(new Recipe(recipe_id, recipe_name, recipe_instruction, ingredients, isPublished));
             }
 
             // return the list of satisfiable recipes
@@ -205,6 +207,59 @@ public class RecipeDAO extends BaseDAO {
 
 
         catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * Performs a SQL statement to return Recipe given the recipe's id
+     *
+     * @param id the id of the recipe we want to get an object of
+     * @return a Recipe Object
+     */
+    public Recipe getRecipe(int id) {
+        try {
+            Statement statement = this.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT RI.id as 'RI.id', I.id, I.name as 'I.name', I.unit_of_measure, RI.ingredient_quantity, R.name, R.instruction, R.published " +
+                                                        "FROM ingredients I, recipe_ingredients RI, recipes R " +
+                                                        "WHERE R.id = RI.recipe_id " +
+                                                        "AND RI.ingredient_id = I.id " +
+                                                        "AND R.id = '" + id + "' ");
+            // make sure the recipe id exists
+            if (rs.next()) {
+
+                // items we need for the final object to be returned
+                String recipe_name = rs.getString("name");
+                String instructions = rs.getString("instruction");
+                boolean isPublished = rs.getBoolean("published");
+                ArrayList<RecipeIngredient> ingredients = new ArrayList<>();
+                rs.beforeFirst();   // reset the cursor to beginning
+
+                // loop through the query results
+                while (rs.next()) {
+                    int recipe_ingredient_id = rs.getInt("RI.id");
+                    int ingredient_quantity = rs.getInt("ingredient_quantity");
+
+                    // info for the Ingredient object held within the RecipeIngredient object
+                    int ingredient_id = rs.getInt("id");
+                    String ingredient_name = rs.getString("I.name");
+                    String ingredient_unit = rs.getString("unit_of_measure");
+                    Ingredient ingredient = new Ingredient(ingredient_id, ingredient_name, ingredient_unit);
+
+                    // add a new RecipeIngredient to the recipe's array list of RecipeIngredients
+                    ingredients.add(new RecipeIngredient(recipe_ingredient_id, ingredient, ingredient_quantity));
+                }
+
+                // return the desired Recipe object
+                return new Recipe(id, recipe_name, instructions, ingredients, isPublished);
+
+            } else {
+                return null;
+            }
+
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;
         }

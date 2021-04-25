@@ -1,6 +1,7 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.Operations.DisplayObjects.RecipeDisplayObject;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -13,7 +14,7 @@ import java.awt.event.ActionListener;
  * User interface for Admins to modify existing (or new) recipes
  *
  * @author Team 2
- * @version 04/24/2021
+ * @version 04/25/2021
  */
 public class ModifyRecipeUI extends JPanel {
     // instance variables
@@ -30,11 +31,13 @@ public class ModifyRecipeUI extends JPanel {
     private JTextField nameTxtField;
     private JLabel instrLabel;
     private JTextArea instrTxtField;
-    private JButton back;
+    private JButton backBtn;
     private JButton submitBtn;
 
     private JPanel ingredientPanel; // Panel that holds the 4 buttons in bottoms row for adding ingredients
     private int numOfIngredients;   // keeps track of how many ingredient rows we have
+
+    private RecipeDisplayObject recipe; // used if the admin is modifying an existing recipe
 
 
     /**
@@ -48,14 +51,14 @@ public class ModifyRecipeUI extends JPanel {
         containerPanel = new JPanel();
         containerPanel.setLayout(new GridLayout(0,1)); //Panel for Buttons on bottom to dynamically add/remove
 
-        // ******************
-        // Main Panel Set Up
-        // ******************
+        // ****************************
+        // Main Panel Set Up - BLANK
+        // ****************************
         setupMainPanel();
 
-        // ********************
+        // *************************
         // 1st Ingredient Panel
-        // ********************
+        // *************************
         numOfIngredients = 1;
         addIngredientRow();
 
@@ -72,21 +75,23 @@ public class ModifyRecipeUI extends JPanel {
      */
     public ModifyRecipeUI(int recipeID) {
         serviceDispatcher = new ServiceDispatcher();
+        recipe = serviceDispatcher.getRecipeDisplayObject(recipeID);    // get the recipe display object
+
         this.setLayout(new BorderLayout());
 
         // set up the container panel
         containerPanel = new JPanel();
         containerPanel.setLayout(new GridLayout(0,1)); //Panel for Buttons on bottom to dynamically add/remove
 
-        // ******************
-        // Main Panel Set Up
-        // ******************
+        // ****************************
+        // Main Panel Set Up - FILLED
+        // ****************************
         setupMainPanel();
 
-        // ********************
-        // 1st Ingredient Panel
-        // ********************
-        numOfIngredients = 1;
+        // ******************************
+        // n number of Ingredient Panel
+        // ******************************
+        numOfIngredients = recipe.getIngredients().size();
         addIngredientRow();
 
         // ********************************************
@@ -158,8 +163,14 @@ public class ModifyRecipeUI extends JPanel {
 
         gbc.gridx = 2;
         gbc.gridy = 1;
-        back = new JButton("Back");
-        centerPanel.add(back, gbc);
+        backBtn = new JButton("Back");
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                serviceDispatcher.gotoManageRecipesUI();
+            }
+        });
+        centerPanel.add(backBtn, gbc);
 
         gbc.gridx = 3;
         gbc.gridy = 1;

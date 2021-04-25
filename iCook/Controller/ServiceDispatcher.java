@@ -14,7 +14,7 @@ import java.util.Vector;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 04/24/2021
+ * @version 04/25/2021
  */
 public class ServiceDispatcher {
     // user need to be static (not unique for each ServiceDispatcher object)
@@ -313,7 +313,7 @@ public class ServiceDispatcher {
             // the ArrayList to be returned
             for (Recipe recipe : recipes) {
                 display_recipes.add(new RecipeDisplayObject(recipe.getRecipeID(),
-                        recipe.getRecipeName(), recipe.getInstructions(), recipe.getIngredientDisplayObjects()));
+                        recipe.getRecipeName(), recipe.getInstructions(), getIngredientDisplayObjects(recipe), recipe.isPublished()));
             }
 
             // return the list of available recipes
@@ -340,6 +340,39 @@ public class ServiceDispatcher {
      */
     public Vector<Vector> getRecipes() {
         return facade.getRecipes();
+    }
+
+
+    /**
+     * Sends a Request to the Facade to return a Recipe object which is then converted
+     * to a RecipeDisplayObject for the View to access.
+     *
+     * @return a RecipeDisplayObject corresponding to the passed in recipe id
+     */
+    public RecipeDisplayObject getRecipeDisplayObject(int id) {
+        Recipe recipe = facade.getRecipe(id);
+
+        return new RecipeDisplayObject(id, recipe.getRecipeName(), recipe.getInstructions(), getIngredientDisplayObjects(recipe), recipe.isPublished());
+    }
+
+
+    /**
+     * Converts a Recipe object's ingredient list to an ArrayList of IngredientDisplayObjects.
+     * Used in conversions between Recipe objects and RecipeDisplayObjects
+     *
+     * @return an ArrayList of IngredientDisplayObjects
+     */
+    private ArrayList<IngredientDisplayObject> getIngredientDisplayObjects(Recipe recipe) {
+        // list to be returned
+        ArrayList<IngredientDisplayObject> ingredientDisplayObjects = new ArrayList<>();
+
+        // convert the recipe's list RecipeIngredients to a list of IngredientDisplayObjects
+        for (RecipeIngredient ri : recipe.getIngredients()) {
+            ingredientDisplayObjects.add(new IngredientDisplayObject(ri.getIngredient().getIngredientID(),
+                    ri.getIngredient().getIngredientName(), ri.getIngredient().getUnitOfMeasure(), ri.getQuantity()));
+        }
+
+        return ingredientDisplayObjects;
     }
 
 

@@ -1,7 +1,5 @@
 package iCook.Model;
 
-import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
-
 import java.util.ArrayList;
 
 /**
@@ -9,7 +7,7 @@ import java.util.ArrayList;
  * RecipeIngredient objects, as well as the number of servings a given recipe will produce
  *
  * @Author: Team 2
- * @date: 4/24/2021
+ * @date: 4/25/2021
  */
 public class Recipe {
     // instance variables
@@ -17,19 +15,25 @@ public class Recipe {
     private String recipeName;      // name of recipe
     private String instructions;    // instructions for the recipe
     private ArrayList<RecipeIngredient> ingredients;
+    boolean isPublished;            // publish status of this recipe
 
 
     /**
-     * Constructor
+     * Constructor - 5 parameters
      * @param recipeID int
      * @param recipeName String
      * @param instructions String
+     * @param ingredients ArrayList<RecipeIngredient>
+     * @param isPublished boolean
      */
-    public Recipe(int recipeID, String recipeName, String instructions, ArrayList<RecipeIngredient> ingredients) {
+    public Recipe(int recipeID, String recipeName, String instructions, ArrayList<RecipeIngredient> ingredients, boolean isPublished) {
         this.recipeID = recipeID;
         this.recipeName = recipeName;
         this.instructions = instructions;
         this.ingredients = ingredients;
+        this.isPublished = isPublished;
+
+        // set this recipe as the recipe ingredient's recipe object
         for (RecipeIngredient ing : ingredients)
             ing.setRecipe(this);
     }
@@ -55,17 +59,8 @@ public class Recipe {
     }
 
 
-    public ArrayList<IngredientDisplayObject> getIngredientDisplayObjects() {
-        // list to be returned
-        ArrayList<IngredientDisplayObject> ingredientDisplayObjects = new ArrayList<>();
-
-        // convert the recipe's list RecipeIngredients to a list of IngredientDisplayObjects
-        for (RecipeIngredient ri : ingredients) {
-            ingredientDisplayObjects.add(new IngredientDisplayObject(ri.getIngredient().getIngredientID(),
-                    ri.getIngredient().getIngredientName(), ri.getIngredient().getUnitOfMeasure(), ri.getQuantity()));
-        }
-
-        return ingredientDisplayObjects;
+    public boolean isPublished() {
+        return isPublished;
     }
 
 

@@ -1,10 +1,10 @@
 package iCook.View.Operations.DisplayObjects;
 
 /**
- * Display object for an ingredient used in the InventoryUI
+ * Display object for an ingredient used in the View package
  *
  * @Author: Team 2
- * @Date: 12/1/2020
+ * @Date: 4/25/2020
  */
 public class IngredientDisplayObject {
 
@@ -23,7 +23,7 @@ public class IngredientDisplayObject {
      * @param unitOfMeasure the unit of measure of the ingredient
      * @param quantity the quantity of the ingredient
      */
-    public IngredientDisplayObject(int ingredientID, String name, String unitOfMeasure, int quantity){
+    public IngredientDisplayObject(int ingredientID, String name, String unitOfMeasure, int quantity) {
         this.ingredientID = ingredientID;
         this.name = name;
         this.unitOfMeasure = unitOfMeasure;

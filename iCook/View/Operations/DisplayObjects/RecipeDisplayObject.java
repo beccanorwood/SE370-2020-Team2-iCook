@@ -3,10 +3,10 @@ package iCook.View.Operations.DisplayObjects;
 import java.util.ArrayList;
 
 /**
- * Display object for a recipe used in the RecipeUI
+ * Display object for a recipe used in the View package
  *
  * @Author: Team 2
- * @Date: 4/24/2021
+ * @Date: 4/25/2021
  */
 public class RecipeDisplayObject {
 
@@ -15,21 +15,24 @@ public class RecipeDisplayObject {
     private String name;
     private String instructions;
     private ArrayList<IngredientDisplayObject> ingredients;
+    private boolean isPublished;
 
 
     /**
-     * Constructor - 3 parameters
+     * Constructor - 5 parameters
      *
      * @param recipeID the id of the recipe
      * @param name the name of the recipe
      * @param instructions the instructions of the recipe
+     * @param ingredients the ingredients for this object
+     * @param isPublished boolean value determining if this recipe is published
      */
-    public RecipeDisplayObject(int recipeID, String name, String instructions, ArrayList<IngredientDisplayObject> ingredients)
-    {
+    public RecipeDisplayObject(int recipeID, String name, String instructions, ArrayList<IngredientDisplayObject> ingredients, boolean isPublished) {
         this.recipeID = recipeID;
         this.name = name;
         this.instructions = instructions;
         this.ingredients = ingredients;
+        this.isPublished = isPublished;
     }
 
 
@@ -74,6 +77,16 @@ public class RecipeDisplayObject {
     public ArrayList<IngredientDisplayObject> getIngredients()
     {
         return ingredients;
+    }
+
+
+    /**
+     * Getter for the publish status of the recipe
+     *
+     * @return the published variables boolean value
+     */
+    public boolean isPublished() {
+        return isPublished;
     }
 
 

@@ -10,7 +10,7 @@ import java.util.Vector;
  * Central class for all DAO classes. Has access to all DAO classes.
  *
  * @author Team 2
- * @version 12/1/2020
+ * @version 4/25/2021
  */
 public class Facade {
 
@@ -130,6 +130,17 @@ public class Facade {
     public Vector<Vector> getRecipes()
     {
         return recipeDAO.getRecipes();
+    }
+
+
+    /**
+     * Sends a Request to the RecipeDAO to get the desired Recipe object
+     *
+     * @return a Recipe object corresponding to its id
+     */
+    public Recipe getRecipe(int id)
+    {
+        return recipeDAO.getRecipe(id);
     }
 
 

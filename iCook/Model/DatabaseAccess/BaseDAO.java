@@ -1,15 +1,12 @@
 package iCook.Model.DatabaseAccess;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Superclass for DAO classes that establishes the connection to iCook's database
  *
  * @author Team 2
- * @version 11/30/2020
+ * @version 4/25/2021
  */
 public class BaseDAO {
 
@@ -67,7 +64,8 @@ public class BaseDAO {
      */
     protected Statement createStatement() throws SQLException
     {
-        return connection.createStatement();
+        // make the statement traversable and not one direction only
+        return connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
     }
 
 

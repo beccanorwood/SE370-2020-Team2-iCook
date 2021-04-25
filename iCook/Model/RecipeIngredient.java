@@ -5,7 +5,7 @@ package iCook.Model;
  * required of the ingredient for said recipe.
  *
  * @Author: Team 2
- * @Date: 4/24/2021
+ * @Date: 4/25/2021
  */
 public class RecipeIngredient {
     // instance variables
@@ -16,16 +16,15 @@ public class RecipeIngredient {
 
 
     /**
-     * Constructor
-     * @param recipeIngredientID
-     * @param ingredient
-     * @param recipe
-     * @param quantity
+     * Constructor - 3 parameters
+     *
+     * @param recipeIngredientID recipe ingredient id
+     * @param ingredient ingredient object
+     * @param quantity quantity of this ingredient
      */
-    public RecipeIngredient(int recipeIngredientID, Ingredient ingredient, Recipe recipe, int quantity) {
+    public RecipeIngredient(int recipeIngredientID, Ingredient ingredient, int quantity) {
         this.recipeIngredientID = recipeIngredientID;
         this.ingredient = ingredient;
-        this.recipe = recipe;
         this.quantity = quantity;
     }
 
