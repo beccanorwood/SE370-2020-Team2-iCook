@@ -6,7 +6,9 @@ import iCook.View.Operations.*;
 import iCook.View.Operations.DisplayObjects.*;
 
 import javax.swing.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -316,6 +318,7 @@ public class ServiceDispatcher {
     }
 
 
+
     /**
      * Requests the facade to return an ArrayList of recipes available to the user
      *
@@ -325,6 +328,7 @@ public class ServiceDispatcher {
     {
         // send the user's inventory to the facade to be processed
         ArrayList<Recipe> recipes = facade.getSatisfiedRecipes(userIngredients);
+
 
         // make sure the user has recipes available to them
         if (recipes != null && !recipes.isEmpty())

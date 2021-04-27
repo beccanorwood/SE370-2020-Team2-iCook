@@ -2,14 +2,24 @@ package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
 import iCook.Model.Ingredient;
+import iCook.Model.Recipe;
 import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
 import iCook.View.Operations.DisplayObjects.RecipeDisplayObject;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.text.*;
 
 /**
  * User interface for user's to view recipes they can cook based on their inventory. Users can click on a recipe they
@@ -21,6 +31,10 @@ import java.util.ArrayList;
 public class RecipeUI extends JPanel implements ActionListener
 {
     // instance variables
+    private GridBagConstraints gbc;
+
+    private  BufferedImage img;
+
     private JPanel toppanel;
     private JLabel iCook;
 
@@ -29,24 +43,35 @@ public class RecipeUI extends JPanel implements ActionListener
 
     private JPanel center_panel;
     private JScrollPane center_scrollable;
+
+    private JTextArea ingredients;
     private JTextArea instructions;
 
     private JPanel bottom_panel;
     private JButton[] recipesBtn;
 
+    private ArrayList<JButton> newRecipes;
+
     private JButton modifyRecipe;
-    private String selectedRecipe;
+    private JButton cancel;
+    private JButton save;
+
+    private RecipeDisplayObject selectedRecipe;
 
     private ServiceDispatcher serviceDispatcher;
 
     private ArrayList<RecipeDisplayObject> satisfiedRecipes;
     private int numOfRecipes;
 
+
     public RecipeUI() {
         // use the service dispatcher to get the recipe list for the logged in user
         serviceDispatcher = new ServiceDispatcher();
         this.setLayout(new BorderLayout());
         satisfiedRecipes = serviceDispatcher.getSatisfiedRecipes();
+
+        //Initialize newRecipes arraylist
+        newRecipes = new ArrayList<>();
 
         // **************************************************
         // *** Setting up the text field for instructions ***
@@ -59,6 +84,48 @@ public class RecipeUI extends JPanel implements ActionListener
         instructions.setFont(new Font("Helvetica", Font.PLAIN, 22));
         instructions.setBackground(new Color(26, 27, 34));
         instructions.setForeground(new Color(249,250,244));
+
+
+
+        ingredients = new JTextArea();
+        ingredients.setLineWrap(true);
+        ingredients.setEditable(false);
+        instructions.setFont(new Font("Helvetica", Font.PLAIN, 22));
+        instructions.setBackground(new Color(26, 27, 34));
+        instructions.setForeground(new Color(249,250,244));
+
+
+        /*/
+        Changes cursor of frame to be "iCook" logo
+         */
+        try{
+            img = ImageIO.read(new File("iCook_Logo(125).png"));
+            setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+                    img, new Point(0,0), "iCook Cursor"
+            ));
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+
+
+        instructions.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                //If user has moved cursor into text area
+                instructions.getCaret().setVisible(true);
+                instructions.getCaret().setSelectionVisible(true);
+                save.setEnabled(true);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                //If user has removed cursor into text area
+                instructions.getCaret().setVisible(false);
+                instructions.getCaret().setSelectionVisible(false);
+            }
+        });
+
 
         // ***********************************
         // *** Top panel is worked on here ***
@@ -88,7 +155,7 @@ public class RecipeUI extends JPanel implements ActionListener
         recipe_panel.setBackground(new Color(26, 27, 34));
 
         // this is the bounds for where the button will be added in the left panel
-        GridBagConstraints gbc = new GridBagConstraints();
+        gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.fill = GridBagConstraints.VERTICAL;
         gbc.gridx = 0;
@@ -96,6 +163,7 @@ public class RecipeUI extends JPanel implements ActionListener
 
         // create an array of buttons
         recipesBtn = new JButton[numOfRecipes];
+
 
         // populate the left scrollable with recipe buttons
         for(int i = 0; i < numOfRecipes; i++)
@@ -136,15 +204,34 @@ public class RecipeUI extends JPanel implements ActionListener
         inv.setFont(new Font("Helvetica", Font.PLAIN, 16));
         inv.setPreferredSize(new Dimension(144,32));
 
+
+        // create button to modify selected recipe
         modifyRecipe = new JButton("Modify Recipe");
         modifyRecipe.setFont(new Font("Helvetica", Font.PLAIN, 16));
         modifyRecipe.setPreferredSize(new Dimension(144,32));
         modifyRecipe.setVisible(false);
 
+        // create button to save modified recipe
+        save = new JButton("Save");
+        save.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        save.setPreferredSize(new Dimension(144,32));
+        save.setEnabled(false);
+        save.setVisible(false);
+
+
+        // create button to save modified recipe
+        cancel = new JButton("Cancel");
+        cancel.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        cancel.setPreferredSize(new Dimension(144,32));
+        cancel.setVisible(false);
+
+
         // make them work
         home.addActionListener(this);
         inv.addActionListener(this);
         modifyRecipe.addActionListener(this);
+        save.addActionListener(this);
+        cancel.addActionListener(this);
 
         // set the bottom panel to contain the navigation buttons
         bottom_panel = new JPanel();
@@ -152,6 +239,8 @@ public class RecipeUI extends JPanel implements ActionListener
         bottom_panel.add(home);
         bottom_panel.add(inv);
         bottom_panel.add(modifyRecipe);
+        bottom_panel.add(save);
+        bottom_panel.add(cancel);
 
         // **********************************
         // *** Adding all panels to frame ***
@@ -205,7 +294,134 @@ public class RecipeUI extends JPanel implements ActionListener
             center_panel.setAlignmentX(Component.CENTER_ALIGNMENT);
             center_panel.setVisible(true);
         }
+
     }
+
+    /**
+    Method that is called when user chooses to modify a recipe
+     */
+    private void ModifyRecipe(String button)
+    {
+        //
+        String modifiedInstructions = instructions.getText();
+
+
+        /*
+        Checks if recipe instructions in text field is different than instructions
+        from corresponding recipe in DB
+         */
+        if(!modifiedInstructions.equals(selectedRecipe.getInstructions()))
+        {
+            if(button.equals("Save"))
+            {
+                //Add modified recipe to user's Recipe page
+                //New recipe display object for user will be created and displayed on left panel
+                //Temporarily saved as string for testing
+                Object[] options = {"Add Recipe", "Cancel"};
+
+
+                String tempRecipe = (String) JOptionPane.showInputDialog(null,"Enter new recipe name",
+                                                                "iCook", JOptionPane.INFORMATION_MESSAGE,
+                                                                new ImageIcon(img), null,
+                                                                null);
+
+
+                SaveNewRecipe(tempRecipe, modifiedInstructions);
+            }
+
+            else if(button.equals("Cancel"))
+            {
+                Object[] options = {"Continue Editing", "Discard Changes"};
+
+                //Display pop-up window asking user if they want to save recipe
+                int result = JOptionPane.showOptionDialog(null,"You have unsaved changes." +
+                                            " \nDo you wish to continue editing?", "iCook",
+                                            JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                                            new ImageIcon(img), options, options[0]);
+
+
+                System.out.println("New Recipe: " + result);
+
+
+                //If the user wants to discard their changes
+                if (result == JOptionPane.NO_OPTION)
+                {
+                    instructions.setEditable(false);
+                    instructions.getCaret().setVisible(false);
+                    instructions.getCaret().setSelectionVisible(false);
+                    instructions.setText(selectedRecipe.getInstructions());
+                    instructions.setBackground(new Color(26, 27, 34));
+                    center_panel.setBackground(new Color(26, 27, 34));
+                    iCook.setText(selectedRecipe.getName());
+                    save.setVisible(false);
+                    cancel.setVisible(false);
+                }
+                else if(result == JOptionPane.YES_OPTION)
+                {
+                    instructions.setEditable(true);
+                    save.setVisible(true);
+                    modifyRecipe.setVisible(true);
+                    cancel.setVisible(true);
+                    instructions.setBackground((Color.decode("#30323f")));
+                    center_panel.setBackground((Color.decode("#30323f")));
+                }
+            }
+        }
+
+        /*
+        If the user clicks in the text area but doesn't change anything and enters the "Save" or "Cancel"
+        frame reverts back to original state
+         */
+
+        else
+        {
+            save.setVisible(false);
+            cancel.setVisible(false);
+            modifyRecipe.setVisible(false);
+            instructions.setEditable(false);
+            iCook.setText(selectedRecipe.getName());
+            instructions.getCaret().setVisible(false);
+            instructions.getCaret().setSelectionVisible(false);
+            instructions.setBackground(new Color(26, 27, 34));
+            center_panel.setBackground(new Color(26, 27, 34));
+        }
+
+    }
+
+
+    /**
+     *
+     Saves new recipe added by user that is added to recipe panel
+     */
+    private void SaveNewRecipe(String recipe, String newRecipeInstructions)
+    {
+        newRecipes.add(new JButton(recipe));
+
+        System.out.println("Recipe Size: " + newRecipes.size());
+
+        for(int i = 0; i < newRecipes.size(); i++)
+        {
+            newRecipes.get(i).setFont(new Font("Helvetica", Font.PLAIN, 16));
+            newRecipes.get(i).setPreferredSize(new Dimension(200,32));
+            newRecipes.get(i).setHorizontalAlignment(JButton.CENTER);
+            recipe_panel.add((newRecipes.get(i)), gbc);
+            gbc.gridy++;
+
+            iCook.setText(recipe);
+            instructions.setText(newRecipeInstructions);
+        }
+
+        center_panel.setBackground(new Color(26, 27, 34));
+        instructions.setBackground(new Color(26, 27, 34));
+        modifyRecipe.setVisible(false);
+        cancel.setVisible(false);
+        save.setVisible(false);
+
+        //View changes
+        this.revalidate();
+        this.repaint();
+    }
+
 
 
     /**
@@ -234,9 +450,31 @@ public class RecipeUI extends JPanel implements ActionListener
         else if(buttonChosen.equals("Modify Recipe"))
         {
             instructions.setEditable(true);
-            iCook.setText("Modify " + selectedRecipe);
+            iCook.setText("Modify " + selectedRecipe.getName());
             instructions.setBackground((Color.decode("#30323f")));
             center_panel.setBackground((Color.decode("#30323f")));
+
+
+            //Cancel & Save Buttons are visible
+            cancel.setVisible(true);
+            save.setVisible(true);
+        }
+
+        else if(buttonChosen.equals("Cancel"))
+        {
+            instructions.setEditable(false);
+            modifyRecipe.setVisible(false);
+            save.setVisible(false);
+            cancel.setVisible(false);
+            instructions.setBackground(new Color(26, 27, 34));
+            center_panel.setBackground(new Color(26, 27, 34));
+
+            ModifyRecipe(buttonChosen);
+        }
+
+        else if(buttonChosen.equals("Save"))
+        {
+            ModifyRecipe(buttonChosen);
         }
 
         // this is where we will figure out what button they pressed
@@ -246,8 +484,13 @@ public class RecipeUI extends JPanel implements ActionListener
             for(int i = 0; i < recipesBtn.length; i++) {
                 if (buttonChosen.equals(satisfiedRecipes.get(i).getName())) {
                     System.out.println("You pressed Button: " + satisfiedRecipes.get(i).getName());
-                    selectedRecipe = satisfiedRecipes.get(i).getName();
+                    iCook.setText(satisfiedRecipes.get(i).getName());
+                    selectedRecipe = satisfiedRecipes.get(i);
+
+
+                    //Send to method before setting text of jtextArea to separate into two text fields
                     instructions.setText(satisfiedRecipes.get(i).getInstructions());
+
                     instructions.setSize(740, 900);
                     instructions.setCaretPosition(0);
 
@@ -266,6 +509,5 @@ public class RecipeUI extends JPanel implements ActionListener
             }
         }
     }
-
 
 } // end of RecipeUI class

@@ -510,10 +510,19 @@ public class InventoryUI extends JPanel {
         inventory_scrollable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         inventory_scrollable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        JSplitPane s1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, paneltopLeft, paneltopRight);
-        JSplitPane s2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, available_ingredients_scrollable, inventory_scrollable);
-        JSplitPane main_split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, s1, s2);
-        JSplitPane bottom_split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, main_split, bottomPanel);
+        JSplitPane s1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, paneltopLeft, paneltopRight);
+        JSplitPane s2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, available_ingredients_scrollable, inventory_scrollable);
+        JSplitPane main_split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, s1, s2);
+        JSplitPane bottom_split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, main_split, bottomPanel);
+
+
+        /*
+        Makes split panes not moveable
+         */
+        s1.setEnabled(false);
+        s2.setEnabled(false);
+        main_split.setEnabled(false);
+        bottom_split.setEnabled(false);
 
         final boolean firstResize = true;
 

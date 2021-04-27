@@ -370,7 +370,7 @@ public class ModifyRecipeUI extends JPanel {
 
 
     /**
-     * Display a row for an exiting recipe ingredient
+     * Display a row for an existing recipe ingredient
      *
      * @param ingredient the ingredient to be displayed in this row
      */
