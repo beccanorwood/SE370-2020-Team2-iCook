@@ -67,26 +67,9 @@ public class WelcomeUI extends JPanel implements ActionListener {
     }
 
 
-    private void setUpLeftPanel()
-    {
+    private void setUpLeftPanel() {
         JLabel logo = new JLabel(new ImageIcon(img)); //Background image for left frame;
         logo.setBorder(new EmptyBorder(0,15,0,0));
-
-        logo.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                try{
-                    chefImg = ImageIO.read(new File("chef_welcome_transp.png"));
-                }catch(IOException e1){
-                    e1.printStackTrace();
-                }
-                logo.setIcon(new ImageIcon(chefImg));
-            }
-            public void mouseExited(MouseEvent e){
-                logo.setIcon(new ImageIcon(img));
-            }
-        });
-
         this.panel.add(logo, BorderLayout.CENTER);
     }
 
@@ -205,15 +188,10 @@ public class WelcomeUI extends JPanel implements ActionListener {
 
         //Create 3 separate classes for each actionEvent to populate the proper JFrame
 
-        if(buttonChosen.equals("Login")){
-            serviceDispatcher.gotoLogin();
-        }
-        else if(buttonChosen.equals("Signup")){
-            serviceDispatcher.gotoSignup();
-        }
-        else if (buttonChosen.equals("Quit"))
-        {
-            serviceDispatcher.quitProgram();
+        switch (buttonChosen) {
+            case "Login" -> serviceDispatcher.gotoLogin();
+            case "Signup" -> serviceDispatcher.gotoSignup();
+            case "Quit" -> serviceDispatcher.quitProgram();
         }
     }
 }
