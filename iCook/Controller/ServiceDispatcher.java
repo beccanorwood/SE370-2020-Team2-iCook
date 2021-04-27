@@ -14,7 +14,7 @@ import java.util.Vector;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 04/25/2021
+ * @version 04/26/2021
  */
 public class ServiceDispatcher {
     // user need to be static (not unique for each ServiceDispatcher object)
@@ -400,22 +400,75 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new instance of WelcomeUI. This is the only entry point for iCook.
+     * Converts a RecipeDisplayObject's ingredient list to an ArrayList of RecipeIngredient Objects.
+     * Used in conversions between RecipeDisplayObjects and Recipe objects.
+     *
+     * @return an ArrayList of RecipeIngredient Objects
+     */
+    private ArrayList<RecipeIngredient> getIngredientList(RecipeDisplayObject recipeDO) {
+        // list to be returned
+        ArrayList<RecipeIngredient> ingredients = new ArrayList<>();
+
+        // convert the recipe's list of IngredientDisplayObjects to a list of RecipeIngredients
+        for (IngredientDisplayObject ingDO : recipeDO.getIngredients()) {
+            // ingredient to be passed into the new RecipeIngredient object
+            Ingredient i = new Ingredient(ingDO.getIngredientID(), ingDO.getName(), ingDO.getUnitOfMeasure());
+
+            // add a new RecipeIngredient to the ArrayList
+            ingredients.add(new RecipeIngredient(0, i, ingDO.getQuantity()));
+        }
+
+        return ingredients;
+    }
+
+
+    /**
+     * Sends request to the Facade to add a new recipe to the database.
+     * Converts the accepted RecipeDisplayObject into a Recipe object for the
+     * Facade to handle.
+     *
+     * @param recipeDO the RecipeDisplayObject to be added to the database
+     */
+    public void addNewRecipe(RecipeDisplayObject recipeDO) {
+        Recipe recipe = new Recipe(recipeDO.getRecipeID(), recipeDO.getName(),
+                recipeDO.getInstructions(), getIngredientList(recipeDO), recipeDO.isPublished());
+
+        facade.addNewRecipe(recipe);
+    }
+
+
+    /**
+     * Sends request to the Facade to update an existing recipe in the database.
+     * Converts the accepted RecipeDisplayObject into a Recipe object for the
+     * Facade to handle.
+     *
+     * @param recipeDO the RecipeDisplayObject to be updated in the database
+     */
+    public void updateRecipe(RecipeDisplayObject recipeDO) {
+        Recipe recipe = new Recipe(recipeDO.getRecipeID(), recipeDO.getName(),
+                recipeDO.getInstructions(), getIngredientList(recipeDO), recipeDO.isPublished());
+
+        facade.updateRecipe(recipe);
+    }
+
+
+    /**
+     * Initializes the program's frame and begins iCook. This is the only entry point for iCook.
      * (Starts the application)
      */
     public void startProgram() {
 //        // when program first starts, create the login UIs
 //        setupLoginUI();
 
-        // First java frame is created and will be passed between classes within the View Package
+        // The java frame is initialized here
         frame = new JFrame();
         frame.setTitle("iCook");
         frame.setSize(1024, 768);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.setVisible(true);
 
+        // first panel to be displayed is the welcomeUI
         gotoWelcome();
     }
 
@@ -433,8 +486,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new instance of WelcomeUI and disposes of the current UI we are on
-     * (Used in LoginUI && SignUpUI && HomeUI)
+     * Sets the frame's contents to the contents of the WelcomeUI
      */
     public void gotoWelcome() {
         frame.getContentPane().removeAll();
@@ -444,8 +496,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new instance of LoginUI and disposes of the current UI we are on
-     * (Used in the WelcomeUI)
+     * Sets the frame's contents to the contents of the LoginUI
      */
     public void gotoLogin() {
         frame.getContentPane().removeAll();
@@ -455,8 +506,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new instance of SignUpUI and disposes of the current UI we are on
-     * (Used in the WelcomeUI)
+     * Sets the frame's contents to the contents of the SignUpUI
      */
     public void gotoSignup() {
         frame.getContentPane().removeAll();
@@ -466,8 +516,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new instance of HomeUI and disposes of the current UI we are on
-     * (Used in LoginUI && SignUpUI && InventoryUI && RecipeUI)
+     * Sets the frame's contents to the contents of the HomeUI
      */
     public void gotoHome() {
 //        // user is now logged in, create the operation UIs
@@ -480,8 +529,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new instance of ManageRecipesUI and disposes of the current UI we are on
-     * (Used in HomeUI)
+     * Sets the frame's contents to the contents of the ManageRecipesUI
      */
     public void gotoManageRecipesUI() {
         frame.getContentPane().removeAll();
@@ -491,8 +539,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new instance of ModifyRecipeUI and disposes of the current UI we are on
-     * (Used in ManageRecipesUI)
+     * Sets the frame's contents to the contents of the ModifyRecipeUI
      */
     public void gotoModifyRecipeUI() {
         frame.getContentPane().removeAll();
@@ -502,8 +549,8 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new instance of ModifyRecipeUI and disposes of the current UI we are on
-     * (Used in ManageRecipesUI -- USED FOR EXISTING RECIPES)
+     * Sets the frame's contents to the contents of the ModifyRecipeUI
+     * (USED FOR EXISTING RECIPES)
      */
     public void gotoModifyRecipeUI(int recipeID) {
         frame.getContentPane().removeAll();
@@ -513,8 +560,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new instance of RecipeUI and disposes of the current UI we are on
-     * (Used in HomeUI && InventoryUI)
+     * Sets the frame's contents to the contents of the RecipeUI
      */
     public void gotoRecipes() {
         frame.getContentPane().removeAll();
@@ -524,8 +570,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Creates a new instance of InventoryUI and disposes of the current UI we are on
-     * (Used in HomeUI && RecipeUI && InventoryUI)
+     * Sets the frame's contents to the contents of the InventoryUI
      */
     public void gotoInventory() {
         frame.getContentPane().removeAll();

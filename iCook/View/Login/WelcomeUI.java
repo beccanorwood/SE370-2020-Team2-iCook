@@ -100,8 +100,7 @@ public class WelcomeUI extends JPanel implements ActionListener {
             @Override
             public void mouseEntered(MouseEvent e) {
                 login.setFont(new Font("Helvetica", Font.BOLD, 20));
-                login.setBackground(Color.decode("#9c7aeb"));
-                login.setForeground(Color.decode("#e4e8f2"));
+                login.setForeground(new Color(81, 143, 112));
             }
             public void mouseExited(MouseEvent e){
                 login.setFont(new Font("Helvetica", Font.PLAIN, 20));
@@ -119,8 +118,7 @@ public class WelcomeUI extends JPanel implements ActionListener {
             @Override
             public void mouseEntered(MouseEvent e) {
                 signup.setFont(new Font("Helvetica", Font.BOLD, 20));
-                signup.setBackground(Color.decode("#9c7aeb"));
-                signup.setForeground(Color.decode("#e4e8f2"));
+                signup.setForeground(new Color(81, 143, 112));
             }
             public void mouseExited(MouseEvent e){
                 signup.setFont(new Font("Helvetica", Font.PLAIN, 20));
@@ -139,8 +137,7 @@ public class WelcomeUI extends JPanel implements ActionListener {
             @Override
             public void mouseEntered(MouseEvent e) {
                 quit.setFont(new Font("Helvetica", Font.BOLD, 20));
-                quit.setBackground(Color.decode("#9c7aeb"));
-                quit.setForeground(Color.decode("#e4e8f2"));
+                quit.setForeground(new Color(81, 143, 112));
             }
             public void mouseExited(MouseEvent e){
                 quit.setFont(new Font("Helvetica", Font.PLAIN, 20));
