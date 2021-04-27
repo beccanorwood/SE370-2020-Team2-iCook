@@ -27,7 +27,6 @@ public class WelcomeUI extends JPanel implements ActionListener {
     private JButton signup;
     private JButton quit;
     private BufferedImage img;
-    private BufferedImage chefImg;
     private ServiceDispatcher serviceDispatcher;
 
 
