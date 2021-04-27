@@ -19,7 +19,7 @@ import java.util.Vector;
  * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
- * @version 4/25/2021
+ * @version 4/26/2021
  */
 public class RecipeDAO extends BaseDAO {
 
@@ -163,7 +163,7 @@ public class RecipeDAO extends BaseDAO {
      * Performs a SQL statement to return a Vector of all iCook's recipes.
      * Info we are retrieving from each recipe: id, name, published
      *
-     * @return a Vector containing vectors (each inner vector contains a recipe's info).
+     * @return a Vector of vectors (each inner vector contains a recipe's info).
      */
     public Vector<Vector> getRecipes() {
         try {
@@ -217,7 +217,7 @@ public class RecipeDAO extends BaseDAO {
      * Performs a SQL statement to return Recipe given the recipe's id
      *
      * @param id the id of the recipe we want to get an object of
-     * @return a Recipe Object
+     * @return the corresponding Recipe Object of the id passed in
      */
     public Recipe getRecipe(int id) {
         try {
@@ -227,7 +227,7 @@ public class RecipeDAO extends BaseDAO {
                                                         "WHERE R.id = RI.recipe_id " +
                                                         "AND RI.ingredient_id = I.id " +
                                                         "AND R.id = '" + id + "' ");
-            // make sure the recipe id exists
+            // if the recipe has ingredients, continue below
             if (rs.next()) {
 
                 // items we need for the final object to be returned
@@ -254,14 +254,112 @@ public class RecipeDAO extends BaseDAO {
 
                 // return the desired Recipe object
                 return new Recipe(id, recipe_name, instructions, ingredients, isPublished);
+            }
 
-            } else {
-                return null;
+            // safety check to see if the recipe exists without ingredients
+            else {
+                ResultSet rs2 = statement.executeQuery("SELECT * FROM recipes WHERE id = '"+id+"' ");
+
+                // if so, return a recipe object with no ingredient list
+                if (rs2.next()) {
+                    // items we need for the final object to be returned
+                    String recipe_name = rs2.getString("name");
+                    String instructions = rs2.getString("instruction");
+                    boolean isPublished = rs2.getBoolean("published");
+
+                    // return the desired Recipe object
+                    return new Recipe(id, recipe_name, instructions, new ArrayList<>(), isPublished);
+                }
+
+                // else there is no such recipe, return null
+                else {
+                    return null;
+                }
             }
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;
+        }
+    }
+
+
+    /**
+     * Performs a SQL statement to insert a new Recipe into the recipes table
+     * as well as other SQL statements to insert its ingredients into the recipe_ingredients table.
+     *
+     * @param recipe to be inserted into the database
+     */
+    public void addNewRecipe(Recipe recipe) {
+        try {
+            Statement statement = this.createStatement();
+
+            // info needed to insert into the recipes table
+            String name = recipe.getRecipeName();
+            String instructions = recipe.getInstructions();
+            int isPublished = recipe.isPublished() ? 1 : 0;
+
+            // insert recipe data into the recipes table
+            statement.executeUpdate("INSERT INTO recipes " +
+                                        "VALUES(NULL, '"+name+"', '"+instructions+"', '"+isPublished+"' )");
+
+            // insert ingredient data into the recipe_ingredients table
+            ResultSet rs = statement.executeQuery("SELECT id FROM recipes WHERE name = '"+name+"' ");
+            if (rs.next()) {
+                // get the newly added recipe's id
+                int recipe_id = rs.getInt("id");
+
+                // for each RecipeIngredient in the recipe, insert it into the recipe_ingredients table
+                for (RecipeIngredient ing : recipe.getIngredients()) {
+                    int ing_id = ing.getIngredient().getIngredientID();
+                    int ing_qty = ing.getQuantity();
+
+                    statement.executeUpdate("INSERT INTO recipe_ingredients " +
+                                                "VALUES(NULL, '"+ing_id+"', '"+ing_qty+"', '"+recipe_id+"' )");
+                }
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Performs a SQL statement to update the Recipe in the recipes table
+     * as well as other SQL statements to update its ingredients in the recipe_ingredients table.
+     *
+     * @param recipe to be updated in the database
+     */
+    public void updateRecipe(Recipe recipe) {
+        try {
+            Statement statement = this.createStatement();
+
+            // info needed to perform queries
+            int recipe_id = recipe.getRecipeID();
+            String name = recipe.getRecipeName();
+            String instructions = recipe.getInstructions();
+            int isPublished = recipe.isPublished() ? 1 : 0;
+            ArrayList<RecipeIngredient> ingredients = recipe.getIngredients();
+
+            // update recipe data in the recipes table
+            statement.executeUpdate("UPDATE recipes " +
+                                        "SET name = '"+name+"', instruction = '"+instructions+"', published = '"+isPublished+"'" +
+                                        "WHERE id = '"+recipe_id+"' ");
+
+            // wipe the recipe_ingredients table of its rows containing the recipe's id
+            statement.executeUpdate("DELETE FROM recipe_ingredients WHERE recipe_id = '"+recipe_id+"' ");
+
+            // insert the recipe's ingredients into the recipe_ingredients table (unless qty is 0)
+            for (RecipeIngredient ing : ingredients) {
+                if (ing.getQuantity() != 0) {
+                    statement.executeUpdate("INSERT INTO recipe_ingredients " +
+                            "VALUES(NULL, '" + ing.getIngredient().getIngredientID() + "', '" + ing.getQuantity() + "', '" + recipe_id + "' )");
+                }
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 

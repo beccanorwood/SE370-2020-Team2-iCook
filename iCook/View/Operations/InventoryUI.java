@@ -4,6 +4,7 @@ import iCook.Controller.ServiceDispatcher;
 import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -16,7 +17,7 @@ import java.util.HashMap;
  * can add,remove, and update ingredients in their inventory on this page.
  *
  * @author Team 2
- * @version 04/09/2021
+ * @version 04/27/2021
  */
 public class InventoryUI extends JPanel {
     //Inventory UI frame that holds all inventory panels//
@@ -98,28 +99,76 @@ public class InventoryUI extends JPanel {
     {
         JPanel topPanel = new JPanel(); //Panel displaying labels for each panel
         JPanel bottomPanel = new JPanel(); //Panel displaying buttons to update their inventory, go to recipe page, or the home page
+        Border emptyBorder = BorderFactory.createEmptyBorder();
 
-        topPanel.setBackground(new Color(26, 27, 34));
-        bottomPanel.setBackground(new Color(26, 27, 34));
+        topPanel.setBackground(new Color(255,255,255));
+        bottomPanel.setBackground(new Color(255,255,255));
 
         home = new JButton("Home");
-        home.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        home.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         home.setPreferredSize(new Dimension(144,32));
         home.setHorizontalAlignment(JButton.CENTER);
+        home.setForeground(new Color(255,255,255));
+        home.setBackground(new Color(28, 31, 46));
+        home.setFocusPainted(false);
+        home.setBorder(emptyBorder);
+
+        home.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                home.setForeground(new Color(255,255,255));
+                home.setBackground(new Color(68, 166, 154));
+            }
+            public void mouseExited(MouseEvent e){
+                home.setForeground(new Color(255,255,255));
+                home.setBackground(new Color(28, 31, 46));
+            }
+        });
 
         recipes = new JButton("Recipes");
-        recipes.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        recipes.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         recipes.setPreferredSize(new Dimension(144,32));
         recipes.setHorizontalAlignment(JButton.CENTER);
+        recipes.setForeground(new Color(255,255,255));
+        recipes.setBackground(new Color(28, 31, 46));
+        recipes.setFocusPainted(false);
+        recipes.setBorder(emptyBorder);
+
+        recipes.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                recipes.setForeground(new Color(255,255,255));
+                recipes.setBackground(new Color(68, 166, 154));
+            }
+            public void mouseExited(MouseEvent e){
+                recipes.setForeground(new Color(255,255,255));
+                recipes.setBackground(new Color(28, 31, 46));
+            }
+        });
 
         update = new JButton("Update");
-        update.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        update.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         update.setPreferredSize(new Dimension(144,32));
         update.setHorizontalAlignment(JButton.CENTER);
+        update.setForeground(new Color(255,255,255));
+        update.setBackground(new Color(28, 31, 46));
+        update.setFocusPainted(false);
+        update.setBorder(emptyBorder);
+
+        update.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                update.setForeground(new Color(255,255,255));
+                update.setBackground(new Color(248, 68, 149));
+            }
+            public void mouseExited(MouseEvent e){
+                update.setForeground(new Color(255,255,255));
+                update.setBackground(new Color(28, 31, 46));
+            }
+        });
 
 
         //Calls the ButtonListener class //
-
         home.addActionListener(bl);
         recipes.addActionListener(bl);
         update.addActionListener(bl);
@@ -137,7 +186,7 @@ public class InventoryUI extends JPanel {
 
         //Panel inside of available ingredient inventory that holds the ingredient names
         JPanel availableIngredientsPanel = new JPanel();
-        availableIngredientsPanel.setBackground(new Color(26, 27, 34));
+        availableIngredientsPanel.setBackground(new Color(255,255,255));
         availableIngredientsPanel.setLayout(new GridLayout(ingredientList.size(), 1));
 
 
@@ -145,7 +194,7 @@ public class InventoryUI extends JPanel {
 
         //Panel inside of available ingredient inventory side of frame, that holds the ingredient units
         JPanel availableIngredientsUnits = new JPanel();
-        availableIngredientsUnits.setBackground(new Color(26, 27, 34));
+        availableIngredientsUnits.setBackground(new Color(255,255,255));
         availableIngredientsUnits.setLayout(new GridLayout(ingredientList.size(), 1));
 
 
@@ -162,7 +211,7 @@ public class InventoryUI extends JPanel {
         gbc2.fill = GridBagConstraints.VERTICAL;
         gbc2.gridx = 0;
         gbc2.gridy = 0;
-        mainleftPanel.setBackground(new Color(26, 27, 34));
+        mainleftPanel.setBackground(new Color(255,255,255));
 
 
 
@@ -176,18 +225,18 @@ public class InventoryUI extends JPanel {
         gbc.fill = GridBagConstraints.VERTICAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        mainrightPanel.setBackground(new Color(26, 27, 34));
+        mainrightPanel.setBackground(new Color(255,255,255));
 
 
         JPanel ingredientPortion = new JPanel(); //Panel that holds the ingredients of the user's inventory
-        ingredientPortion.setBackground(new Color(26, 27, 34));
+        ingredientPortion.setBackground(new Color(255,255,255));
 
         JPanel currentIngredientsUnitPanel = new JPanel(); //Panel that holds the corresponding ingredient units of the user's inventory
-        currentIngredientsUnitPanel.setBackground(new Color(26, 27, 34));
+        currentIngredientsUnitPanel.setBackground(new Color(255,255,255));
 
         JPanel[] btnContainerRight; //Array of panels, each panel holds the increase, decrease, and amount buttons for the user's current inventory
         JPanel totalBtnContainerRight = new JPanel(); //Vertical panel that holds the aforementioned array of button panels
-        totalBtnContainerRight.setBackground(new Color(26, 27, 34));
+        totalBtnContainerRight.setBackground(new Color(255,255,255));
 
         JLabel [] currInventoryName; //Array of labels that display the name of the user's current ingredient inventory
         JLabel [] currInventoryUnits; //Array of RadioButtons that display the units of the user's current ingredient inventory
@@ -211,9 +260,12 @@ public class InventoryUI extends JPanel {
             for (int i = 0; i < ingredientList.size(); i++) {
                 ingredient_name_buttons[i] = new JCheckBox();
                 ingredient_name_buttons[i].setText(ingredientList.get(i).getName());
-                ingredient_name_buttons[i].setFont(new Font("Helvetica", Font.PLAIN, 20));
-                ingredient_name_buttons[i].setBackground(new Color(26, 27, 34));
-                ingredient_name_buttons[i].setForeground(new Color(128,128,128));
+                ingredient_name_buttons[i].setFont(new Font("Century Gothic", Font.PLAIN, 20));
+                ingredient_name_buttons[i].setForeground(new Color(138,135,125));
+                ingredient_name_buttons[i].setBackground(new Color(255,255,255));
+                ingredient_name_buttons[i].setFocusPainted(false);
+                ingredient_name_buttons[i].setBorder(emptyBorder);
+
                 ingredient_name_buttons[i].setPreferredSize(new Dimension(180, 54));
 
                 ingredient_name_buttons[i].addActionListener(cbl);
@@ -222,9 +274,9 @@ public class InventoryUI extends JPanel {
 
                 ingredient_unit_buttons[i] = new JLabel();
                 ingredient_unit_buttons[i].setText("  " + ingredientList.get(i).getUnitOfMeasure());
-                ingredient_unit_buttons[i].setBackground(new Color(26, 27, 34));
-                ingredient_unit_buttons[i].setForeground(new Color(128,128,128));
-                ingredient_unit_buttons[i].setFont(new Font("Helvetica", Font.ITALIC, 18));
+                ingredient_unit_buttons[i].setBackground(new Color(255,255,255));
+                ingredient_unit_buttons[i].setForeground(new Color(138,135,125));
+                ingredient_unit_buttons[i].setFont(new Font("Century Gothic", Font.ITALIC, 18));
                 ingredient_unit_buttons[i].setPreferredSize(new Dimension(62, 54));
 
                 availableIngredientsUnits.add(ingredient_unit_buttons[i], gbc2);
@@ -242,33 +294,43 @@ public class InventoryUI extends JPanel {
 
             // holds all buttons
             totalBtnContainer = new JPanel(new GridLayout(ingredientList.size(), 1));
-            totalBtnContainer.setBackground(new Color(26, 27, 34));
+            totalBtnContainer.setBackground(new Color(255,255,255));
 
             // this is for left panel -/+ buttons
             for(int i = 0; i < btnContainer.length; i++){
                 btnContainer[i] = new JPanel(new GridLayout(1, 0));
-                btnContainer[i].setBackground(new Color(26, 27, 34));
+                btnContainer[i].setBackground(new Color(255,255,255));
 
                 decrementBtns[i] = new JButton("-");
-                decrementBtns[i].setFont(new Font("Helvetica", Font.PLAIN, 19));
-                decrementBtns[i].setForeground(new Color(26, 27, 34));
+                decrementBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 decrementBtns[i].setPreferredSize(new Dimension(62, 54));
                 decrementBtns[i].setAlignmentX(JButton.CENTER);
                 decrementBtns[i].setAlignmentY(JButton.CENTER);
+                decrementBtns[i].setForeground(new Color(255,255,255));
+                decrementBtns[i].setBackground(new Color(28, 31, 46));
+                decrementBtns[i].setFocusPainted(false);
+                decrementBtns[i].setBorder(emptyBorder);
+
 
                 quantityBtns[i] = new JButton(" ");
-                quantityBtns[i].setFont(new Font("Helvetica", Font.PLAIN, 19));
-                quantityBtns[i].setForeground(new Color(26, 27, 34));
+                quantityBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 quantityBtns[i].setPreferredSize(new Dimension(62, 54));
                 quantityBtns[i].setAlignmentX(JButton.CENTER);
                 quantityBtns[i].setAlignmentY(JButton.CENTER);
+                quantityBtns[i].setForeground(new Color(255,255,255));
+                quantityBtns[i].setBackground(new Color(28, 31, 46));
+                quantityBtns[i].setFocusPainted(false);
+                quantityBtns[i].setBorder(emptyBorder);
 
                 incrementBtns[i] = new JButton("+");
-                incrementBtns[i].setFont(new Font("Helvetica", Font.PLAIN, 19));
-                incrementBtns[i].setForeground(new Color(26, 27, 34));
+                incrementBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 incrementBtns[i].setPreferredSize(new Dimension(62, 54));
                 incrementBtns[i].setAlignmentX(JButton.CENTER);
                 incrementBtns[i].setAlignmentY(JButton.CENTER);
+                incrementBtns[i].setForeground(new Color(255,255,255));
+                incrementBtns[i].setBackground(new Color(28, 31, 46));
+                incrementBtns[i].setFocusPainted(false);
+                incrementBtns[i].setBorder(emptyBorder);
 
                 btnContainer[i].add(decrementBtns[i]);
                 btnContainer[i].add(quantityBtns[i]);
@@ -309,7 +371,7 @@ public class InventoryUI extends JPanel {
 
             // for all buttons
             totalBtnContainer = new JPanel(new GridLayout(ingredientList.size(), 1));
-            totalBtnContainer.setBackground(new Color(26, 27, 34));
+            totalBtnContainer.setBackground(new Color(255,255,255));
 
             availableIngredientsPanel.setLayout(new GridLayout(ingredientList.size(), 1));
             availableIngredientsUnits.setLayout(new GridLayout(ingredientList.size(), 1));
@@ -320,9 +382,9 @@ public class InventoryUI extends JPanel {
             for(int i = 0; i < ingredientList.size(); i++){
                 ingredient_name_buttons[i] = new JCheckBox();
                 ingredient_name_buttons[i].setText(ingredientList.get(i).getName());
-                ingredient_name_buttons[i].setFont(new Font("Helvetica", Font.PLAIN, 20));
-                ingredient_name_buttons[i].setBackground(new Color(26, 27, 34));
-                ingredient_name_buttons[i].setForeground(new Color(128,128,128));
+                ingredient_name_buttons[i].setFont(new Font("Century Gothic", Font.PLAIN, 20));
+                ingredient_name_buttons[i].setForeground(new Color(138,135,125));
+                ingredient_name_buttons[i].setBackground(new Color(255,255,255));
                 ingredient_name_buttons[i].addActionListener(cbl);
                 ingredient_name_buttons[i].setEnabled(true);
                 ingredient_name_buttons[i].setPreferredSize(new Dimension(180, 54));
@@ -331,9 +393,8 @@ public class InventoryUI extends JPanel {
 
                 ingredient_unit_buttons[i] = new JLabel();
                 ingredient_unit_buttons[i].setText("  " + ingredientList.get(i).getUnitOfMeasure());
-                ingredient_unit_buttons[i].setBackground(new Color(26, 27, 34));
-                ingredient_unit_buttons[i].setForeground(new Color(128,128,128));
-                ingredient_unit_buttons[i].setFont(new Font("Helvetica", Font.ITALIC, 18));
+                ingredient_unit_buttons[i].setForeground(new Color(138,135,125));
+                ingredient_unit_buttons[i].setFont(new Font("Century Gothic", Font.ITALIC, 18));
                 ingredient_unit_buttons[i].setPreferredSize(new Dimension(62, 54));
 
 
@@ -348,28 +409,37 @@ public class InventoryUI extends JPanel {
             for(int i = 0; i < btnContainer.length; i++)
             {
                 decrementBtns[i] = new JButton("-");
-                decrementBtns[i].setFont(new Font("Helvetica", Font.PLAIN, 19));
-                decrementBtns[i].setForeground(new Color(26, 27, 34));
+                decrementBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 decrementBtns[i].setPreferredSize(new Dimension(62, 54));
                 decrementBtns[i].setAlignmentX(JButton.CENTER);
                 decrementBtns[i].setAlignmentY(JButton.CENTER);
+                decrementBtns[i].setForeground(new Color(255,255,255));
+                decrementBtns[i].setBackground(new Color(28, 31, 46));
+                decrementBtns[i].setFocusPainted(false);
+                decrementBtns[i].setBorder(emptyBorder);
 
                 quantityBtns[i] = new JButton(" ");
-                quantityBtns[i].setFont(new Font("Helvetica", Font.PLAIN, 19));
-                quantityBtns[i].setForeground(new Color(26, 27, 34));
+                quantityBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 quantityBtns[i].setPreferredSize(new Dimension(62, 54));
                 quantityBtns[i].setAlignmentX(JButton.CENTER);
                 quantityBtns[i].setAlignmentY(JButton.CENTER);
+                quantityBtns[i].setForeground(new Color(255,255,255));
+                quantityBtns[i].setBackground(new Color(28, 31, 46));
+                quantityBtns[i].setFocusPainted(false);
+                quantityBtns[i].setBorder(emptyBorder);
 
                 incrementBtns[i] = new JButton("+");
-                incrementBtns[i].setFont(new Font("Helvetica", Font.PLAIN, 19));
-                incrementBtns[i].setForeground(new Color(26, 27, 34));
+                incrementBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 incrementBtns[i].setPreferredSize(new Dimension(62, 54));
                 incrementBtns[i].setAlignmentX(JButton.CENTER);
                 incrementBtns[i].setAlignmentY(JButton.CENTER);
+                incrementBtns[i].setForeground(new Color(255,255,255));
+                incrementBtns[i].setBackground(new Color(28, 31, 46));
+                incrementBtns[i].setFocusPainted(false);
+                incrementBtns[i].setBorder(emptyBorder);
 
                 btnContainer[i] = new JPanel(new GridLayout(1, 0));
-                btnContainer[i].setBackground(new Color(26, 27, 34));
+                btnContainer[i].setBackground(new Color(255,255,255));
 
                 btnContainer[i].add(decrementBtns[i]);
                 btnContainer[i].add(quantityBtns[i]);
@@ -409,20 +479,17 @@ public class InventoryUI extends JPanel {
             // this is for every name / unit of user possessed ingredient
             for(int i = 0; i < userIngredientList.size(); i++){
                 currInventoryName[i] = new JLabel();
-                currInventoryName[i].setText("     " + userIngredientList.get(i).getName());
-                currInventoryName[i].setFont(new Font("Helvetica", Font.PLAIN, 20));
-                currInventoryName[i].setBackground(new Color(26, 27, 34));
-                currInventoryName[i].setForeground(new Color(249,250,244));
+                currInventoryName[i].setText(userIngredientList.get(i).getName());
+                currInventoryName[i].setFont(new Font("Century Gothic", Font.PLAIN, 20));
+                currInventoryName[i].setForeground(new Color(51, 51, 51));
                 currInventoryName[i].setPreferredSize(new Dimension(180, 54));
 
                 ingredientPortion.add(currInventoryName[i], gbc);
-                ingredientPortion.setBackground(new Color(26, 27, 34));
 
                 currInventoryUnits[i] = new JLabel();
                 currInventoryUnits[i].setText("  " + userIngredientList.get(i).getUnitOfMeasure());
-                currInventoryUnits[i].setBackground(new Color(26, 27, 34));
-                currInventoryUnits[i].setForeground(new Color(249,250,244));
-                currInventoryUnits[i].setFont(new Font("Helvetica", Font.ITALIC, 18));
+                currInventoryUnits[i].setForeground(new Color(51, 51, 51));
+                currInventoryUnits[i].setFont(new Font("Century Gothic", Font.ITALIC, 18));
                 currInventoryUnits[i].setPreferredSize(new Dimension(62, 54));
 
 
@@ -436,32 +503,41 @@ public class InventoryUI extends JPanel {
             // this is for every -/+ button for the ingredients the user possesses
             for(int i = 0; i < userIngredientList.size(); i++){
                 decreaseBtns[i] = new JButton("-");
-                decreaseBtns[i].setFont(new Font("Helvetica", Font.PLAIN, 19));
-                decreaseBtns[i].setForeground(new Color(26, 27, 34));
+                decreaseBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 decreaseBtns[i].setPreferredSize(new Dimension(62, 54));
                 decreaseBtns[i].setAlignmentX(JButton.CENTER);
                 decreaseBtns[i].setAlignmentY(JButton.CENTER);
+                decreaseBtns[i].setForeground(new Color(255,255,255));
+                decreaseBtns[i].setBackground(new Color(28, 31, 46));
+                decreaseBtns[i].setFocusPainted(false);
+                decreaseBtns[i].setBorder(emptyBorder);
 
 
                 amountBtns[i] = new JButton(String.valueOf(userIngredientList.get(i).getQuantity()));
-                amountBtns[i].setFont(new Font("Helvetica", Font.PLAIN, 19));
+                amountBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 amountBtns[i].setText(String.valueOf(userIngredientList.get(i).getQuantity()));
-                amountBtns[i].setForeground(new Color(26, 27, 34));
                 amountBtns[i].setPreferredSize(new Dimension(62, 54));
                 amountBtns[i].setAlignmentX(JButton.CENTER);
                 amountBtns[i].setAlignmentY(JButton.CENTER);
+                amountBtns[i].setForeground(new Color(255,255,255));
+                amountBtns[i].setBackground(new Color(28, 31, 46));
+                amountBtns[i].setFocusPainted(false);
+                amountBtns[i].setBorder(emptyBorder);
 
 
                 increaseBtns[i] = new JButton("+");
-                increaseBtns[i].setFont(new Font("Helvetica", Font.PLAIN, 19));
-                increaseBtns[i].setForeground(new Color(26, 27, 34));
+                increaseBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 increaseBtns[i].setPreferredSize(new Dimension(62, 54));
                 increaseBtns[i].setAlignmentX(JButton.CENTER);
                 increaseBtns[i].setAlignmentY(JButton.CENTER);
+                increaseBtns[i].setForeground(new Color(255,255,255));
+                increaseBtns[i].setBackground(new Color(28, 31, 46));
+                increaseBtns[i].setFocusPainted(false);
+                increaseBtns[i].setBorder(emptyBorder);
 
 
                 btnContainerRight[i] = new JPanel(new GridLayout(1, 0));
-                btnContainerRight[i].setBackground(new Color(26, 27, 34));
+                btnContainerRight[i].setBackground(new Color(255,255,255));
                 btnContainerRight[i].add(decreaseBtns[i]);
                 btnContainerRight[i].add(amountBtns[i]);
                 btnContainerRight[i].add(increaseBtns[i]);
@@ -482,19 +558,19 @@ public class InventoryUI extends JPanel {
 
 
         JPanel paneltopLeft = new JPanel(new BorderLayout());
-        paneltopLeft.setBackground(new Color(26, 27, 34));
+        paneltopLeft.setBackground(new Color(255,255,255));
 
         JLabel test1 = new JLabel("Available Ingredients");
-        test1.setForeground(new Color(249,250,244));
-        test1.setFont(new Font("Helvetica", Font.BOLD, 22));
+        test1.setForeground(new Color(51,51,51));
+        test1.setFont(new Font("Century Gothic", Font.PLAIN, 22));
         test1.setHorizontalAlignment(SwingConstants.CENTER);
 
         JPanel paneltopRight = new JPanel(new BorderLayout());
-        paneltopRight.setBackground(new Color(26, 27, 34));
+        paneltopRight.setBackground(new Color(255,255,255));
 
         JLabel test2 = new JLabel("Your Ingredient Inventory");
-        test2.setForeground(new Color(249,250,244));
-        test2.setFont(new Font("Helvetica", Font.BOLD, 22));
+        test2.setForeground(new Color(51,51,51));
+        test2.setFont(new Font("Century Gothic", Font.PLAIN, 22));
         test2.setHorizontalAlignment(SwingConstants.CENTER);
 
         paneltopLeft.add(test1, BorderLayout.CENTER);
@@ -544,13 +620,13 @@ public class InventoryUI extends JPanel {
         mainleftPanel.add(availableIngredientsPanel);
         mainleftPanel.add(totalBtnContainer);
         mainleftPanel.add(availableIngredientsUnits);
-        mainleftPanel.setBackground(new Color(26, 27, 34));
+        mainleftPanel.setBackground(new Color(255,255,255));
 
         /*Right Panel Layout*/
         mainrightPanel.add(ingredientPortion);
         mainrightPanel.add(totalBtnContainerRight);
         mainrightPanel.add(currentIngredientsUnitPanel);
-        mainrightPanel.setBackground(new Color(26, 27, 34));
+        mainrightPanel.setBackground(new Color(255,255,255));
 
 
         this.add(main_split, BorderLayout.CENTER);
@@ -578,9 +654,8 @@ public class InventoryUI extends JPanel {
                     {
                         // add ingredient to list of new ingredient for user
                         addedIngredients.put(ingredient.getName(), ingredient);
-                        ingredient_name_buttons[i].setForeground(new Color(249,250,244));
-                        ingredient_name_buttons[i].setForeground(new Color(249,250,244));
-                        ingredient_unit_buttons[i].setForeground(new Color(249,250,244));
+                        ingredient_name_buttons[i].setForeground(new Color(51,51,51));
+                        ingredient_unit_buttons[i].setForeground(new Color(51,51,51));
 
                         // testing purposes
                         System.out.println("Selected Item: " + ingredient.getName());
@@ -650,9 +725,9 @@ public class InventoryUI extends JPanel {
             {
                 if(src2 == userInventoryIncrementBtns.get(i))
                 {
-                        updatedQuantity = updateUserIngredientQuantity(i, userInventoryIncrementBtns.get(i));
-                        userInventoryQuantityBtns.get(i).setText(String.valueOf(updatedQuantity));
-                        userIngredientList.get(i).setQuantity(updatedQuantity);
+                    updatedQuantity = updateUserIngredientQuantity(i, userInventoryIncrementBtns.get(i));
+                    userInventoryQuantityBtns.get(i).setText(String.valueOf(updatedQuantity));
+                    userIngredientList.get(i).setQuantity(updatedQuantity);
                 }
             }
 
@@ -660,9 +735,9 @@ public class InventoryUI extends JPanel {
             for(int i = 0; i < userIngredientList.size(); i++){
                 if(src2 == userInventoryDecrementBtns.get(i))
                 {
-                        updatedQuantity = updateUserIngredientQuantity(i, userInventoryDecrementBtns.get(i));
-                        userInventoryQuantityBtns.get(i).setText(String.valueOf(updatedQuantity));
-                        userIngredientList.get(i).setQuantity(updatedQuantity);
+                    updatedQuantity = updateUserIngredientQuantity(i, userInventoryDecrementBtns.get(i));
+                    userInventoryQuantityBtns.get(i).setText(String.valueOf(updatedQuantity));
+                    userIngredientList.get(i).setQuantity(updatedQuantity);
                 }
             }
 
