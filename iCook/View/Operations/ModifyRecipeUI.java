@@ -614,6 +614,11 @@ public class ModifyRecipeUI extends JPanel {
             // create a RecipeDisplayObject to be passed to the serviceDispatcher
             RecipeDisplayObject recipeDO = createRecipeDO();
 
+            for (IngredientDisplayObject i : recipeDO.getIngredients()) {
+                System.out.println(i.getName());
+                System.out.println(i.getQuantity());
+            }
+
             // if the recipe is going from not published --> published, call the builder!!!
             if (initially_published != recipeDO.isPublished() && recipeDO.isPublished()) {
                 System.out.println("Went from not published to published!!!");
@@ -694,7 +699,7 @@ public class ModifyRecipeUI extends JPanel {
             // make sure we are not adding any duplicates
             for (IngredientDisplayObject recipe_ing : recipe_ings) {
                 if (recipe_ing.getName().contains(ing.getName())) {
-                    break outerloop;
+                    continue outerloop;
                 }
             }
 
