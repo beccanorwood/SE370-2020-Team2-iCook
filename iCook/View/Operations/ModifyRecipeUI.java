@@ -4,10 +4,13 @@ import iCook.Controller.ServiceDispatcher;
 import iCook.View.Operations.DisplayObjects.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 
@@ -15,7 +18,7 @@ import java.util.ArrayList;
  * User interface for Admins to modify existing recipes or to create new recipes.
  *
  * @author Team 2
- * @version 04/26/2021
+ * @version 04/27/2021
  */
 public class ModifyRecipeUI extends JPanel {
     // instance variables
@@ -52,6 +55,8 @@ public class ModifyRecipeUI extends JPanel {
 
     private boolean initially_published;  // this determines if we call the builder
 
+    private Border emptyBorder = BorderFactory.createEmptyBorder();
+
 
     /**
      * Constructor - for brand new recipe
@@ -63,7 +68,7 @@ public class ModifyRecipeUI extends JPanel {
         all_ingredient_panels = new ArrayList<>();
 
         this.setLayout(new BorderLayout());
-        this.setBackground(new Color(35, 39, 42));
+        this.setBackground(new Color(255,255,255));
 
         // set up the container panel
         containerPanel = new JPanel();
@@ -100,7 +105,7 @@ public class ModifyRecipeUI extends JPanel {
         all_ingredient_panels = new ArrayList<>();
 
         this.setLayout(new BorderLayout());
-        this.setBackground(new Color(35, 39, 42));
+        this.setBackground(new Color(255,255,255));
 
         // set up the container panel
         containerPanel = new JPanel();
@@ -137,19 +142,20 @@ public class ModifyRecipeUI extends JPanel {
         // Initialize variables for main panel
         //************************************
         nameLabel = new JLabel("Recipe:");
-        nameLabel.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        nameLabel.setForeground(Color.decode("#ffffff"));
+        nameLabel.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+        nameLabel.setForeground(new Color(51,51,51));
 
         nameTxtField = new JTextField(30);
-        nameTxtField.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        nameTxtField.setFont(new Font("Century Gothic", Font.PLAIN, 20));
         nameTxtField.setPreferredSize(new Dimension(30, 40));
 
         instrLabel = new JLabel("Instructions:");
-        instrLabel.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        instrLabel.setForeground(Color.decode("#ffffff"));
+        instrLabel.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+        instrLabel.setForeground(new Color(51,51,51));
 
         instrTxtField = new JTextArea(12, 30);
-        instrTxtField.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        instrTxtField.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+        instrTxtField.setLineWrap(true);
         JScrollPane txtScroll = new JScrollPane(instrTxtField);
         txtScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -161,11 +167,11 @@ public class ModifyRecipeUI extends JPanel {
         gbc.insets = new Insets(7,10,7,10);
 
         mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(Color.decode("#23272A"));
+        mainPanel.setBackground(new Color(255,255,255));
         mainPanel.setSize(1024, 768);
 
         centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setBackground(new Color(35, 39, 42));
+        centerPanel.setBackground(new Color(255,255,255));
 
         //*****************************
         // Add components to main panel
@@ -197,6 +203,24 @@ public class ModifyRecipeUI extends JPanel {
         gbc.gridx = 2;
         gbc.gridy = 1;
         backBtn = new JButton("Back");
+        backBtn.setForeground(new Color(255,255,255));
+        backBtn.setBackground(new Color(28, 31, 46));
+        backBtn.setFocusPainted(false);
+        backBtn.setBorder(emptyBorder);
+        backBtn.setPreferredSize(new Dimension(100,32));
+
+        backBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                backBtn.setForeground(new Color(255,255,255));
+                backBtn.setBackground(new Color(248, 68, 149));
+            }
+            public void mouseExited(MouseEvent e){
+                backBtn.setForeground(new Color(255,255,255));
+                backBtn.setBackground(new Color(28, 31, 46));
+            }
+        });
+
         backBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -205,11 +229,11 @@ public class ModifyRecipeUI extends JPanel {
         });
         centerPanel.add(backBtn, gbc);
 
-        centerPanel.setBackground((Color.decode("#23272A")));
+        centerPanel.setBackground(new Color(255,255,255));
         mainPanel.add(centerPanel);
 
         scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setBackground(new Color(35, 39, 42));
+        scrollPane.setBackground(new Color(255,255,255));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         this.add(scrollPane, BorderLayout.CENTER);
     }
@@ -223,20 +247,20 @@ public class ModifyRecipeUI extends JPanel {
         // Initialize variables for main panel
         //************************************
         nameLabel = new JLabel("Recipe:");
-        nameLabel.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        nameLabel.setForeground(Color.decode("#ffffff"));
+        nameLabel.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+        nameLabel.setForeground(new Color(51,51,51));
 
         nameTxtField = new JTextField(30);
-        nameTxtField.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        nameTxtField.setFont(new Font("Century Gothic", Font.PLAIN, 20));
         nameTxtField.setPreferredSize(new Dimension(30, 40));
         nameTxtField.setText(recipe.getName());
 
         instrLabel = new JLabel("Instructions:");
-        instrLabel.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        instrLabel.setForeground(Color.decode("#ffffff"));
+        instrLabel.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+        instrLabel.setForeground(new Color(51,51,51));
 
         instrTxtField = new JTextArea(12, 30);
-        instrTxtField.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        instrTxtField.setFont(new Font("Century Gothic", Font.PLAIN, 20));
         instrTxtField.setLineWrap(true);
         instrTxtField.setText(recipe.getInstructions());
         instrTxtField.select(0,0);
@@ -251,11 +275,11 @@ public class ModifyRecipeUI extends JPanel {
         gbc.insets = new Insets(7,10,7,10);
 
         mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(Color.decode("#23272A"));
+        mainPanel.setBackground(new Color(255,255,255));
         mainPanel.setSize(1024, 768);
 
         centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setBackground(new Color(35, 39, 42));
+        centerPanel.setBackground(new Color(255,255,255));
 
         //*****************************
         // Add components to main panel
@@ -287,6 +311,24 @@ public class ModifyRecipeUI extends JPanel {
         gbc.gridx = 2;
         gbc.gridy = 1;
         backBtn = new JButton("Back");
+        backBtn.setForeground(new Color(255,255,255));
+        backBtn.setBackground(new Color(28, 31, 46));
+        backBtn.setFocusPainted(false);
+        backBtn.setBorder(emptyBorder);
+        backBtn.setPreferredSize(new Dimension(100,32));
+
+        backBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                backBtn.setForeground(new Color(255,255,255));
+                backBtn.setBackground(new Color(248, 68, 149));
+            }
+            public void mouseExited(MouseEvent e){
+                backBtn.setForeground(new Color(255,255,255));
+                backBtn.setBackground(new Color(28, 31, 46));
+            }
+        });
+
         backBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -295,11 +337,11 @@ public class ModifyRecipeUI extends JPanel {
         });
         centerPanel.add(backBtn, gbc);
 
-        centerPanel.setBackground((Color.decode("#23272A")));
+        centerPanel.setBackground(new Color(255,255,255));
         mainPanel.add(centerPanel);
 
         scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setBackground(new Color(35, 39, 42));
+        scrollPane.setBackground(new Color(255,255,255));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         this.add(scrollPane, BorderLayout.CENTER);
     }
@@ -310,11 +352,28 @@ public class ModifyRecipeUI extends JPanel {
      */
     private void addIngredientRow() {
         // create a new panel for additional ingredient
-        ingredientPanel = new JPanel(new GridLayout(1, 5, 0, 0));
-        ingredientPanel.setBackground((Color.decode("#23272A")));
+        ingredientPanel = new JPanel(new GridLayout(1, 5, 10, 0));
+        ingredientPanel.setBackground(new Color(255,255,255));
 
         // create the add button
         JButton addButton = new JButton("+");
+        addButton.setForeground(new Color(255,255,255));
+        addButton.setBackground(new Color(28, 31, 46));
+        addButton.setFocusPainted(false);
+        addButton.setBorder(emptyBorder);
+
+        addButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                addButton.setForeground(new Color(255,255,255));
+                addButton.setBackground(new Color(68, 166, 154));
+            }
+            public void mouseExited(MouseEvent e){
+                addButton.setForeground(new Color(255,255,255));
+                addButton.setBackground(new Color(28, 31, 46));
+            }
+        });
+
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -324,17 +383,38 @@ public class ModifyRecipeUI extends JPanel {
 
         // create the sub button
         JButton subButton = new JButton("-");
+        subButton.setForeground(new Color(255,255,255));
+        subButton.setBackground(new Color(28, 31, 46));
+        subButton.setFocusPainted(false);
+        subButton.setBorder(emptyBorder);
+
+        // first ingredient row cannot be deleted
+        if (isFirstIngredient) {
+            subButton.setEnabled(false);
+            subButton.setBackground(new Color(94,94,94));
+            isFirstIngredient = false;
+        }
+        else {
+            subButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    subButton.setForeground(new Color(255, 255, 255));
+                    subButton.setBackground(new Color(248, 68, 149));
+                }
+
+                public void mouseExited(MouseEvent e) {
+                    subButton.setForeground(new Color(255, 255, 255));
+                    subButton.setBackground(new Color(28, 31, 46));
+                }
+            });
+        }
+
         subButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 removeIngredientRow(e);
             }
         });
-        // first ingredient row cannot be deleted
-        if (isFirstIngredient) {
-            subButton.setEnabled(false);
-            isFirstIngredient = false;
-        }
 
         // create the combo box here
         createComboBox();
@@ -381,11 +461,28 @@ public class ModifyRecipeUI extends JPanel {
      */
     private void addRecipeIngredientRow(IngredientDisplayObject ingredient) {
         // create a new panel for additional ingredient
-        ingredientPanel = new JPanel(new GridLayout(1, 5, 0, 0));
-        ingredientPanel.setBackground((Color.decode("#23272A")));
+        ingredientPanel = new JPanel(new GridLayout(1, 5, 10, 0));
+        ingredientPanel.setBackground(new Color(255,255,255));
 
         // create the add button
         JButton addButton = new JButton("+");
+        addButton.setForeground(new Color(255,255,255));
+        addButton.setBackground(new Color(28, 31, 46));
+        addButton.setFocusPainted(false);
+        addButton.setBorder(emptyBorder);
+
+        addButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                addButton.setForeground(new Color(255,255,255));
+                addButton.setBackground(new Color(68, 166, 154));
+            }
+            public void mouseExited(MouseEvent e){
+                addButton.setForeground(new Color(255,255,255));
+                addButton.setBackground(new Color(28, 31, 46));
+            }
+        });
+
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -395,6 +492,32 @@ public class ModifyRecipeUI extends JPanel {
 
         // create the sub button
         JButton subButton = new JButton("-");
+        subButton.setForeground(new Color(255,255,255));
+        subButton.setBackground(new Color(28, 31, 46));
+        subButton.setFocusPainted(false);
+        subButton.setBorder(emptyBorder);
+
+        // first ingredient row cannot be deleted
+        if (isFirstIngredient) {
+            subButton.setEnabled(false);
+            subButton.setBackground(new Color(94,94,94));
+            isFirstIngredient = false;
+        }
+        else {
+            subButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    subButton.setForeground(new Color(255, 255, 255));
+                    subButton.setBackground(new Color(248, 68, 149));
+                }
+
+                public void mouseExited(MouseEvent e) {
+                    subButton.setForeground(new Color(255, 255, 255));
+                    subButton.setBackground(new Color(28, 31, 46));
+                }
+            });
+        }
+
         subButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -402,11 +525,6 @@ public class ModifyRecipeUI extends JPanel {
             }
         });
 
-        // first ingredient row cannot be deleted
-        if (isFirstIngredient) {
-            subButton.setEnabled(false);
-            isFirstIngredient = false;
-        }
 
         // create the combo box here
         createComboBox();
@@ -473,6 +591,23 @@ public class ModifyRecipeUI extends JPanel {
         gbc.gridx = 3;
         gbc.gridy = 1;
         submitBtn = new JButton("Submit");
+        submitBtn.setForeground(new Color(255,255,255));
+        submitBtn.setBackground(new Color(28, 31, 46));
+        submitBtn.setFocusPainted(false);
+        submitBtn.setBorder(emptyBorder);
+        submitBtn.setPreferredSize(new Dimension(100,32));
+
+        submitBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                submitBtn.setForeground(new Color(255,255,255));
+                submitBtn.setBackground(new Color(68, 166, 154));
+            }
+            public void mouseExited(MouseEvent e){
+                submitBtn.setForeground(new Color(255,255,255));
+                submitBtn.setBackground(new Color(28, 31, 46));
+            }
+        });
 
         // define what happens when admin clicks the submit button
         submitBtn.addActionListener(e -> {
@@ -575,16 +710,16 @@ public class ModifyRecipeUI extends JPanel {
         gbc.gridx = 2;
         gbc.gridy = 0;
         publishedButton = new JRadioButton("Published");
-        publishedButton.setBackground((Color.decode("#23272A")));
-        publishedButton.setForeground(Color.decode("#ffffff"));
+        publishedButton.setForeground(new Color(51,51,51));
+        publishedButton.setBackground(new Color(255,255,255));
         radioBtnGroup.add(publishedButton);
         centerPanel.add(publishedButton, gbc);
 
         gbc.gridx = 3;
         gbc.gridy = 0;
         notPublishedButton = new JRadioButton("Not Published");
-        notPublishedButton.setBackground((Color.decode("#23272A")));
-        notPublishedButton.setForeground(Color.decode("#ffffff"));
+        notPublishedButton.setForeground(new Color(51,51,51));
+        notPublishedButton.setBackground(new Color(255,255,255));
         radioBtnGroup.add(notPublishedButton);
         centerPanel.add(notPublishedButton, gbc);
 

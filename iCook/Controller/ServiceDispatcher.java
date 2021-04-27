@@ -460,6 +460,13 @@ public class ServiceDispatcher {
 //        // when program first starts, create the login UIs
 //        setupLoginUI();
 
+        // set the look and feel to be uniform on all operating systems
+        try{
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
         // The java frame is initialized here
         frame = new JFrame();
         frame.setTitle("iCook");

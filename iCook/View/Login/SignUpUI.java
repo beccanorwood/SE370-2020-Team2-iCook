@@ -1,9 +1,12 @@
 package iCook.View.Login;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import iCook.Controller.ServiceDispatcher;
 
@@ -13,7 +16,7 @@ import iCook.Controller.ServiceDispatcher;
  * a username that is already in use.
  *
  * @author Team 2
- * @version 04/09/2021
+ * @version 04/27/2021
  */
 public class SignUpUI extends JPanel implements ActionListener
 {
@@ -28,6 +31,8 @@ public class SignUpUI extends JPanel implements ActionListener
         serviceDispatcher = new ServiceDispatcher();
         this.setLayout(new BorderLayout());
 
+        Border emptyBorder = BorderFactory.createEmptyBorder();
+
         signup_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
 
         constraints = new GridBagConstraints();
@@ -35,8 +40,8 @@ public class SignUpUI extends JPanel implements ActionListener
         constraints.insets = new Insets(15, 10, 15, 10);
 
         JLabel iCook_signUP = new JLabel("Sign Up");
-        iCook_signUP.setFont(new Font("Helvetica", Font.BOLD, 40));
-        iCook_signUP.setForeground(new Color(249,250,244));
+        iCook_signUP.setFont(new Font("Century Gothic", Font.PLAIN, 40));
+        iCook_signUP.setForeground(new Color(51,51,51));
 
         constraints.gridx = 3;
         constraints.gridy = 0;
@@ -45,16 +50,48 @@ public class SignUpUI extends JPanel implements ActionListener
         JButton create = new JButton("Create Account");
         create.setPreferredSize(new Dimension(144,32));
         create.addActionListener(this);
+        create.setForeground(new Color(255,255,255));
+        create.setBackground(new Color(28, 31, 46));
+        create.setFocusPainted(false);
+        create.setBorder(emptyBorder);
+
+        create.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                create.setForeground(new Color(255,255,255));
+                create.setBackground(new Color(68, 166, 154));
+            }
+            public void mouseExited(MouseEvent e){
+                create.setForeground(new Color(255,255,255));
+                create.setBackground(new Color(28, 31, 46));
+            }
+        });
 
         JButton back = new JButton("Back");
         back.addActionListener(this);
         back.setPreferredSize(new Dimension(144,32));
+        back.setForeground(new Color(255,255,255));
+        back.setBackground(new Color(28, 31, 46));
+        back.setFocusPainted(false);
+        back.setBorder(emptyBorder);
+
+        back.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                back.setForeground(new Color(255,255,255));
+                back.setBackground(new Color(248, 68, 149));
+            }
+            public void mouseExited(MouseEvent e){
+                back.setForeground(new Color(255,255,255));
+                back.setBackground(new Color(28, 31, 46));
+            }
+        });
 
         JLabel userName = new JLabel("Create username: ");
         userName_field = new JTextField(20);
-        userName_field.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        userName.setForeground(new Color(249,250,244));
-        userName.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        userName_field.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+        userName.setForeground(new Color(51,51,51));
+        userName.setFont(new Font("Century Gothic", Font.PLAIN, 20));
 
         constraints.gridx = 3;
         constraints.gridy = 7;
@@ -65,9 +102,9 @@ public class SignUpUI extends JPanel implements ActionListener
 
         JLabel passWord = new JLabel("Create password: ");
         passwordField = new JPasswordField(20);
-        passwordField.setFont(new Font("Helvetica", Font.PLAIN, 20));
-        passWord.setForeground(new Color(249,250,244));
-        passWord.setFont(new Font("Helvetica", Font.PLAIN, 20));
+        passwordField.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+        passWord.setForeground(new Color(51,51,51));
+        passWord.setFont(new Font("Century Gothic", Font.PLAIN, 20));
 
         constraints.gridx = 3;
         constraints.gridy = 9;
@@ -85,7 +122,7 @@ public class SignUpUI extends JPanel implements ActionListener
         //Sign Up Button position
         constraints.gridx = 4;
         signup_panel.add(create, constraints);
-        signup_panel.setBackground(new Color(26, 27, 34));
+        signup_panel.setBackground(new Color(255,255,255));
 
         //Clean up contents from WelcomeUI panel
         signup_panel.revalidate();
@@ -115,12 +152,12 @@ public class SignUpUI extends JPanel implements ActionListener
             {
                 //Error message
                 JLabel blank_error = new JLabel("Error: username and/or password cannot be blank!");
-                blank_error.setForeground(new Color(241,122,126));
-                blank_error.setFont(new Font("Helvetica", Font.PLAIN, 20));
+                blank_error.setForeground(new Color(51,51,51));
+                blank_error.setFont(new Font("Century Gothic", Font.PLAIN, 20));
 
                 JPanel blank_error_p = new JPanel();
                 blank_error_p.add(blank_error);
-                blank_error_p.setBackground(new Color(26, 27, 34));
+                blank_error_p.setBackground(new Color(255,255,255));
 
                 this.add(blank_error_p, BorderLayout.SOUTH);
                 this.setVisible(true);
@@ -142,15 +179,16 @@ public class SignUpUI extends JPanel implements ActionListener
                 else {
                     //Error message
                     JLabel blank_error = new JLabel(message);
-                    blank_error.setForeground(new Color(241,122,126));
+                    blank_error.setForeground(new Color(51,51,516));
 
                     JPanel blank_error_p = new JPanel();
                     blank_error_p.add(blank_error);
-                    blank_error.setFont(new Font("Helvetica", Font.PLAIN, 20));
-                    blank_error_p.setBackground(new Color(26, 27, 34));
+                    blank_error.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+                    blank_error_p.setBackground(new Color(255,255,255));
 
                     this.add(blank_error_p, BorderLayout.SOUTH);
-                    this.setVisible(true);
+                    this.revalidate();
+                    this.repaint();
                 }
             }
         }

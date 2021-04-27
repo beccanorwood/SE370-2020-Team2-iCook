@@ -1,14 +1,15 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
-import iCook.Model.Ingredient;
-import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
 import iCook.View.Operations.DisplayObjects.RecipeDisplayObject;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /**
@@ -16,10 +17,9 @@ import java.util.ArrayList;
  * wish to create and view its instructions. If a user does not have a sufficient inventory for any recipes, a message will be displayed
  *
  * @author Team 2
- * @version 04/09/2021
+ * @version 04/27/2021
  */
-public class RecipeUI extends JPanel implements ActionListener
-{
+public class RecipeUI extends JPanel implements ActionListener {
     // instance variables
     private JPanel toppanel;
     private JLabel iCook;
@@ -48,6 +48,8 @@ public class RecipeUI extends JPanel implements ActionListener
         this.setLayout(new BorderLayout());
         satisfiedRecipes = serviceDispatcher.getSatisfiedRecipes();
 
+        Border emptyBorder = BorderFactory.createEmptyBorder();
+
         // **************************************************
         // *** Setting up the text field for instructions ***
         // ***    and setting up the frame for this GUI    **
@@ -56,21 +58,21 @@ public class RecipeUI extends JPanel implements ActionListener
         instructions.setLineWrap(true);
         instructions.setWrapStyleWord(true);
         instructions.setEditable(false);
-        instructions.setFont(new Font("Helvetica", Font.PLAIN, 22));
-        instructions.setBackground(new Color(26, 27, 34));
-        instructions.setForeground(new Color(249,250,244));
+        instructions.setFont(new Font("Century Gothic", Font.PLAIN, 22));
+        instructions.setBackground(new Color(255,255,255));
+        instructions.setForeground(new Color(51,51,51));
 
         // ***********************************
         // *** Top panel is worked on here ***
         // ***********************************
 
         iCook = new JLabel("Recipes in your market");
-        iCook.setFont(new Font("Helvetica", Font.BOLD, 40));
-        iCook.setForeground(new Color(249,250,244));
+        iCook.setFont(new Font("Century Gothic", Font.PLAIN, 40));
+        iCook.setForeground(new Color(51,51,51));
 
         // populate the header
         toppanel = new JPanel();
-        toppanel.setBackground(new Color(26, 27, 34));
+        toppanel.setBackground(new Color(255,255,255));
         toppanel.add(iCook);
 
         // *********************************************
@@ -85,7 +87,7 @@ public class RecipeUI extends JPanel implements ActionListener
 
         // create the recipe panel (this stores all recipe buttons)
         recipe_panel = new JPanel(new GridBagLayout());
-        recipe_panel.setBackground(new Color(26, 27, 34));
+        recipe_panel.setBackground(new Color(255,255,255));
 
         // this is the bounds for where the button will be added in the left panel
         GridBagConstraints gbc = new GridBagConstraints();
@@ -93,6 +95,7 @@ public class RecipeUI extends JPanel implements ActionListener
         gbc.fill = GridBagConstraints.VERTICAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.insets = new Insets(10,0,0,0);
 
         // create an array of buttons
         recipesBtn = new JButton[numOfRecipes];
@@ -103,9 +106,24 @@ public class RecipeUI extends JPanel implements ActionListener
             recipesBtn[i] = new JButton();
             recipesBtn[i].setText(satisfiedRecipes.get(i).getName());
             recipesBtn[i].addActionListener(this);
-            recipesBtn[i].setFont(new Font("Helvetica", Font.PLAIN, 16));
+            recipesBtn[i].setFont(new Font("Century Gothic", Font.PLAIN, 16));
             recipesBtn[i].setPreferredSize(new Dimension(200,32));
             recipesBtn[i].setHorizontalAlignment(JButton.CENTER);
+            recipesBtn[i].setForeground(new Color(255,255,255));
+            recipesBtn[i].setBackground(new Color(28, 31, 46));
+            recipesBtn[i].setFocusPainted(false);
+            recipesBtn[i].setBorder(emptyBorder);
+            recipesBtn[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    e.getComponent().setForeground(new Color(255,255,255));
+                    e.getComponent().setBackground(new Color(68, 166, 154));
+                }
+                public void mouseExited(MouseEvent e){
+                    e.getComponent().setForeground(new Color(255,255,255));
+                    e.getComponent().setBackground(new Color(28, 31, 46));
+                }
+            });
 
             recipe_panel.add(recipesBtn[i], gbc);
             gbc.gridy++;
@@ -120,7 +138,7 @@ public class RecipeUI extends JPanel implements ActionListener
         GridBagConstraints gbc2 = new GridBagConstraints();
         gbc2.anchor = GridBagConstraints.CENTER;
         gbc2.fill = GridBagConstraints.HORIZONTAL;
-        center_panel.setBackground(new Color(26, 27, 34));
+        center_panel.setBackground(new Color(255,255,255));
 
         // **************************************
         // *** Bottom panel is worked on here ***
@@ -128,18 +146,66 @@ public class RecipeUI extends JPanel implements ActionListener
 
         // create button to go back to home page
         JButton home = new JButton("Home");
-        home.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        home.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         home.setPreferredSize(new Dimension(144,32));
+        home.setForeground(new Color(255,255,255));
+        home.setBackground(new Color(28, 31, 46));
+        home.setFocusPainted(false);
+        home.setBorder(emptyBorder);
+
+        home.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                home.setForeground(new Color(255,255,255));
+                home.setBackground(new Color(68, 166, 154));
+            }
+            public void mouseExited(MouseEvent e){
+                home.setForeground(new Color(255,255,255));
+                home.setBackground(new Color(28, 31, 46));
+            }
+        });
 
         // create button to go to inventory page
         JButton inv = new JButton("Inventory");
-        inv.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        inv.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         inv.setPreferredSize(new Dimension(144,32));
+        inv.setForeground(new Color(255,255,255));
+        inv.setBackground(new Color(28, 31, 46));
+        inv.setFocusPainted(false);
+        inv.setBorder(emptyBorder);
+
+        inv.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                inv.setForeground(new Color(255,255,255));
+                inv.setBackground(new Color(68, 166, 154));
+            }
+            public void mouseExited(MouseEvent e){
+                inv.setForeground(new Color(255,255,255));
+                inv.setBackground(new Color(28, 31, 46));
+            }
+        });
 
         modifyRecipe = new JButton("Modify Recipe");
-        modifyRecipe.setFont(new Font("Helvetica", Font.PLAIN, 16));
+        modifyRecipe.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         modifyRecipe.setPreferredSize(new Dimension(144,32));
         modifyRecipe.setVisible(false);
+        modifyRecipe.setForeground(new Color(255,255,255));
+        modifyRecipe.setBackground(new Color(28, 31, 46));
+        modifyRecipe.setFocusPainted(false);
+        modifyRecipe.setBorder(emptyBorder);
+
+        modifyRecipe.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                modifyRecipe.setForeground(new Color(255,255,255));
+                modifyRecipe.setBackground(new Color(248, 68, 149));
+            }
+            public void mouseExited(MouseEvent e){
+                modifyRecipe.setForeground(new Color(255,255,255));
+                modifyRecipe.setBackground(new Color(28, 31, 46));
+            }
+        });
 
         // make them work
         home.addActionListener(this);
@@ -148,7 +214,7 @@ public class RecipeUI extends JPanel implements ActionListener
 
         // set the bottom panel to contain the navigation buttons
         bottom_panel = new JPanel();
-        bottom_panel.setBackground(new Color(26, 27, 34));
+        bottom_panel.setBackground(new Color(255,255,255));
         bottom_panel.add(home);
         bottom_panel.add(inv);
         bottom_panel.add(modifyRecipe);
@@ -187,7 +253,7 @@ public class RecipeUI extends JPanel implements ActionListener
             instructions.setText("We cannot find any recipes given your inventory! " +
                                 "\nAdd more ingredients to your inventory to get recipes!");
             instructions.setSize(740, 900);
-            instructions.setForeground(new Color(241,122,126));
+            instructions.setForeground(new Color(51,51,51));
 
             center_panel.add(instructions, gbc2);
             center_panel.setAlignmentY(Component.CENTER_ALIGNMENT);
