@@ -691,6 +691,13 @@ public class ModifyRecipeUI extends JPanel {
 
             } // end of for loop (components)
 
+            // make sure we are not adding any duplicates
+            for (IngredientDisplayObject recipe_ing : recipe_ings) {
+                if (recipe_ing.getName().contains(ing.getName())) {
+                    break outerloop;
+                }
+            }
+
             // add the current ingredient to the array list of ingredient display objects
             recipe_ings.add(new IngredientDisplayObject(ing.getIngredientID(),
                     ing.getName(), ing.getUnitOfMeasure(), ing_qty));

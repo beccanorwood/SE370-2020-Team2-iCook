@@ -61,7 +61,7 @@ public class ManageRecipesUI extends JPanel {
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(FG),
                 "iCook Recipes", TitledBorder.CENTER, TitledBorder.TOP)); // compound titled line border
         ((TitledBorder)mainPanel.getBorder()).setTitleColor(FG);
-        mainPanel.setBackground(BG);
+        mainPanel.setBackground(new Color(246,251,253));
         mainPanel.setForeground(FG);
 
         // constraint used for component placement
@@ -103,6 +103,8 @@ public class ManageRecipesUI extends JPanel {
                     JTable target = (JTable)e.getSource();
                     int row = target.getSelectedRow();  // gets the selected row
                     int column = 0;                     // get the first column containing the recipe's id
+
+                    // go to the modify UI for this selected recipe
                     serviceDispatcher.gotoModifyRecipeUI(Integer.parseInt((String)table.getValueAt(row,column)));
                 }
             }
