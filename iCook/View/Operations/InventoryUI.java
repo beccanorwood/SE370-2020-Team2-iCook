@@ -5,6 +5,7 @@ import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -251,6 +252,7 @@ public class InventoryUI extends JPanel {
             ingredient_name_buttons = new JCheckBox[ingredientList.size()];
             ingredient_unit_buttons = new JLabel[ingredientList.size()];
 
+
             availableIngredientsPanel.setLayout(new GridLayout(ingredientList.size(), 1));
             availableIngredientsUnits.setLayout(new GridLayout(ingredientList.size(), 1));
 
@@ -293,7 +295,8 @@ public class InventoryUI extends JPanel {
             btnContainer = new JPanel[ingredientList.size()];
 
             // holds all buttons
-            totalBtnContainer = new JPanel(new GridLayout(ingredientList.size(), 1));
+            totalBtnContainer = new JPanel(new GridLayout(ingredientList.size(), 1, 5,10));
+            totalBtnContainer.setBorder(new EmptyBorder(5,5,5,5));
             totalBtnContainer.setBackground(new Color(255,255,255));
 
             // this is for left panel -/+ buttons
@@ -309,10 +312,11 @@ public class InventoryUI extends JPanel {
                 decrementBtns[i].setForeground(new Color(255,255,255));
                 decrementBtns[i].setBackground(new Color(28, 31, 46));
                 decrementBtns[i].setFocusPainted(false);
-                decrementBtns[i].setBorder(emptyBorder);
+                //decrementBtns[i].setBorder(emptyBorder);
 
 
                 quantityBtns[i] = new JButton(" ");
+                quantityBtns[i].setEnabled(false);
                 quantityBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 quantityBtns[i].setPreferredSize(new Dimension(62, 54));
                 quantityBtns[i].setAlignmentX(JButton.CENTER);
@@ -419,6 +423,7 @@ public class InventoryUI extends JPanel {
                 decrementBtns[i].setBorder(emptyBorder);
 
                 quantityBtns[i] = new JButton(" ");
+                quantityBtns[i].setEnabled(false);
                 quantityBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 quantityBtns[i].setPreferredSize(new Dimension(62, 54));
                 quantityBtns[i].setAlignmentX(JButton.CENTER);
@@ -438,7 +443,8 @@ public class InventoryUI extends JPanel {
                 incrementBtns[i].setFocusPainted(false);
                 incrementBtns[i].setBorder(emptyBorder);
 
-                btnContainer[i] = new JPanel(new GridLayout(1, 0));
+                btnContainer[i] = new JPanel(new GridLayout(1, 0, 5,5));
+                btnContainer[i].setBorder(new EmptyBorder(5,5,5,5));
                 btnContainer[i].setBackground(new Color(255,255,255));
 
                 btnContainer[i].add(decrementBtns[i]);
@@ -467,9 +473,9 @@ public class InventoryUI extends JPanel {
             amountBtns = new JButton[userIngredientList.size()];
             increaseBtns = new JButton[userIngredientList.size()];
 
-            currentIngredientsUnitPanel.setLayout(new GridLayout(userIngredientList.size(), 1));
+            currentIngredientsUnitPanel.setLayout(new GridLayout(userIngredientList.size(), 1, 8, 10));
 
-            ingredientPortion.setLayout(new GridLayout(userIngredientList.size(), 1));
+            ingredientPortion.setLayout(new GridLayout(userIngredientList.size(), 1,8,10));
 
             btnContainerRight = new JPanel[userIngredientList.size()];
             totalBtnContainerRight.setLayout(new GridLayout(userIngredientList.size(), 1));
@@ -514,6 +520,7 @@ public class InventoryUI extends JPanel {
 
 
                 amountBtns[i] = new JButton(String.valueOf(userIngredientList.get(i).getQuantity()));
+                amountBtns[i].setEnabled(false);
                 amountBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
                 amountBtns[i].setText(String.valueOf(userIngredientList.get(i).getQuantity()));
                 amountBtns[i].setPreferredSize(new Dimension(62, 54));
@@ -536,7 +543,8 @@ public class InventoryUI extends JPanel {
                 increaseBtns[i].setBorder(emptyBorder);
 
 
-                btnContainerRight[i] = new JPanel(new GridLayout(1, 0));
+                btnContainerRight[i] = new JPanel(new GridLayout(1, 0, 5, 5));
+                btnContainerRight[i].setBorder(new EmptyBorder(5,8,5,8));
                 btnContainerRight[i].setBackground(new Color(255,255,255));
                 btnContainerRight[i].add(decreaseBtns[i]);
                 btnContainerRight[i].add(amountBtns[i]);
@@ -593,7 +601,7 @@ public class InventoryUI extends JPanel {
 
 
         /*
-        Makes split panes not moveable
+        Makes split panes stay in one position
          */
         s1.setEnabled(false);
         s2.setEnabled(false);
