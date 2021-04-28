@@ -425,10 +425,10 @@ public class ModifyRecipeUI extends JPanel {
         quantity.setHorizontalAlignment(JTextField.CENTER);
 
         // add everything to the newly created panel
-        ingredientPanel.add(addButton);
-        ingredientPanel.add(subButton);
         ingredientPanel.add(ing_list);
         ingredientPanel.add(quantity);
+        ingredientPanel.add(addButton);
+        ingredientPanel.add(subButton);
 
         //Empty border that adds padding between ever new ingredient row
         ingredientPanel.setBorder(new EmptyBorder(5,0,5,0));
@@ -537,10 +537,10 @@ public class ModifyRecipeUI extends JPanel {
         quantity.setText(String.valueOf(ingredient.getQuantity())); // set the quantity of this ingredient
 
         // add everything to the newly created panel
-        ingredientPanel.add(addButton);
-        ingredientPanel.add(subButton);
         ingredientPanel.add(ing_list);
         ingredientPanel.add(quantity);
+        ingredientPanel.add(addButton);
+        ingredientPanel.add(subButton);
 
         //Empty border that adds padding between ever new ingredient row
         ingredientPanel.setBorder(new EmptyBorder(5,0,5,0));

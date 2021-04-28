@@ -777,7 +777,7 @@ public class InventoryUI extends JPanel {
             if(src2 == recipes)
             {
                 // go to RecipeUI
-                serviceDispatcher.gotoRecipes();
+                serviceDispatcher.gotoViewRecipes();
             }
 
             // else if the user clicked the update button

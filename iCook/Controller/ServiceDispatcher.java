@@ -6,9 +6,7 @@ import iCook.View.Operations.*;
 import iCook.View.Operations.DisplayObjects.*;
 
 import javax.swing.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -16,7 +14,7 @@ import java.util.Vector;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 04/26/2021
+ * @version 04/27/2021
  */
 public class ServiceDispatcher {
     // user need to be static (not unique for each ServiceDispatcher object)
@@ -246,7 +244,6 @@ public class ServiceDispatcher {
     }
 
 
-
     /**
      * Returns an ArrayList of IngredientDisplayObjects representing the user's inventory
      *
@@ -316,7 +313,6 @@ public class ServiceDispatcher {
         // send the HashMap to the facade to be processed
         facade.updateUserInventory(user.getId(), updatedInventory);
     }
-
 
 
     /**
@@ -571,11 +567,11 @@ public class ServiceDispatcher {
 
 
     /**
-     * Sets the frame's contents to the contents of the RecipeUI
+     * Sets the frame's contents to the contents of the ViewRecipesUI
      */
-    public void gotoRecipes() {
+    public void gotoViewRecipes() {
         frame.getContentPane().removeAll();
-        frame.getContentPane().add(new RecipeUI());
+        frame.getContentPane().add(new ViewRecipesUI());
         frame.setVisible(true);
     }
 

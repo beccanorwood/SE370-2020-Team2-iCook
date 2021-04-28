@@ -196,7 +196,7 @@ public class HomeUI extends JPanel implements ActionListener {
         }
         // take the user to RecipeUI
         else if (btn.equals("Recipes")) {
-            serviceDispatcher.gotoRecipes();
+            serviceDispatcher.gotoViewRecipes();
         }
         else if (btn.equals("Manage")) {
             serviceDispatcher.gotoManageRecipesUI();
