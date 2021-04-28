@@ -476,7 +476,7 @@ public class ServiceDispatcher {
         frame.setResizable(false);
 
         // first panel to be displayed is the welcomeUI
-        gotoWelcome();
+        gotoTEST(); // CHANGE BACK WHEN DONE WITH TESTING!!!
     }
 
 
@@ -582,6 +582,16 @@ public class ServiceDispatcher {
     public void gotoInventory() {
         frame.getContentPane().removeAll();
         frame.getContentPane().add(new InventoryUI());
+        frame.setVisible(true);
+    }
+
+
+    /**
+     * Sets the frame's contents to the contents of the TestUI
+     */
+    public void gotoTEST() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(new TESTUI());
         frame.setVisible(true);
     }
 
