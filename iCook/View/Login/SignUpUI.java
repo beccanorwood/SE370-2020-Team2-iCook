@@ -16,10 +16,9 @@ import iCook.Controller.ServiceDispatcher;
  * a username that is already in use.
  *
  * @author Team 2
- * @version 04/27/2021
+ * @version 04/29/2021
  */
-public class SignUpUI extends JPanel implements ActionListener
-{
+public class SignUpUI extends JPanel implements ActionListener {
     private JPanel signup_panel;
     private JTextField userName_field;
     private JPasswordField passwordField;
@@ -136,6 +135,7 @@ public class SignUpUI extends JPanel implements ActionListener
     {
         String btn_Selection = e.getActionCommand();
 
+
         // the user wants to go back to the WelcomeUI
         if(btn_Selection.equals("Back"))
             serviceDispatcher.gotoWelcome();
@@ -143,6 +143,16 @@ public class SignUpUI extends JPanel implements ActionListener
         // user click on "Create Account"
         else if (btn_Selection.equals("Create Account"))
         {
+            // Error panel
+            JPanel blank_error_p = new JPanel();
+            blank_error_p.setBackground(new Color(255,255,255));
+            // Error message
+            JLabel blank_error = new JLabel();
+            blank_error.setForeground(new Color(51,51,51));
+            blank_error.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+            blank_error_p.add(blank_error);
+            this.add(blank_error_p, BorderLayout.SOUTH);
+
             // get the username and password into a string
             String username = userName_field.getText();
             String password = new String(passwordField.getPassword());
@@ -151,16 +161,9 @@ public class SignUpUI extends JPanel implements ActionListener
             if(username.isBlank() || password.isBlank())
             {
                 //Error message
-                JLabel blank_error = new JLabel("Error: username and/or password cannot be blank!");
-                blank_error.setForeground(new Color(51,51,51));
-                blank_error.setFont(new Font("Century Gothic", Font.PLAIN, 20));
-
-                JPanel blank_error_p = new JPanel();
-                blank_error_p.add(blank_error);
-                blank_error_p.setBackground(new Color(255,255,255));
-
-                this.add(blank_error_p, BorderLayout.SOUTH);
-                this.setVisible(true);
+                blank_error.setText("Error: username and/or password cannot be blank!");
+                blank_error_p.revalidate();
+                blank_error_p.repaint();
             }
 
             else
@@ -178,17 +181,9 @@ public class SignUpUI extends JPanel implements ActionListener
                 // if the creation was not successful, display the error
                 else {
                     //Error message
-                    JLabel blank_error = new JLabel(message);
-                    blank_error.setForeground(new Color(51,51,516));
-
-                    JPanel blank_error_p = new JPanel();
-                    blank_error_p.add(blank_error);
-                    blank_error.setFont(new Font("Century Gothic", Font.PLAIN, 20));
-                    blank_error_p.setBackground(new Color(255,255,255));
-
-                    this.add(blank_error_p, BorderLayout.SOUTH);
-                    this.revalidate();
-                    this.repaint();
+                    blank_error.setText(message);
+                    blank_error_p.revalidate();
+                    blank_error_p.repaint();
                 }
             }
         }

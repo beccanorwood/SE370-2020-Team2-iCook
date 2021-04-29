@@ -13,7 +13,7 @@ import iCook.Controller.ServiceDispatcher;
  * User interface for the login page. A user can login to iCook with their existing account.
  *
  * @author Team 2
- * @version 04/27/2021
+ * @version 04/29/2021
  */
 public class LoginUI extends JPanel implements ActionListener {
     private JPanel login_panel;
@@ -174,8 +174,8 @@ public class LoginUI extends JPanel implements ActionListener {
                     southPanel.add(noAccountFound);
 
                 this.add(southPanel,BorderLayout.SOUTH);
-                this.revalidate();
-                this.repaint();
+                southPanel.revalidate();
+                southPanel.repaint();
             }
         }
 
