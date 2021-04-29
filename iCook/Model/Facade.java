@@ -102,11 +102,11 @@ public class Facade {
      * Requests the UserDAO to update the user's inventory
      *
      * @param userID the user's id whose ingredients we want to update
-     * @param updatedIngredientList a HashMap containing the user's pending inventory information (to be updated)
+     * @param userIngredients an ArrayList of UserIngredient objects to be updated
      */
-    public void updateUserInventory(int userID, HashMap<Integer, Integer> updatedIngredientList)
+    public void updateUserInventory(int userID, ArrayList<UserIngredient> userIngredients)
     {
-        userDAO.updateUserIngredientTable(userID, updatedIngredientList);
+        userDAO.updateUserIngredientTable(userID, userIngredients);
     }
 
 

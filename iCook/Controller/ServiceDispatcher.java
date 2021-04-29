@@ -7,14 +7,13 @@ import iCook.View.Operations.DisplayObjects.*;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Vector;
 
 /**
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 04/27/2021
+ * @version 04/29/2021
  */
 public class ServiceDispatcher {
     // user need to be static (not unique for each ServiceDispatcher object)
@@ -296,22 +295,25 @@ public class ServiceDispatcher {
     /**
      * Requests the facade to update the user's inventory with a given ArrayList
      *
-     * @param updatedIngredientList an ArrayList of IngredientDisplayObject that contains the user's pending inventory information (to be updated)
+     * @param updatedIngredientList an ArrayList of IngredientDisplayObjects that contains the user's pending inventory information (to be updated)
      */
-    public void updateUserInventory(ArrayList<IngredientDisplayObject> updatedIngredientList)
-    {
+    public void updateUserInventory(ArrayList<IngredientDisplayObject> updatedIngredientList) {
         // store the needed ingredient information in a HashMap
-        HashMap<Integer, Integer> updatedInventory = new HashMap<>();
+        ArrayList<UserIngredient> userIngredients = new ArrayList<>();
 
-        // for every display object received from the Model, put the id and quantity in the HashMap
-        for (IngredientDisplayObject ingredient : updatedIngredientList)
-        {
-            // key = ingredientID / value = quantity
-            updatedInventory.put(ingredient.getIngredientID(), ingredient.getQuantity());
+        // Convert every display object into an ingredient object, then
+        // create a new UserIngredient object and append it to userIngredients
+        for (IngredientDisplayObject ingredient : updatedIngredientList) {
+            UserIngredient ui = new UserIngredient(user, new Ingredient(ingredient.getIngredientID(),
+                    ingredient.getName(), ingredient.getUnitOfMeasure()));  // new UserIngredient object
+
+            ui.setQuantity(ingredient.getQuantity());   // set the quantity
+
+            userIngredients.add(ui);    // add to list
         }
 
-        // send the HashMap to the facade to be processed
-        facade.updateUserInventory(user.getId(), updatedInventory);
+        // send to the facade to be processed
+        facade.updateUserInventory(user.getId(), userIngredients);
     }
 
 

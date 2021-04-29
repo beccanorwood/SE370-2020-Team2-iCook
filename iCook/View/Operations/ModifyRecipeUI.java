@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * User interface for Admins to modify existing recipes or to create new recipes.
  *
  * @author Team 2
- * @version 04/27/2021
+ * @version 04/29/2021
  */
 public class ModifyRecipeUI extends JPanel {
     // instance variables
@@ -483,12 +483,7 @@ public class ModifyRecipeUI extends JPanel {
             }
         });
 
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addIngredientRow();
-            }
-        });
+        addButton.addActionListener(e -> addIngredientRow());
 
         // create the sub button
         JButton subButton = new JButton("-");
@@ -518,12 +513,7 @@ public class ModifyRecipeUI extends JPanel {
             });
         }
 
-        subButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removeIngredientRow(e);
-            }
-        });
+        subButton.addActionListener(e -> removeIngredientRow(e));
 
 
         // create the combo box here

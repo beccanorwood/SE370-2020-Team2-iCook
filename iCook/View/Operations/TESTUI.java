@@ -37,14 +37,13 @@ public class TESTUI extends JPanel {
     private boolean isFirstIngredient = true; // there should always be at least 1 row
     private int possessedIngredients; // used to stop user from adding rows when all ingredients are in inventory
 
-    // data to populate the UI with
+    // data to used within the UI
     private ServiceDispatcher serviceDispatcher;
     private ArrayList<IngredientDisplayObject> system_ingredients;
     private ArrayList<IngredientDisplayObject> user_ingredients;
+    private ArrayList<IngredientDisplayObject> all_ingredients_to_save; // used when sending info to serviceDispatcher
 
     // styling
-    private final Color BG = new Color(255,255,255);
-    private final Color FG = new Color(51,51,51);
     private Border emptyBorder = BorderFactory.createEmptyBorder(); // btn formatting
 
     /**
@@ -60,16 +59,16 @@ public class TESTUI extends JPanel {
         // initialize the panel's contents
         initialize();
 
-        // add an ingredient row for each ingredient the user possess
+        // add an ingredient row for each ingredient the user possesses
         if (!user_ingredients.isEmpty()) {
             for (IngredientDisplayObject ingDO : user_ingredients)
                 addIngredientRow(ingDO);
         } else {
-            addIngredientRow(null); // add only 1 row if their inventory is empty
+            addIngredientRow(null); // add 1 empty row if their inventory is empty
         }
 
-        // set this panel to be visible
-        this.setVisible(true);
+        scrollPane.getVerticalScrollBar().setValue(0);  // make the scrollbar set to the top when page
+        this.setVisible(true);  // set this panel to be visible
     }
 
 
@@ -154,7 +153,6 @@ public class TESTUI extends JPanel {
             }
         });
 
-
         // save button
         saveBtn = new JButton("Save");
         saveBtn.setPreferredSize(new Dimension(244, 42));
@@ -162,7 +160,20 @@ public class TESTUI extends JPanel {
         saveBtn.setBackground(new Color(28, 31, 46));
         saveBtn.setFocusPainted(false);
         saveBtn.setBorder(emptyBorder);
-        saveBtn.addActionListener(e -> serviceDispatcher.gotoHome());
+
+        // if user hits save button, send data to serviceDispatcher
+        saveBtn.addActionListener(e -> {
+            // populate all_ingredients_to_save
+            getIngredientsToSave(all_ingredient_panels);
+
+            // send data to serviceDispatcher
+            serviceDispatcher.updateUserInventory(all_ingredients_to_save);
+            serviceDispatcher.gotoTEST();
+//            for (IngredientDisplayObject i : all_ingredients_to_save) {
+//                System.out.println(i.getName() +" "+ i.getQuantity());
+//            }
+//            System.out.println();
+        });
 
         saveBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -247,7 +258,7 @@ public class TESTUI extends JPanel {
         addButton.addActionListener(e -> {
             // limit the number of rows based on total number of system ingredients
             if (possessedIngredients < system_ingredients.size()) {
-                addIngredientRow(null);
+                addIngredientRow(null); // add a new empty row
                 possessedIngredients++;
             }
         });
@@ -358,4 +369,63 @@ public class TESTUI extends JPanel {
 
         return ing_display;
     }
+
+
+    /**
+     * Initializes and populates all_ingredients_to_save with every ingredient on this GUI
+     *
+     * @param all_ingredient_panels the ArrayList containing all of our ingredient panels
+     */
+    private void getIngredientsToSave(ArrayList<JPanel> all_ingredient_panels) {
+        // list we will be populating for the serviceDispatcher
+        all_ingredients_to_save = new ArrayList<>();
+
+        // loop over each ingredient panel
+        panel_loop:
+        for (JPanel ingredient_panel : all_ingredient_panels) {
+            // get the ingredient panel's components
+            Component[] components = ingredient_panel.getComponents();
+
+            // info we need from the ingredient panel's components
+            IngredientDisplayObject ing = null;
+
+            // for each component, get the ingredient name and its quantity
+            for (Component component : components) {
+                // current component is the JComboBox
+                if (component instanceof JComboBox) {
+                    String selected_ing = (String) ((JComboBox<?>) component).getSelectedItem();
+
+                    // match the selected ingredient from the list of system ingredients to get the object
+                    for (IngredientDisplayObject system_ingredient : system_ingredients) {
+                        if (system_ingredient.getName().equals(selected_ing)) {
+                            ing = system_ingredient;
+                            break;
+                        }
+                    }
+                }
+                // current component is the JTextField, get the quantity
+                else if (component instanceof JTextField) {
+                    // if the qty is not a number, do not add it to the list of ingredients and skip to next panel
+                    try {
+                        ing.setQuantity(Integer.parseInt(((JTextField) component).getText()));
+                    } catch (NumberFormatException exp) {
+                        continue panel_loop;
+                    }
+                }
+            } // end of components for loop
+
+            // make sure we are not adding any duplicates
+            for (IngredientDisplayObject user_ing : all_ingredients_to_save) {
+                if (user_ing.getName().equals(ing.getName())) {
+                    continue panel_loop;
+                }
+            }
+
+            all_ingredients_to_save.add(ing);
+
+        } // end of panel_loop
+
+    } // end of function
+
+
 }

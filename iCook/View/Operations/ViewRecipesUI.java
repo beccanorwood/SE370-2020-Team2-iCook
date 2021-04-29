@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * wish to create and view its instructions. If a user does not have a sufficient inventory for any recipes, a message will be displayed
  *
  * @author Team 2
- * @version 04/27/2021
+ * @version 04/28/2021
  */
 public class ViewRecipesUI extends JPanel implements ActionListener
 {
@@ -119,9 +119,9 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.fill = GridBagConstraints.VERTICAL;
+        gbc.insets = new Insets(10,0,0,0);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(10,0,0,0);
 
         // create an array of buttons
         recipesBtn = new JButton[numOfRecipes];
@@ -525,8 +525,12 @@ public class ViewRecipesUI extends JPanel implements ActionListener
                     instructions.setSize(740, 900);
                     instructions.select(0, 0);
 
-                    //Enable modify recipe button to be visible
+                    // Enable modify recipe button to be visible
                     modifyRecipe.setVisible(true);
+
+                    // this will make the instructions start at the top of the panel!!!
+                    gbc.weighty = 1;
+                    gbc.weightx = 1;
 
                     center_panel.add(instructions, gbc);
                     center_panel.setAlignmentY(Component.TOP_ALIGNMENT);

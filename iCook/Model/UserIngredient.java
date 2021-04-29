@@ -6,7 +6,7 @@ package iCook.Model;
  * of the ingredient.
  *
  * @author Team 2
- * @version 12/5/2020
+ * @version 4/29/2021
  */
 public class UserIngredient {
 
@@ -20,6 +20,7 @@ public class UserIngredient {
 
     /**
      * Constructor
+     *
      * @param userIngredientID int
      * @param userID int
      * @param ingredientID int
@@ -34,6 +35,22 @@ public class UserIngredient {
         this.quantity = quantity;
         this.ingredientName = ingredientName;
         this.unit_of_measure = unit_of_measure;
+    }
+
+
+    /**
+     * Constructor - less parameters (used for converting)
+     *
+     * @param user that this ingredient belongs to
+     * @param ingredient that the user possesses
+     */
+    public UserIngredient(User user, Ingredient ingredient) {
+        this.userIngredientID = 0;  // not yet assigned (0 means nothing)
+        this.userID = user.getId();
+        this.ingredientID = ingredient.getIngredientID();
+        this.quantity = 0;  // not yet assigned
+        this.ingredientName = ingredient.getIngredientName();
+        this.unit_of_measure = ingredient.getUnitOfMeasure();
     }
 
 
@@ -70,6 +87,16 @@ public class UserIngredient {
      */
     public int getQuantity() {
         return quantity;
+    }
+
+
+    /**
+     * Setter for the UserIngredient's quantity
+     *
+     * @param quantity to be set
+     */
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
 
