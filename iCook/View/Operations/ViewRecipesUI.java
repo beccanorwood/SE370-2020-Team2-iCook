@@ -1,6 +1,7 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
 import iCook.View.Operations.DisplayObjects.RecipeDisplayObject;
 
 import javax.imageio.ImageIO;
@@ -521,7 +522,20 @@ public class ViewRecipesUI extends JPanel implements ActionListener
                     selectedRecipe = satisfiedRecipes.get(i);
                     iCook.setText(selectedRecipe.getName());
 
-                    instructions.setText(satisfiedRecipes.get(i).getInstructions());
+                    // create the string to hold the instruction's text
+                    String instructions_text = "";
+
+                    // populate the string's ingredient section
+                    instructions_text += "Ingredients:\n-------------------\n";
+                    for (IngredientDisplayObject ing : selectedRecipe.getIngredients())
+                        instructions_text += ing.getQuantity() + " " + ing.getUnitOfMeasure() + " " + ing.getName() + "\n";
+
+                    // populate the string's step's section
+                    instructions_text += "\n\nInstructions:\n-------------------\n";
+                    instructions_text += selectedRecipe.getInstructions();
+
+                    // add the string to the instructions text area
+                    instructions.setText(instructions_text);
                     instructions.setSize(740, 900);
                     instructions.select(0, 0);
 
