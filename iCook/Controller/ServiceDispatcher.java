@@ -476,7 +476,7 @@ public class ServiceDispatcher {
         frame.setResizable(false);
 
         // first panel to be displayed is the welcomeUI
-        gotoTEST(); // CHANGE BACK WHEN DONE WITH TESTING!!!
+        gotoWelcome(); // CHANGE BACK WHEN DONE WITH TESTING!!!
     }
 
 

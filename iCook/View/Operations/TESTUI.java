@@ -52,14 +52,23 @@ public class TESTUI extends JPanel {
      */
     public TESTUI() {
         // initialize instance variables here
-        serviceDispatcher = new ServiceDispatcher();    // create the ServiceDispatcher
-        system_ingredients = serviceDispatcher.getSystemIngredientDisplayObjects(); // get the list of system ingredients
-        //user_ingredients = serviceDispatcher.getUserInventory(); // get user's inventory
-        possessedIngredients = 0;
-        all_ingredient_panels = new ArrayList<>();
+        serviceDispatcher = new ServiceDispatcher();
+        system_ingredients = serviceDispatcher.getSystemIngredientDisplayObjects();
+        user_ingredients = serviceDispatcher.getUserInventory();
+        possessedIngredients = user_ingredients.size();
 
+        // initialize the panel's contents
         initialize();
-        addIngredientRow();
+
+        // add an ingredient row for each ingredient the user possess
+        if (!user_ingredients.isEmpty()) {
+            for (IngredientDisplayObject ingDO : user_ingredients)
+                addIngredientRow(ingDO);
+        } else {
+            addIngredientRow(null); // add only 1 row if their inventory is empty
+        }
+
+        // set this panel to be visible
         this.setVisible(true);
     }
 
@@ -71,7 +80,7 @@ public class TESTUI extends JPanel {
         this.setLayout(new BorderLayout());
         this.setBackground(new Color(255, 255, 255));
 
-        // ********************************
+        // ******************************
         // this is the header (top panel)
         title = new JLabel("Ingredient Inventory",SwingConstants.CENTER);
         title.setFont(new Font("Century Gothic", Font.PLAIN, 40));
@@ -81,16 +90,18 @@ public class TESTUI extends JPanel {
         topPanel.add(title, SwingConstants.CENTER);
         this.add(topPanel, BorderLayout.NORTH);
 
-        // ********************************
+        // *****************************************************
         // this is the outer center panel (will have scrollable)
         outerCenterPanel = new JPanel(new BorderLayout());
         outerCenterPanel.setBackground(new Color(255,255,255));
-
         scrollPane = new JScrollPane(outerCenterPanel);
         scrollPane.setBackground(new Color(255,255,255));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         this.add(scrollPane, BorderLayout.CENTER);
+
+        // ArrayList that holds each ingredient panel (used for saving info)
+        all_ingredient_panels = new ArrayList<>();
 
         // holds every row of ingredient panels
         containerPanel = new JPanel();
@@ -103,12 +114,13 @@ public class TESTUI extends JPanel {
         gbc.weighty = 1;
         gbc.weightx = 1;
 
+        // add the container to the center panel and add the center panel to the outerCenterPanel
         centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setBackground(new Color(247, 253, 246));
         centerPanel.add(containerPanel, gbc);
         outerCenterPanel.add(centerPanel);
 
-        // ********************************
+        // ***********************************
         // Bottom panel for navigation buttons
         btnPanel = new JPanel(new GridBagLayout());
         btnPanel.setBackground(new Color(255,255,255));
@@ -118,17 +130,19 @@ public class TESTUI extends JPanel {
         bottomPanel.add(btnPanel, SwingConstants.CENTER);
         this.add(bottomPanel, BorderLayout.SOUTH);
 
+        // reset these constraints for the navigation buttons
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weighty = 1;
         gbc.weightx = 1;
 
+        // back button
         backBtn = new JButton("Back");
         backBtn.setPreferredSize(new Dimension(244, 42));
         backBtn.setForeground(new Color(255,255,255));
         backBtn.setBackground(new Color(28, 31, 46));
         backBtn.setFocusPainted(false);
         backBtn.setBorder(emptyBorder);
-        btnPanel.add(backBtn, gbc);
+        backBtn.addActionListener(e -> serviceDispatcher.gotoHome());
 
         backBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -140,13 +154,15 @@ public class TESTUI extends JPanel {
             }
         });
 
+
+        // save button
         saveBtn = new JButton("Save");
         saveBtn.setPreferredSize(new Dimension(244, 42));
         saveBtn.setForeground(new Color(255,255,255));
         saveBtn.setBackground(new Color(28, 31, 46));
         saveBtn.setFocusPainted(false);
         saveBtn.setBorder(emptyBorder);
-        btnPanel.add(saveBtn, gbc);
+        saveBtn.addActionListener(e -> serviceDispatcher.gotoHome());
 
         saveBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -157,46 +173,69 @@ public class TESTUI extends JPanel {
                 saveBtn.setBackground(new Color(28, 31, 46));
             }
         });
+
+        // add the buttons to the button panel
+        btnPanel.add(backBtn, gbc);
+        btnPanel.add(saveBtn, gbc);
     }
 
 
     /**
      * Dynamically adds an ingredient row
      */
-    private void addIngredientRow() {
+    private void addIngredientRow(IngredientDisplayObject ingDO) {
+        // determine if we need to auto-populate the row's contents
+        String ing_name = "";
+        String ing_qty = "";
+        String ing_unit = "";
+
+        if (ingDO != null) {
+            ing_name = ingDO.getName();
+            ing_qty = String.valueOf(ingDO.getQuantity());
+            ing_unit = ingDO.getUnitOfMeasure();
+        }
+
         // create a new panel for additional ingredient
         ingredientPanel = new JPanel(new GridLayout(1, 5, 10, 0));
         ingredientPanel.setBackground(new Color(247, 253, 246));
+        ingredientPanel.setBorder(new EmptyBorder(15,0,15,0)); // adding padding between each ingredient panel
+
+        // create the text field for quantity input
+        JTextField quantity = new JTextField();
+        quantity.setText(ing_qty);
+        quantity.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        quantity.setPreferredSize(new Dimension(3, 5));
+        quantity.setHorizontalAlignment(JTextField.CENTER);
 
         // create the unit_of_measure button
-        JButton ing_units = new JButton();
+        JLabel ing_units = new JLabel();
+        ing_units.setText(ing_unit);
         ing_units.setPreferredSize(new Dimension(122, 42)); // this set the size of all following buttons
         ing_units.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         ing_units.setForeground(new Color(255,255,255));
         ing_units.setBackground(new Color(28, 31, 46));
-        ing_units.setFocusPainted(false);
+        ing_units.setOpaque(true);
+        ing_units.setHorizontalAlignment(SwingConstants.CENTER);
         ing_units.setBorder(emptyBorder);
-        ing_units.setEnabled(false);
 
-        // create the combo box here
+        // create the combo box here.
+        // although this is the first component in a row, it needs to be created after the unit and quantity
+        // components as we want to update the text in those components dynamically.
         JComboBox ing_list = new JComboBox(getIngredientsList());
+        ing_list.setSelectedItem(ing_name);
+        ((JLabel)ing_list.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         ing_list.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         ing_list.addActionListener(e -> {
-            for (IngredientDisplayObject ingDO : system_ingredients) {
-                if (ingDO.getName().equals(ing_list.getSelectedItem())) {
-                    ing_units.setText(ingDO.getUnitOfMeasure());
+            for (IngredientDisplayObject i : system_ingredients) {
+                if (i.getName().equals(ing_list.getSelectedItem())) {
+                    ing_units.setText(i.getUnitOfMeasure());
                     break;
                 } else {
+                    quantity.setText("");
                     ing_units.setText("");
                 }
             }
         });
-
-        // create the text field for quantity input
-        JTextField quantity = new JTextField();
-        quantity.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-        quantity.setPreferredSize(new Dimension(3, 5));
-        quantity.setHorizontalAlignment(JTextField.CENTER);
 
         // create the add button
         JButton addButton = new JButton("+");
@@ -207,8 +246,8 @@ public class TESTUI extends JPanel {
         addButton.setBorder(emptyBorder);
         addButton.addActionListener(e -> {
             // limit the number of rows based on total number of system ingredients
-            if (possessedIngredients < system_ingredients.size()-1) {
-                addIngredientRow();
+            if (possessedIngredients < system_ingredients.size()) {
+                addIngredientRow(null);
                 possessedIngredients++;
             }
         });
@@ -262,9 +301,6 @@ public class TESTUI extends JPanel {
         ingredientPanel.add(addButton);
         ingredientPanel.add(subButton);
 
-        //Empty border that adds padding between ever new ingredient row
-        ingredientPanel.setBorder(new EmptyBorder(15,0,15,0));
-
         // add this new ingredient panel to the container panel
         containerPanel.add(ingredientPanel);
 
@@ -292,6 +328,7 @@ public class TESTUI extends JPanel {
         // remove the ingredientPanel from the list of all ingredient panels
         all_ingredient_panels.remove((((JButton)e.getSource()).getParent()));
 
+        // decrement the user's possessed ingredients
         possessedIngredients--;
 
         // dynamically update the frame
