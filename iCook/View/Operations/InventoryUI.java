@@ -8,819 +8,436 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
- * User interface for user's to view their inventory. Two panels are presented to the user, the left panel shows
- * ingredients available to the user to select from, the right panel shows the users current inventory. A user
- * can add,remove, and update ingredients in their inventory on this page.
+ * User interface for user's to view their inventory.
  *
  * @author Team 2
- * @version 04/27/2021
+ * @version 04/29/2021
  */
 public class InventoryUI extends JPanel {
+    // instance variables
+    private JPanel inventoryContainerPanel;
+    private JPanel innerInventoryPanel;
+    private JPanel main_center_Panel;
+    private JPanel btnPanel;
+    private JButton saveBtn;
+    private JButton backBtn;
+    private JScrollPane scrollPane; // Scroll Panel
+    private JPanel containerPanel;  // Panel that holds row of buttons to add ingredients
+    private GridBagConstraints gbc; //Constraints used to ingredient rows
 
+    private ArrayList<JPanel> all_ingredient_panels;
+    private JPanel ingredientPanel;
+    private boolean isFirstIngredient = true; // there should always be at least 1 row
+    private int possessedIngredients; // used to stop user from adding rows when all ingredients are in inventory
 
-
-    //Inventory UI frame that holds all inventory panels//
-    private JScrollPane available_ingredients_scrollable;
-    private JScrollPane inventory_scrollable;
-
-
-    //Available Ingredients inventory attributes//
-    /*Left side of frame instance variables*/
-
-
-    private JPanel mainleftPanel; //left half of JFrame
-    private JPanel mainrightPanel; //right half of JFrame
-
-    private JButton[] incrementBtns; //Buttons that user selects to increase amount of ingredient not in their inventory
-    private JButton[] quantityBtns; //Button that changes value dependent upon the increment/decrement buttons
-    private JButton[] decrementBtns; //Button that user selects to decrease the amount of an ingredient not in their inventory
-
-    private JPanel[] btnContainer; //JPanel that holds each increment, decrement, and quantity button for the available ingredients
-    private JPanel totalBtnContainer; //JPanel that holds all the separate button panels and aligns them in the middle of the available ingredient panel
-
-    JCheckBox[] ingredient_name_buttons; //Ingredients that user does not currently have in their inventory, but are available from the database
-    JLabel[] ingredient_unit_buttons; //Measurements corresponding to each available ingredient
-
-
-    //User's ingredient inventory instance variables //
-
-    /*Right side of frame instance variables*/
-
-
-
-    private JButton[] increaseBtns; //Buttons that the user selects to update the quantity currently in their inventory by increasing the value
-    private JButton[] decreaseBtns; //Buttons that the user selects to update the quantity currently in their inventory by decreasing the value
-    private JButton[] amountBtns; //Buttons that changes value depending upon the increase/decrease values
-
-    /*Bottom panel with Buttons instance variables*/
-    private JButton home;
-    private JButton recipes;
-    private JButton update;
-
+    // data to used within the UI
     private ServiceDispatcher serviceDispatcher;
+    private ArrayList<IngredientDisplayObject> system_ingredients;
+    private ArrayList<IngredientDisplayObject> user_ingredients;
+    private ArrayList<IngredientDisplayObject> all_ingredients_to_save; // used when sending info to serviceDispatcher
 
-    private ArrayList<IngredientDisplayObject> ingredientList;    // stores the system ingredients
-
-    private ArrayList<IngredientDisplayObject> userIngredientList;      // stores the user's ingredients
-    private HashMap<String, IngredientDisplayObject> addedIngredients;        // stores newly added ingredients
-    private ArrayList<IngredientDisplayObject> pendingIngredientList;   // this is the list of the entire inventory for the user (sent to controller when update button pressed)
-
-    private ArrayList<JButton> userInventoryIncrementBtns; // Arraylist storing the increase buttons, connected to user's inventory panel
-    private ArrayList<JButton> userInventoryDecrementBtns; // Arraylist storing the decrease buttons, connected to user's inventory panel
-    private ArrayList<JButton> userInventoryQuantityBtns; // ArrayList storing the amount buttons, connected to user's inventory panel
-
-    private ArrayList<JButton> availableInventoryIncrementBtns; //Arraylist storing increment buttons, connected to the available ingredient panel
-    private ArrayList<JButton> availableInventoryDecrementBtns; //Arraylist storing decrement buttons, connected to the available ingredient panel
-    private ArrayList<JButton> availableInventoryAmountBtns;//Arraylist storing the quantity buttons, connected to available ingredient panel
+    // styling
+    private Border emptyBorder = BorderFactory.createEmptyBorder(); // btn formatting
 
 
-    ButtonListener bl = new ButtonListener(); //Inner Action Listener Class for InventoryUI buttons
-    CheckBoxListener cbl = new CheckBoxListener(); //Inner Action Listener Class for InventoryUI radioButtons
-
-    public InventoryUI()
-    {
-        this.setLayout(new BorderLayout());
-
-        addedIngredients = new HashMap<>();
-        userInventoryIncrementBtns = new ArrayList<>();
-        userInventoryDecrementBtns = new ArrayList<>();
-        userInventoryQuantityBtns = new ArrayList<>();
-
-        availableInventoryIncrementBtns = new ArrayList<>();
-        availableInventoryDecrementBtns = new ArrayList<>();
-        availableInventoryAmountBtns = new ArrayList<>();
-
+    /**
+     * Constructor
+     */
+    public InventoryUI() {
+        // initialize instance variables here
         serviceDispatcher = new ServiceDispatcher();
-        ingredientList = serviceDispatcher.getAvailableIngredients();
-        userIngredientList = serviceDispatcher.getUserInventory();
+        system_ingredients = serviceDispatcher.getSystemIngredientDisplayObjects();
+        user_ingredients = serviceDispatcher.getUserInventory();
+        possessedIngredients = 0;
 
-        Display();
+        // initialize the panel's contents
+        initialize();
+
+        // add an ingredient row for each ingredient the user possesses
+        if (!user_ingredients.isEmpty()) {
+            for (IngredientDisplayObject ingDO : user_ingredients)
+                addIngredientRow(ingDO);
+        } else {
+            addIngredientRow(null); // add 1 empty row if their inventory is empty
+        }
+
+        scrollPane.getVerticalScrollBar().setValue(0);  // make the scrollbar set to the top when page
+        this.setVisible(true);  // set this panel to be visible
     }
 
-    private void Display()
-    {
-        JPanel topPanel = new JPanel(); //Panel displaying labels for each panel
-        JPanel bottomPanel = new JPanel(); //Panel displaying buttons to update their inventory, go to recipe page, or the home page
-        Border emptyBorder = BorderFactory.createEmptyBorder();
 
-        topPanel.setBackground(new Color(255,255,255));
-        bottomPanel.setBackground(new Color(255,255,255));
+    /**
+     * Initializes the panel's contents
+     */
+    public void initialize() {
+        this.setLayout(new BorderLayout());
+        this.setBackground(new Color(255, 255, 255));
 
-        home = new JButton("Home");
-        home.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-        home.setPreferredSize(new Dimension(144,32));
-        home.setHorizontalAlignment(JButton.CENTER);
-        home.setForeground(new Color(255,255,255));
-        home.setBackground(new Color(28, 31, 46));
-        home.setFocusPainted(false);
-        home.setBorder(emptyBorder);
+        // ArrayList that holds each ingredient panel (used for saving info)
+        all_ingredient_panels = new ArrayList<>();
 
-        home.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                home.setForeground(new Color(255,255,255));
-                home.setBackground(new Color(68, 166, 154));
-            }
-            public void mouseExited(MouseEvent e){
-                home.setForeground(new Color(255,255,255));
-                home.setBackground(new Color(28, 31, 46));
-            }
-        });
-
-        recipes = new JButton("Recipes");
-        recipes.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-        recipes.setPreferredSize(new Dimension(144,32));
-        recipes.setHorizontalAlignment(JButton.CENTER);
-        recipes.setForeground(new Color(255,255,255));
-        recipes.setBackground(new Color(28, 31, 46));
-        recipes.setFocusPainted(false);
-        recipes.setBorder(emptyBorder);
-
-        recipes.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                recipes.setForeground(new Color(255,255,255));
-                recipes.setBackground(new Color(68, 166, 154));
-            }
-            public void mouseExited(MouseEvent e){
-                recipes.setForeground(new Color(255,255,255));
-                recipes.setBackground(new Color(28, 31, 46));
-            }
-        });
-
-        update = new JButton("Update");
-        update.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-        update.setPreferredSize(new Dimension(144,32));
-        update.setHorizontalAlignment(JButton.CENTER);
-        update.setForeground(new Color(255,255,255));
-        update.setBackground(new Color(28, 31, 46));
-        update.setFocusPainted(false);
-        update.setBorder(emptyBorder);
-
-        update.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                update.setForeground(new Color(255,255,255));
-                update.setBackground(new Color(248, 68, 149));
-            }
-            public void mouseExited(MouseEvent e){
-                update.setForeground(new Color(255,255,255));
-                update.setBackground(new Color(28, 31, 46));
-            }
-        });
-
-
-        //Calls the ButtonListener class //
-        home.addActionListener(bl);
-        recipes.addActionListener(bl);
-        update.addActionListener(bl);
-
-        //Add buttons to the bottomPanel //
-        bottomPanel.add(home);
-        bottomPanel.add(recipes);
-        bottomPanel.add(update);
-
-
-        //bottomPanel.setLayout(new GridLayout(0, 6));
-
-        //bottomPanel.setLayout(new GridLayout(0, 3));
-
-
-        //Panel inside of available ingredient inventory that holds the ingredient names
-        JPanel availableIngredientsPanel = new JPanel();
-        availableIngredientsPanel.setBackground(new Color(255,255,255));
-        availableIngredientsPanel.setLayout(new GridLayout(ingredientList.size(), 1));
-
-
-        //==========================================================================
-
-        //Panel inside of available ingredient inventory side of frame, that holds the ingredient units
-        JPanel availableIngredientsUnits = new JPanel();
-        availableIngredientsUnits.setBackground(new Color(255,255,255));
-        availableIngredientsUnits.setLayout(new GridLayout(ingredientList.size(), 1));
-
-
-
-        //==========================================================================
-
-
-        /*Panel on left side of frame that displays ingredients available to the user that
-                                aren't in the user's inventory */
-
-
-        mainleftPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc2 = new GridBagConstraints();
-        gbc2.anchor = GridBagConstraints.CENTER;
-        gbc2.fill = GridBagConstraints.VERTICAL;
-        gbc2.gridx = 0;
-        gbc2.gridy = 0;
-        mainleftPanel.setBackground(new Color(255,255,255));
-
-
-
-        //==========================================================================
-
-        //Components that are added to the right half of the jframe
-
-        mainrightPanel = new JPanel(new GridBagLayout()); //Right panel, displaying user's inventory
-        GridBagConstraints gbc = new GridBagConstraints();
+        gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.VERTICAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        mainrightPanel.setBackground(new Color(255,255,255));
-
-
-        JPanel ingredientPortion = new JPanel(); //Panel that holds the ingredients of the user's inventory
-        ingredientPortion.setBackground(new Color(255,255,255));
-
-        JPanel currentIngredientsUnitPanel = new JPanel(); //Panel that holds the corresponding ingredient units of the user's inventory
-        currentIngredientsUnitPanel.setBackground(new Color(255,255,255));
-
-        JPanel[] btnContainerRight; //Array of panels, each panel holds the increase, decrease, and amount buttons for the user's current inventory
-        JPanel totalBtnContainerRight = new JPanel(); //Vertical panel that holds the aforementioned array of button panels
-        totalBtnContainerRight.setBackground(new Color(255,255,255));
-
-        JLabel [] currInventoryName; //Array of labels that display the name of the user's current ingredient inventory
-        JLabel [] currInventoryUnits; //Array of RadioButtons that display the units of the user's current ingredient inventory
-
-        if(userIngredientList.isEmpty()) {
-
-            //==========================================================================
-                /*The available ingredients, displaying all ingredients, since user's
-                                    inventory is empty*/
-            //==========================================================================
-
-
-
-            ingredient_name_buttons = new JCheckBox[ingredientList.size()];
-            ingredient_unit_buttons = new JLabel[ingredientList.size()];
-
-
-            availableIngredientsPanel.setLayout(new GridLayout(ingredientList.size(), 1, 8, 10));
-            availableIngredientsUnits.setLayout(new GridLayout(ingredientList.size(), 1, 8, 10));
-
-            gbc2.gridy = 0;
-
-            // this is for the left panel names/units
-            for (int i = 0; i < ingredientList.size(); i++) {
-                ingredient_name_buttons[i] = new JCheckBox();
-                ingredient_name_buttons[i].setText(ingredientList.get(i).getName());
-                ingredient_name_buttons[i].setFont(new Font("Century Gothic", Font.PLAIN, 20));
-                ingredient_name_buttons[i].setForeground(new Color(138,135,125));
-                ingredient_name_buttons[i].setBackground(new Color(255,255,255));
-                ingredient_name_buttons[i].setFocusPainted(false);
-
-                ingredient_name_buttons[i].setPreferredSize(new Dimension(180, 54));
-
-                ingredient_name_buttons[i].addActionListener(cbl);
-                ingredient_name_buttons[i].setEnabled(true);
-                availableIngredientsPanel.add(ingredient_name_buttons[i], gbc2);
-
-                ingredient_unit_buttons[i] = new JLabel();
-                ingredient_unit_buttons[i].setText("  " + ingredientList.get(i).getUnitOfMeasure());
-                ingredient_unit_buttons[i].setBackground(new Color(255,255,255));
-                ingredient_unit_buttons[i].setForeground(new Color(138,135,125));
-                ingredient_unit_buttons[i].setFont(new Font("Century Gothic", Font.ITALIC, 18));
-                ingredient_unit_buttons[i].setPreferredSize(new Dimension(62, 54));
-                ingredient_unit_buttons[i].setBorder(new EmptyBorder(5,5,5,5));
-
-                availableIngredientsUnits.add(ingredient_unit_buttons[i], gbc2);
-                gbc2.gridy++;
-            }
-
-            gbc2.gridy = 0;
-
-            incrementBtns = new JButton[ingredientList.size()];
-            quantityBtns = new JButton[ingredientList.size()];
-            decrementBtns = new JButton[ingredientList.size()];
-
-            // holds buttons -/+ for a row
-            btnContainer = new JPanel[ingredientList.size()];
-
-            // holds all buttons
-            totalBtnContainer = new JPanel(new GridLayout(ingredientList.size(), 1, 8,10));
-            //totalBtnContainer.setBorder(new EmptyBorder(5,5,5,5));
-            totalBtnContainer.setBackground(new Color(255,255,255));
-
-            // this is for left panel -/+ buttons
-            for(int i = 0; i < btnContainer.length; i++){
-                btnContainer[i] = new JPanel(new GridLayout(1, 0, 8, 10));
-                btnContainer[i].setBackground(new Color(255,255,255));
-
-                decrementBtns[i] = new JButton("-");
-                decrementBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
-                decrementBtns[i].setPreferredSize(new Dimension(62, 54));
-                decrementBtns[i].setAlignmentX(JButton.CENTER);
-                decrementBtns[i].setAlignmentY(JButton.CENTER);
-                decrementBtns[i].setForeground(new Color(255,255,255));
-                decrementBtns[i].setBackground(new Color(28, 31, 46));
-                decrementBtns[i].setFocusPainted(false);
-                //decrementBtns[i].setBorder(emptyBorder);
-
-
-                quantityBtns[i] = new JButton(" ");
-                quantityBtns[i].setEnabled(false);
-                quantityBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
-                quantityBtns[i].setPreferredSize(new Dimension(62, 54));
-                quantityBtns[i].setAlignmentX(JButton.CENTER);
-                quantityBtns[i].setAlignmentY(JButton.CENTER);
-                quantityBtns[i].setForeground(new Color(255,255,255));
-                quantityBtns[i].setBackground(new Color(28, 31, 46));
-                quantityBtns[i].setFocusPainted(false);
-                quantityBtns[i].setBorder(emptyBorder);
-
-                incrementBtns[i] = new JButton("+");
-                incrementBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
-                incrementBtns[i].setPreferredSize(new Dimension(62, 54));
-                incrementBtns[i].setAlignmentX(JButton.CENTER);
-                incrementBtns[i].setAlignmentY(JButton.CENTER);
-                incrementBtns[i].setForeground(new Color(255,255,255));
-                incrementBtns[i].setBackground(new Color(28, 31, 46));
-                incrementBtns[i].setFocusPainted(false);
-                incrementBtns[i].setBorder(emptyBorder);
-
-                btnContainer[i].add(decrementBtns[i]);
-                btnContainer[i].add(quantityBtns[i]);
-                btnContainer[i].add(incrementBtns[i]);
-
-                totalBtnContainer.add(btnContainer[i], gbc2);
-
-                decrementBtns[i].addActionListener(bl);
-                incrementBtns[i].addActionListener(bl);
-                quantityBtns[i].addActionListener(bl);
-
-                availableInventoryIncrementBtns.add(incrementBtns[i]);
-                availableInventoryAmountBtns.add(quantityBtns[i]);
-                availableInventoryDecrementBtns.add(decrementBtns[i]);
-
-                gbc2.gridy++;
-            }
-
-        }
-
-
-        else{
-
-            //==========================================================================
-                /*The available ingredients panel, displaying ingredients that
-                            the user is missing from their inventory*/
-            //==========================================================================
-
-
-            ingredient_name_buttons = new JCheckBox[ingredientList.size()];
-            ingredient_unit_buttons = new JLabel[ingredientList.size()];
-
-            incrementBtns = new JButton[ingredientList.size()];
-            quantityBtns = new JButton[ingredientList.size()];
-            decrementBtns = new JButton[ingredientList.size()];
-
-            // for a row of -/+ buttons
-            btnContainer = new JPanel[ingredientList.size()];
-
-            // for all buttons
-            totalBtnContainer = new JPanel(new GridLayout(ingredientList.size(), 1, 8, 10));
-            totalBtnContainer.setBackground(new Color(255,255,255));
-
-            availableIngredientsPanel.setLayout(new GridLayout(ingredientList.size(), 1));
-            availableIngredientsUnits.setLayout(new GridLayout(ingredientList.size(), 1));
-
-            gbc2.gridy = 0;
-
-            // this is for the name / units for each ingredient in the left panel
-            for(int i = 0; i < ingredientList.size(); i++){
-                ingredient_name_buttons[i] = new JCheckBox();
-                ingredient_name_buttons[i].setText(ingredientList.get(i).getName());
-                ingredient_name_buttons[i].setFont(new Font("Century Gothic", Font.PLAIN, 20));
-                ingredient_name_buttons[i].setForeground(new Color(138,135,125));
-                ingredient_name_buttons[i].setBackground(new Color(255,255,255));
-                ingredient_name_buttons[i].addActionListener(cbl);
-                ingredient_name_buttons[i].setEnabled(true);
-                ingredient_name_buttons[i].setPreferredSize(new Dimension(180, 54));
-
-                availableIngredientsPanel.add(ingredient_name_buttons[i], gbc2);
-
-                ingredient_unit_buttons[i] = new JLabel();
-                ingredient_unit_buttons[i].setText("  " + ingredientList.get(i).getUnitOfMeasure());
-                ingredient_unit_buttons[i].setForeground(new Color(138,135,125));
-                ingredient_unit_buttons[i].setFont(new Font("Century Gothic", Font.ITALIC, 18));
-                ingredient_unit_buttons[i].setPreferredSize(new Dimension(62, 54));
-
-
-                availableIngredientsUnits.add(ingredient_unit_buttons[i], gbc2);
-
-                gbc2.gridy++;
-            }
-
-            gbc2.gridy = 0;
-
-            // this is for each -/+ button in the left panel
-            for(int i = 0; i < btnContainer.length; i++)
-            {
-                decrementBtns[i] = new JButton("-");
-                decrementBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
-                decrementBtns[i].setPreferredSize(new Dimension(62, 54));
-                decrementBtns[i].setAlignmentX(JButton.CENTER);
-                decrementBtns[i].setAlignmentY(JButton.CENTER);
-                decrementBtns[i].setForeground(new Color(255,255,255));
-                decrementBtns[i].setBackground(new Color(28, 31, 46));
-                decrementBtns[i].setFocusPainted(false);
-                decrementBtns[i].setBorder(emptyBorder);
-
-                quantityBtns[i] = new JButton(" ");
-                quantityBtns[i].setEnabled(false);
-                quantityBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
-                quantityBtns[i].setPreferredSize(new Dimension(62, 54));
-                quantityBtns[i].setAlignmentX(JButton.CENTER);
-                quantityBtns[i].setAlignmentY(JButton.CENTER);
-                quantityBtns[i].setForeground(new Color(255,255,255));
-                quantityBtns[i].setBackground(new Color(28, 31, 46));
-                quantityBtns[i].setFocusPainted(false);
-                quantityBtns[i].setBorder(emptyBorder);
-
-                incrementBtns[i] = new JButton("+");
-                incrementBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
-                incrementBtns[i].setPreferredSize(new Dimension(62, 54));
-                incrementBtns[i].setAlignmentX(JButton.CENTER);
-                incrementBtns[i].setAlignmentY(JButton.CENTER);
-                incrementBtns[i].setForeground(new Color(255,255,255));
-                incrementBtns[i].setBackground(new Color(28, 31, 46));
-                incrementBtns[i].setFocusPainted(false);
-                incrementBtns[i].setBorder(emptyBorder);
-
-                btnContainer[i] = new JPanel(new GridLayout(1, 0, 5,5));
-                btnContainer[i].setBorder(new EmptyBorder(5,5,5,5));
-                btnContainer[i].setBackground(new Color(255,255,255));
-
-                btnContainer[i].add(decrementBtns[i]);
-                btnContainer[i].add(quantityBtns[i]);
-                btnContainer[i].add(incrementBtns[i]);
-
-                totalBtnContainer.add(btnContainer[i], gbc2);
-
-                decrementBtns[i].addActionListener(bl);
-                quantityBtns[i].addActionListener(bl);
-                incrementBtns[i].addActionListener(bl);
-
-                availableInventoryIncrementBtns.add(incrementBtns[i]);
-                availableInventoryAmountBtns.add(quantityBtns[i]);
-                availableInventoryDecrementBtns.add(decrementBtns[i]);
-
-                gbc2.gridy++;
-            }
-
-
-
-            /*Right Panel Attributes*/
-
-
-            currInventoryName = new JLabel[userIngredientList.size()];
-            currInventoryUnits = new JLabel[userIngredientList.size()];
-            decreaseBtns = new JButton[userIngredientList.size()];
-            amountBtns = new JButton[userIngredientList.size()];
-            increaseBtns = new JButton[userIngredientList.size()];
-
-            currentIngredientsUnitPanel.setLayout(new GridLayout(userIngredientList.size(), 1, 8, 10));
-
-            ingredientPortion.setLayout(new GridLayout(userIngredientList.size(), 1,8,10));
-
-            btnContainerRight = new JPanel[userIngredientList.size()];
-            totalBtnContainerRight.setLayout(new GridLayout(userIngredientList.size(), 1));
-
-            gbc.gridy = 0;
-
-            // this is for every name / unit of user possessed ingredient
-            for(int i = 0; i < userIngredientList.size(); i++){
-                currInventoryName[i] = new JLabel();
-                currInventoryName[i].setText(userIngredientList.get(i).getName());
-                currInventoryName[i].setFont(new Font("Century Gothic", Font.PLAIN, 20));
-                currInventoryName[i].setForeground(new Color(51, 51, 51));
-                currInventoryName[i].setPreferredSize(new Dimension(180, 54));
-
-                ingredientPortion.add(currInventoryName[i], gbc);
-
-                currInventoryUnits[i] = new JLabel();
-                currInventoryUnits[i].setText("  " + userIngredientList.get(i).getUnitOfMeasure());
-                currInventoryUnits[i].setForeground(new Color(51, 51, 51));
-                currInventoryUnits[i].setFont(new Font("Century Gothic", Font.ITALIC, 18));
-                currInventoryUnits[i].setPreferredSize(new Dimension(62, 54));
-
-
-                currentIngredientsUnitPanel.add(currInventoryUnits[i], gbc);
-
-                gbc.gridy++;
-            }
-
-            gbc.gridy = 0;
-
-            // this is for every -/+ button for the ingredients the user possesses
-            for(int i = 0; i < userIngredientList.size(); i++){
-                decreaseBtns[i] = new JButton("-");
-                decreaseBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
-                decreaseBtns[i].setPreferredSize(new Dimension(62, 54));
-                decreaseBtns[i].setAlignmentX(JButton.CENTER);
-                decreaseBtns[i].setAlignmentY(JButton.CENTER);
-                decreaseBtns[i].setForeground(new Color(255,255,255));
-                decreaseBtns[i].setBackground(new Color(28, 31, 46));
-                decreaseBtns[i].setFocusPainted(false);
-                decreaseBtns[i].setBorder(emptyBorder);
-
-
-                amountBtns[i] = new JButton(String.valueOf(userIngredientList.get(i).getQuantity()));
-                amountBtns[i].setEnabled(false);
-                amountBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
-                amountBtns[i].setText(String.valueOf(userIngredientList.get(i).getQuantity()));
-                amountBtns[i].setPreferredSize(new Dimension(62, 54));
-                amountBtns[i].setAlignmentX(JButton.CENTER);
-                amountBtns[i].setAlignmentY(JButton.CENTER);
-                amountBtns[i].setForeground(new Color(255,255,255));
-                amountBtns[i].setBackground(new Color(28, 31, 46));
-                amountBtns[i].setFocusPainted(false);
-                amountBtns[i].setBorder(emptyBorder);
-
-
-                increaseBtns[i] = new JButton("+");
-                increaseBtns[i].setFont(new Font("Century Gothic", Font.PLAIN, 19));
-                increaseBtns[i].setPreferredSize(new Dimension(62, 54));
-                increaseBtns[i].setAlignmentX(JButton.CENTER);
-                increaseBtns[i].setAlignmentY(JButton.CENTER);
-                increaseBtns[i].setForeground(new Color(255,255,255));
-                increaseBtns[i].setBackground(new Color(28, 31, 46));
-                increaseBtns[i].setFocusPainted(false);
-                increaseBtns[i].setBorder(emptyBorder);
-
-
-                btnContainerRight[i] = new JPanel(new GridLayout(1, 0, 5, 5));
-                btnContainerRight[i].setBorder(new EmptyBorder(5,8,5,8));
-                btnContainerRight[i].setBackground(new Color(255,255,255));
-                btnContainerRight[i].add(decreaseBtns[i]);
-                btnContainerRight[i].add(amountBtns[i]);
-                btnContainerRight[i].add(increaseBtns[i]);
-
-                decreaseBtns[i].addActionListener(bl);
-                amountBtns[i].addActionListener(bl);
-                increaseBtns[i].addActionListener(bl);
-
-                totalBtnContainerRight.add(btnContainerRight[i], gbc);
-
-                userInventoryIncrementBtns.add(decreaseBtns[i]);
-                userInventoryQuantityBtns.add(amountBtns[i]);
-                userInventoryDecrementBtns.add(increaseBtns[i]);
-
-                gbc.gridy++;
-            }
-        }
-
-
-        JPanel paneltopLeft = new JPanel(new BorderLayout());
-        paneltopLeft.setBackground(new Color(255,255,255));
-
-        JLabel test1 = new JLabel("Available Ingredients");
-        test1.setForeground(new Color(51,51,51));
-        test1.setFont(new Font("Century Gothic", Font.PLAIN, 22));
-        test1.setHorizontalAlignment(SwingConstants.CENTER);
-
-        JPanel paneltopRight = new JPanel(new BorderLayout());
-        paneltopRight.setBackground(new Color(255,255,255));
-
-        JLabel test2 = new JLabel("Your Ingredient Inventory");
-        test2.setForeground(new Color(51,51,51));
-        test2.setFont(new Font("Century Gothic", Font.PLAIN, 22));
-        test2.setHorizontalAlignment(SwingConstants.CENTER);
-
-        paneltopLeft.add(test1, BorderLayout.CENTER);
-        paneltopRight.add(test2, BorderLayout.CENTER);
-
-        // make left panel scrollable
-        available_ingredients_scrollable = new JScrollPane(mainleftPanel);
-        available_ingredients_scrollable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        available_ingredients_scrollable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        // make left panel scrollable
-        inventory_scrollable = new JScrollPane(mainrightPanel);
-        inventory_scrollable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        inventory_scrollable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        JSplitPane s1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, paneltopLeft, paneltopRight);
-        JSplitPane s2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, available_ingredients_scrollable, inventory_scrollable);
-        JSplitPane main_split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, s1, s2);
-        JSplitPane bottom_split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, main_split, bottomPanel);
-
-
-        /*
-        Makes split panes stay in one position
-         */
-
-
-        s1.setEnabled(false);
-        s2.setEnabled(false);
-        main_split.setEnabled(false);
-        bottom_split.setEnabled(false);
-
-        final boolean firstResize = true;
-
-        /* Action listener lines up the split panes to be centered as much as possible*/
-
-
-        s1.addComponentListener(new ComponentAdapter() {
+        gbc.insets = new Insets(7,10,7,10);
+
+        //Top panel attributes and creation
+        JLabel title;
+        JPanel titlePanel;
+        JLabel instructionsTitle;
+
+        title = new JLabel("Ingredient Inventory");
+        title.setFont(new Font("Century Gothic", Font.PLAIN, 40));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        instructionsTitle = new JLabel("Click '+' to add an ingredient to your inventory");
+        instructionsTitle.setFont(new Font("Century Gothic", Font.PLAIN, 18));
+        instructionsTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        instructionsTitle.setForeground(new Color(51,51,51));
+
+        // ************************************
+        // this is the header (top panel)
+        titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setBorder(new EmptyBorder(15,0,0,0));
+        titlePanel.setBackground(new Color(255,255,255));
+        titlePanel.add(title);
+        titlePanel.add(instructionsTitle);
+        this.add(titlePanel, BorderLayout.NORTH);
+
+        // ************************************
+        // holds every row of ingredient panels
+        containerPanel = new JPanel();
+        containerPanel.setLayout(new GridLayout(0,1,5,5));
+        containerPanel.setBackground(new Color(247, 253, 246));
+
+        // Panel that holds container panel
+        innerInventoryPanel = new JPanel(new BorderLayout());
+        innerInventoryPanel.setBackground(new Color(247, 253, 246));
+        innerInventoryPanel.add(containerPanel, BorderLayout.NORTH);
+
+        // holds the innerInventoryPanel
+        inventoryContainerPanel = new JPanel();
+        inventoryContainerPanel.setBackground(new Color(247, 253, 246));
+        inventoryContainerPanel.setLayout(new BoxLayout(inventoryContainerPanel, BoxLayout.Y_AXIS));
+        inventoryContainerPanel.add(innerInventoryPanel, gbc);
+
+        // make the inventory panel scrollable
+        scrollPane = new JScrollPane(inventoryContainerPanel);
+        scrollPane.setPreferredSize(new Dimension(824,550));
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // contains all center components
+        main_center_Panel = new JPanel(new GridBagLayout());
+        main_center_Panel.setBackground(new Color(255,255,255));
+        main_center_Panel.add(scrollPane, gbc); // add scrollable to the main center panel
+        this.add(main_center_Panel, BorderLayout.CENTER);
+
+        // ***********************************
+        // Bottom panel for navigation buttons
+        btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 211, 8));
+        btnPanel.setBackground(new Color(255,255,255));
+        btnPanel.setBorder(new EmptyBorder(0,0,15,0));
+        this.add(btnPanel, BorderLayout.SOUTH);
+
+        // back button
+        backBtn = new JButton("Back");
+        backBtn.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        backBtn.setPreferredSize(new Dimension(244, 40));
+        backBtn.setForeground(new Color(255,255,255));
+        backBtn.setBackground(new Color(28, 31, 46));
+        backBtn.setFocusPainted(false);
+        backBtn.setBorder(emptyBorder);
+        backBtn.addActionListener(e -> serviceDispatcher.gotoHome());
+
+        backBtn.addMouseListener(new MouseAdapter() {
             @Override
-            public void componentResized(ComponentEvent e) {
-                if(firstResize){
-                    s1.setDividerLocation(0.5);
-                    s2.setDividerLocation(0.5);
-                    main_split.setDividerLocation(0.10);
+            public void mouseEntered(MouseEvent e) {
+                backBtn.setBackground(new Color(248, 68, 149));
+            }
+            public void mouseExited(MouseEvent e){
+                backBtn.setBackground(new Color(28, 31, 46));
+            }
+        });
+
+        // save button
+        saveBtn = new JButton("Save");
+        saveBtn.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        saveBtn.setPreferredSize(new Dimension(244, 40));
+        saveBtn.setForeground(new Color(255,255,255));
+        saveBtn.setBackground(new Color(28, 31, 46));
+        saveBtn.setFocusPainted(false);
+        saveBtn.setBorder(emptyBorder);
+
+        // if user hits save button, send data to serviceDispatcher
+        saveBtn.addActionListener(e -> {
+            // populate all_ingredients_to_save
+            getIngredientsToSave(all_ingredient_panels);
+
+            // send data to serviceDispatcher
+            serviceDispatcher.updateUserInventory(all_ingredients_to_save);
+            serviceDispatcher.gotoInventory();
+        });
+
+        saveBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                saveBtn.setBackground(new Color(68, 166, 154));
+            }
+            public void mouseExited(MouseEvent e){
+                saveBtn.setBackground(new Color(28, 31, 46));
+            }
+        });
+
+        // add the buttons to the button panel
+        btnPanel.add(backBtn);
+        btnPanel.add(saveBtn);
+    }
+
+
+    /**
+     * Dynamically adds an ingredient row
+     */
+    private void addIngredientRow(IngredientDisplayObject ingDO) {
+        // increment the user's possession number
+        possessedIngredients++;
+
+        // determine if we need to auto-populate the row's contents
+        String ing_name = "";
+        String ing_qty = "";
+        String ing_unit = "";
+
+        if (ingDO != null) {
+            ing_name = ingDO.getName();
+            ing_qty = String.valueOf(ingDO.getQuantity());
+            ing_unit = ingDO.getUnitOfMeasure();
+        }
+
+        // create a new panel for additional ingredient
+        ingredientPanel = new JPanel(new GridLayout(1, 5, 10, 0));
+        ingredientPanel.setPreferredSize(new Dimension(300, 50));
+        ingredientPanel.setBackground(new Color(247, 253, 246));
+        ingredientPanel.setBorder(new EmptyBorder(10,10,10,10)); // adding padding between each ingredient panel
+
+        // create the text field for quantity input
+        JTextField quantity = new JTextField();
+        quantity.setText(ing_qty);
+        quantity.setFont(new Font("Century Gothic", Font.PLAIN, 14));
+        quantity.setHorizontalAlignment(JTextField.CENTER);
+
+        // create the unit_of_measure button
+        JLabel ing_units = new JLabel();
+        ing_units.setText(ing_unit);
+        ing_units.setPreferredSize(new Dimension(122, 42)); // this set the size of all following buttons
+        ing_units.setFont(new Font("Century Gothic", Font.PLAIN, 14));
+        ing_units.setForeground(new Color(255,255,255));
+        ing_units.setBackground(new Color(28, 31, 46));
+        ing_units.setOpaque(true);
+        ing_units.setHorizontalAlignment(SwingConstants.CENTER);
+        ing_units.setBorder(emptyBorder);
+
+        // create the combo box here.
+        // although this is the first component in a row, it needs to be created after the unit and quantity
+        // components as we want to update the text in those components dynamically.
+        JComboBox ing_list = new JComboBox(getIngredientsList());
+        ing_list.setSelectedItem(ing_name);
+        ((JLabel)ing_list.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        ing_list.setFont(new Font("Century Gothic", Font.PLAIN, 14));
+        ing_list.addActionListener(e -> {
+            for (IngredientDisplayObject i : system_ingredients) {
+                if (i.getName().equals(ing_list.getSelectedItem())) {
+                    ing_units.setText(i.getUnitOfMeasure());
+                    break;
+                } else {
+                    quantity.setText("");
+                    ing_units.setText("");
                 }
             }
         });
 
+        // create the add button
+        JButton addButton = new JButton("+");
+        addButton.setFont(new Font("Century Gothic", Font.PLAIN, 14));
+        addButton.setForeground(new Color(255,255,255));
+        addButton.setBackground(new Color(28, 31, 46));
+        addButton.setFocusPainted(false);
+        addButton.setBorder(emptyBorder);
+        addButton.addActionListener(e -> {
+            // limit the number of rows based on total number of system ingredients
+            if (possessedIngredients < system_ingredients.size()) {
+                addIngredientRow(null); // add a new empty row
+            }
+        });
 
-        /*Left Panel Layout */
+        addButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                addButton.setForeground(new Color(255,255,255));
+                addButton.setBackground(new Color(68, 166, 154));
+            }
+            public void mouseExited(MouseEvent e){
+                addButton.setForeground(new Color(255,255,255));
+                addButton.setBackground(new Color(28, 31, 46));
+            }
+        });
 
+        // create the sub button
+        JButton subButton = new JButton("-");
+        subButton.setFont(new Font("Century Gothic", Font.PLAIN, 14));
+        subButton.setForeground(new Color(255,255,255));
+        subButton.setBackground(new Color(28, 31, 46));
+        subButton.setFocusPainted(false);
+        subButton.setBorder(emptyBorder);
+        subButton.addActionListener(this::removeIngredientRow);
 
-        mainleftPanel.add(availableIngredientsPanel);
-        mainleftPanel.add(totalBtnContainer);
-        mainleftPanel.add(availableIngredientsUnits);
-        mainleftPanel.setBackground(new Color(255,255,255));
+        // first ingredient row cannot be deleted
+        if (isFirstIngredient) {
+            subButton.setEnabled(false);
+            subButton.setBackground(new Color(94,94,94));
+            isFirstIngredient = false;
+        }
+        else {
+            subButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    subButton.setForeground(new Color(255, 255, 255));
+                    subButton.setBackground(new Color(248, 68, 149));
+                }
 
-        /*Right Panel Layout*/
+                public void mouseExited(MouseEvent e) {
+                    subButton.setForeground(new Color(255, 255, 255));
+                    subButton.setBackground(new Color(28, 31, 46));
+                }
+            });
+        }
 
-        mainrightPanel.add(ingredientPortion);
-        mainrightPanel.add(totalBtnContainerRight);
-        mainrightPanel.add(currentIngredientsUnitPanel);
-        mainrightPanel.setBackground(new Color(255,255,255));
+        // add everything to the newly created panel
+        ingredientPanel.add(ing_list);
+        ingredientPanel.add(quantity);
+        ingredientPanel.add(ing_units);
+        ingredientPanel.add(addButton);
+        ingredientPanel.add(subButton);
 
+        // add this new ingredient panel to the container panel
+        containerPanel.add(ingredientPanel);
 
-        this.add(main_split, BorderLayout.CENTER);
-        this.add(bottom_split, BorderLayout.SOUTH);
+        // add this ingredient panel to the list containing all of them
+        all_ingredient_panels.add(ingredientPanel);
+
+        // dynamically update the frame
+        // (added row will show immediately)
+        this.revalidate();
+        this.repaint();
+        this.validate();
+        scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
     }
 
 
-    private class CheckBoxListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            //Loop to check through list of ingredients
-            //If ingredient is selected, it will be added to center panel
-            for(int i = 0; i < ingredientList.size(); i++)
-            {
-                // if the selected item == the ingredient's name
-                if (ingredient_name_buttons[i].isSelected())
-                {
-                    // get the ingredient at i
-                    IngredientDisplayObject ingredient = ingredientList.get(i);
-                    String selectedIngredient = ingredient_name_buttons[i].getText();
+    /**
+     * Removes the corresponding ingredient row when (-) button is clicked
+     *
+     * @param e the source of click whose panel will be removed
+     */
+    private void removeIngredientRow(ActionEvent e) {
+        // remove the ingredientPanel containing the sub button that was pressed
+        containerPanel.remove((((JButton)e.getSource()).getParent()));
 
-                    if(selectedIngredient == ingredient.getName() && !addedIngredients.containsValue(ingredient))
-                    {
-                        // add ingredient to list of new ingredient for user
-                        addedIngredients.put(ingredient.getName(), ingredient);
-                        ingredient_name_buttons[i].setForeground(new Color(51,51,51));
-                        ingredient_unit_buttons[i].setForeground(new Color(51,51,51));
+        // remove the ingredientPanel from the list of all ingredient panels
+        all_ingredient_panels.remove((((JButton)e.getSource()).getParent()));
 
-                        // testing purposes
-                        System.out.println("Selected Item: " + ingredient.getName());
-                        System.out.println("Unit of Measure: " + ingredient.getUnitOfMeasure());
+        // decrement the user's possessed ingredients
+        possessedIngredients--;
+
+        // dynamically update the frame
+        this.revalidate();
+        this.repaint();
+    }
+
+
+    /**
+     * Returns a String[] containing all of the system's ingredient's names
+     *
+     * @return a string array containing the list of ingredients available in iCook
+     */
+    private String[] getIngredientsList() {
+        // create a new String array that includes all of the systems ingredients
+        String [] ing_display = new String[system_ingredients.size()+1];
+
+        // first selection should be ""
+        ing_display[0] = "";
+
+        // populate the ingredients
+        for (int i = 1; i < ing_display.length; i++)
+            ing_display[i] = system_ingredients.get(i-1).getName();
+
+        // since we are starting at 1, we need to get the last sys_ing into the String array
+        ing_display[ing_display.length-1] = system_ingredients.get(system_ingredients.size()-1).getName();
+
+        return ing_display;
+    }
+
+
+    /**
+     * Initializes and populates all_ingredients_to_save with every ingredient on this GUI
+     *
+     * @param all_ingredient_panels the ArrayList containing all of our ingredient panels
+     */
+    private void getIngredientsToSave(ArrayList<JPanel> all_ingredient_panels) {
+        // list we will be populating for the serviceDispatcher
+        all_ingredients_to_save = new ArrayList<>();
+
+        // loop over each ingredient panel
+        panel_loop:
+        for (JPanel ingredient_panel : all_ingredient_panels) {
+            // get the ingredient panel's components
+            Component[] components = ingredient_panel.getComponents();
+
+            // info we need from the ingredient panel's components
+            IngredientDisplayObject ing = null;
+
+            // for each component, get the ingredient name and its quantity
+            for (Component component : components) {
+                // current component is the JComboBox
+                if (component instanceof JComboBox) {
+                    String selected_ing = (String) ((JComboBox<?>) component).getSelectedItem();
+
+                    // match the selected ingredient from the list of system ingredients to get the object
+                    for (IngredientDisplayObject system_ingredient : system_ingredients) {
+                        if (system_ingredient.getName().equals(selected_ing)) {
+                            ing = system_ingredient;
+                            break;
+                        }
                     }
                 }
-            }
-        }
+                // current component is the JTextField, get the quantity
+                else if (component instanceof JTextField) {
+                    // if the qty is not a number, do not add it to the list of ingredients and skip to next panel
+                    try {
+                        assert ing != null;
+                        ing.setQuantity(Integer.parseInt(((JTextField) component).getText()));
+                    } catch (NumberFormatException exp) {
+                        continue panel_loop;
+                    }
+                }
+            } // end of components for loop
 
-    }
-
-
-    // ActionListeners for search, add, update, and home buttons
-    private class ButtonListener implements ActionListener
-    {
-        /*
-        * Updates the quantity of an ingredient that was already in the user's inventory
-        */
-
-
-        private int updateUserIngredientQuantity(int index, JButton operation){
-            int currentQuantity = Integer.parseInt(userInventoryQuantityBtns.get(index).getText());
-            int updatedQuantity = 0;
-
-            if (operation.getText() == "+"){
-                updatedQuantity = currentQuantity + 1;
-            }
-            else if (operation.getText() == "-" && currentQuantity > 0) {
-                updatedQuantity = currentQuantity - 1;
-            }
-
-            return updatedQuantity;
-        }
-
-
-        /*
-         * Updates the quantity of a newly added ingredient
-         */
-
-
-        private int updateNewIngredientQuantity(int index, JButton operation){
-            int currentQuantity;
-
-            if (availableInventoryAmountBtns.get(index).getText() == " ")
-                currentQuantity = 0;
-            else
-                currentQuantity = Integer.parseInt(availableInventoryAmountBtns.get(index).getText());
-
-            int updatedQuantity = 0;
-
-            if (operation.getText() == "+"){
-                updatedQuantity = currentQuantity + 1;
-            }
-            else if (operation.getText() == "-" && currentQuantity > 0) {
-                updatedQuantity = currentQuantity - 1;
-            }
-
-            return updatedQuantity;
-        }
-
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            JButton src2 = (JButton) e.getSource();
-            int updatedQuantity;
-
-
-            // loop through array of increment buttons associated with existing ingredients
-            for(int i = 0; i < userIngredientList.size(); i++)
-            {
-                if(src2 == userInventoryIncrementBtns.get(i))
-                {
-                    updatedQuantity = updateUserIngredientQuantity(i, userInventoryIncrementBtns.get(i));
-                    userInventoryQuantityBtns.get(i).setText(String.valueOf(updatedQuantity));
-                    userIngredientList.get(i).setQuantity(updatedQuantity);
+            // make sure we are not adding any duplicates
+            for (IngredientDisplayObject user_ing : all_ingredients_to_save) {
+                assert ing != null;
+                if (user_ing.getName().equals(ing.getName())) {
+                    continue panel_loop;
                 }
             }
 
-            // loop through array of decrement buttons associated with existing ingredients
-            for(int i = 0; i < userIngredientList.size(); i++){
-                if(src2 == userInventoryDecrementBtns.get(i))
-                {
-                    updatedQuantity = updateUserIngredientQuantity(i, userInventoryDecrementBtns.get(i));
-                    userInventoryQuantityBtns.get(i).setText(String.valueOf(updatedQuantity));
-                    userIngredientList.get(i).setQuantity(updatedQuantity);
-                }
-            }
+            all_ingredients_to_save.add(ing);
 
-            // loop through every newly added inc button and set the quantity to its corresponding ingredient
-            // in the addedIngredients List
-            for (int i = 0; i < ingredientList.size(); i++)
-            {
-                if(src2 == availableInventoryIncrementBtns.get(i) && ingredient_name_buttons[i].isSelected())
-                {
-                    updatedQuantity = updateNewIngredientQuantity(i, availableInventoryIncrementBtns.get(i));
-                    availableInventoryAmountBtns.get(i).setText(String.valueOf(updatedQuantity));
-                    addedIngredients.get(ingredientList.get(i).getName()).setQuantity(updatedQuantity);
-                }
-            }
+        } // end of panel_loop
 
-            // loop through every newly added dec button and set the quantity to its corresponding ingredient
-            // in the addedIngredients List
-            for (int i = 0; i < ingredientList.size(); i++)
-            {
-                if(src2 == availableInventoryDecrementBtns.get(i) && ingredient_name_buttons[i].isSelected())
-                {
-                    updatedQuantity = updateNewIngredientQuantity(i, availableInventoryDecrementBtns.get(i));
-                    availableInventoryAmountBtns.get(i).setText(String.valueOf(updatedQuantity));
-                    addedIngredients.get(ingredientList.get(i).getName()).setQuantity(updatedQuantity);
-                }
-            }
+    } // end of function
 
-            // if the user clicked the recipes button
-            if(src2 == recipes)
-            {
-                // go to RecipeUI
-                serviceDispatcher.gotoViewRecipes();
-            }
-
-            // else if the user clicked the update button
-            else if(src2 == update)
-            {
-                pendingIngredientList = new ArrayList<>();          // to be sent to the controller for processing
-                pendingIngredientList.addAll(userIngredientList);   // add the users ingredient list to the pending list
-                pendingIngredientList.addAll(addedIngredients.values());     // add the newly added ingredients to the pending list
-                serviceDispatcher.updateUserInventory(pendingIngredientList);
-
-                // re-instantiate the InventoryUI to reflect changes
-                serviceDispatcher.gotoInventory();
-            }
-
-            // else if the user clicked the home button
-            else if(src2 == home)
-            {
-                // go back to HomeUI
-                serviceDispatcher.gotoHome();
-            }
-        }
-    }
 
 }

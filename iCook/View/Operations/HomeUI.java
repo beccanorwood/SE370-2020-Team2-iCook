@@ -203,7 +203,7 @@ public class HomeUI extends JPanel implements ActionListener {
         }
         // take the user to InventoryUI
         else if (btn.equals("Inventory")){
-            serviceDispatcher.gotoTEST();
+            serviceDispatcher.gotoInventory();
         }
     }
 

@@ -588,14 +588,4 @@ public class ServiceDispatcher {
     }
 
 
-    /**
-     * Sets the frame's contents to the contents of the TestUI
-     */
-    public void gotoTEST() {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new TESTUI());
-        frame.setVisible(true);
-    }
-
-
 } // end of ServiceDispatcher class
