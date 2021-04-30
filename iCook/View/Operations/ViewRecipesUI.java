@@ -485,7 +485,8 @@ public class ViewRecipesUI extends JPanel implements ActionListener
 
             // take user to InventoryUI
         } else if ("Inventory".equals(buttonChosen)) {
-            serviceDispatcher.gotoInventory();
+            //serviceDispatcher.gotoInventory();
+            serviceDispatcher.gotoTEST();
 
             // makes text area with recipe instructions editable
         } else if ("Modify Recipe".equals(buttonChosen)) {

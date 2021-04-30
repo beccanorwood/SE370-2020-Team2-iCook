@@ -7,9 +7,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 /**
@@ -20,17 +18,17 @@ import java.util.ArrayList;
  */
 public class TESTUI extends JPanel {
     // instance variables
-    private JPanel outerCenterPanel;
-    private JLabel title;
-    private JPanel topPanel;
-    private JPanel bottomPanel;
+
+    private JPanel inventoryContainerPanel;
+    private JPanel innerInventoryPanel;
+    private JPanel mainPanel;       // Main panel for all elements
     private JPanel btnPanel;
     private JButton saveBtn;
     private JButton backBtn;
-    private JScrollPane scrollPane;
-    private JPanel centerPanel;
-    private JPanel containerPanel;
-    private GridBagConstraints gbc;
+    private JScrollPane scrollPane; // Scroll Panel
+    private JPanel containerPanel;  // Panel that holds row of buttons to add ingredients
+    private GridBagConstraints gbc; //Constraints used to ingredient rows
+
 
     private ArrayList<JPanel> all_ingredient_panels;
     private JPanel ingredientPanel;
@@ -45,6 +43,10 @@ public class TESTUI extends JPanel {
 
     // styling
     private Border emptyBorder = BorderFactory.createEmptyBorder(); // btn formatting
+
+    private final Color BG = new Color(255,255,255);
+    private final Color FG = new Color(51,51,51);
+
 
     /**
      * Constructor
@@ -71,123 +73,85 @@ public class TESTUI extends JPanel {
         this.setVisible(true);  // set this panel to be visible
     }
 
-
-    /**
-     * Initializes the panel of its contents
-     */
     public void initialize() {
         this.setLayout(new BorderLayout());
         this.setBackground(new Color(255, 255, 255));
 
-        // ******************************
-        // this is the header (top panel)
-        title = new JLabel("Ingredient Inventory",SwingConstants.CENTER);
-        title.setFont(new Font("Century Gothic", Font.PLAIN, 40));
-        topPanel = new JPanel(new BorderLayout());
-        topPanel.setPreferredSize(new Dimension(768,72));
-        topPanel.setBackground(new Color(255,255,255));
-        topPanel.add(title, SwingConstants.CENTER);
-        this.add(topPanel, BorderLayout.NORTH);
+        gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(7,10,7,10);
 
-        // *****************************************************
-        // this is the outer center panel (will have scrollable)
-        outerCenterPanel = new JPanel(new BorderLayout());
-        outerCenterPanel.setBackground(new Color(255,255,255));
-        scrollPane = new JScrollPane(outerCenterPanel);
-        scrollPane.setBackground(new Color(255,255,255));
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        this.add(scrollPane, BorderLayout.CENTER);
+        mainPanel = new JPanel(new GridBagLayout());
+        //mainPanel.setPreferredSize(new Dimension(824, 700));
+        mainPanel.setBackground(new Color(234, 246, 248));
 
-        // ArrayList that holds each ingredient panel (used for saving info)
+
+        //Top panel attributes and creation
+        JLabel title;
+        JPanel titlePanel;
+        JLabel instructionsTitle;
+
+        title = new JLabel("Your Ingredient Inventory");
+        title.setFont(new Font("Century Gothic", Font.PLAIN, 36));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+
+        instructionsTitle = new JLabel("Select '+' to add new ingredient to your inventory");
+        instructionsTitle.setFont(new Font("Century Gothic", Font.PLAIN, 18));
+        instructionsTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        instructionsTitle.setForeground(FG);
+
+
+        titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setBackground(new Color(234, 246, 248));
+        titlePanel.add(title);
+        titlePanel.add(instructionsTitle);
+        this.add(titlePanel, BorderLayout.NORTH);
+
+        //Container Panel for inventory button rows
+        containerPanel = new JPanel();
+        containerPanel.setLayout(new GridLayout(0,1,5,5));
+        containerPanel.setBackground(BG);
+
+        //Container panel
+        inventoryContainerPanel = new JPanel();
+        inventoryContainerPanel.setLayout(new BoxLayout(inventoryContainerPanel, BoxLayout.Y_AXIS));
+
         all_ingredient_panels = new ArrayList<>();
 
-        // holds every row of ingredient panels
-        containerPanel = new JPanel();
-        containerPanel.setLayout(new GridLayout(0, 1));
+        //Panel that holds container panel for the ingredient row
+        innerInventoryPanel = new JPanel(new BorderLayout());
 
-        // holds the container of ingredient panels
-        gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.insets = new Insets(7,10,7,10);
-        gbc.weighty = 1;
-        gbc.weightx = 1;
+        //Panel for Back & Save Buttons
+        btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 8));
 
-        // add the container to the center panel and add the center panel to the outerCenterPanel
-        centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setBackground(new Color(247, 253, 246));
-        centerPanel.add(containerPanel, gbc);
-        outerCenterPanel.add(centerPanel);
-
-        // ***********************************
-        // Bottom panel for navigation buttons
-        btnPanel = new JPanel(new GridBagLayout());
-        btnPanel.setBackground(new Color(255,255,255));
-        bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setPreferredSize(new Dimension(768,72));
-        bottomPanel.setBackground(new Color(255,255,255));
-        bottomPanel.add(btnPanel, SwingConstants.CENTER);
-        this.add(bottomPanel, BorderLayout.SOUTH);
-
-        // reset these constraints for the navigation buttons
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.weighty = 1;
-        gbc.weightx = 1;
-
-        // back button
         backBtn = new JButton("Back");
-        backBtn.setPreferredSize(new Dimension(244, 42));
-        backBtn.setForeground(new Color(255,255,255));
-        backBtn.setBackground(new Color(28, 31, 46));
         backBtn.setFocusPainted(false);
         backBtn.setBorder(emptyBorder);
-        backBtn.addActionListener(e -> serviceDispatcher.gotoHome());
+        backBtn.setPreferredSize(new Dimension(150,30));
+        backBtn.setForeground(new Color(255,255,255));
+        backBtn.setBackground(new Color(28, 31, 46));
 
-        backBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                backBtn.setBackground(new Color(248, 68, 149));
-            }
-            public void mouseExited(MouseEvent e){
-                backBtn.setBackground(new Color(28, 31, 46));
-            }
-        });
-
-        // save button
         saveBtn = new JButton("Save");
-        saveBtn.setPreferredSize(new Dimension(244, 42));
-        saveBtn.setForeground(new Color(255,255,255));
-        saveBtn.setBackground(new Color(28, 31, 46));
         saveBtn.setFocusPainted(false);
         saveBtn.setBorder(emptyBorder);
+        saveBtn.setForeground(new Color(255,255,255));
+        saveBtn.setPreferredSize(new Dimension(150,30));
+        saveBtn.setBackground(new Color(28, 31, 46));
 
-        // if user hits save button, send data to serviceDispatcher
-        saveBtn.addActionListener(e -> {
-            // populate all_ingredients_to_save
-            getIngredientsToSave(all_ingredient_panels);
 
-            // send data to serviceDispatcher
-            serviceDispatcher.updateUserInventory(all_ingredients_to_save);
-            serviceDispatcher.gotoTEST();
-//            for (IngredientDisplayObject i : all_ingredients_to_save) {
-//                System.out.println(i.getName() +" "+ i.getQuantity());
-//            }
-//            System.out.println();
-        });
+        btnPanel.add(backBtn);
+        btnPanel.add(saveBtn);
+        btnPanel.setBackground(new Color(234, 246, 248));
+        this.add(btnPanel, BorderLayout.SOUTH);
 
-        saveBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                saveBtn.setBackground(new Color(68, 166, 154));
-            }
-            public void mouseExited(MouseEvent e){
-                saveBtn.setBackground(new Color(28, 31, 46));
-            }
-        });
 
-        // add the buttons to the button panel
-        btnPanel.add(backBtn, gbc);
-        btnPanel.add(saveBtn, gbc);
+        scrollPane = new JScrollPane(inventoryContainerPanel);
+        scrollPane.setPreferredSize(new Dimension(824,600));
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     }
 
 
@@ -207,22 +171,24 @@ public class TESTUI extends JPanel {
         }
 
         // create a new panel for additional ingredient
-        ingredientPanel = new JPanel(new GridLayout(1, 5, 10, 0));
+        ingredientPanel = new JPanel(new GridLayout(1, 5, 10, 5));
+        ingredientPanel.setPreferredSize(new Dimension(300, 50));
         ingredientPanel.setBackground(new Color(247, 253, 246));
-        ingredientPanel.setBorder(new EmptyBorder(15,0,15,0)); // adding padding between each ingredient panel
+        ingredientPanel.setBorder(new EmptyBorder(10,10,10,10)); // adding padding between each ingredient panel
 
         // create the text field for quantity input
         JTextField quantity = new JTextField();
         quantity.setText(ing_qty);
-        quantity.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-        quantity.setPreferredSize(new Dimension(3, 5));
+        quantity.setFont(new Font("Century Gothic", Font.PLAIN, 15));
+        //quantity.setPreferredSize(new Dimension(3, 5));
         quantity.setHorizontalAlignment(JTextField.CENTER);
+
 
         // create the unit_of_measure button
         JLabel ing_units = new JLabel();
         ing_units.setText(ing_unit);
-        ing_units.setPreferredSize(new Dimension(122, 42)); // this set the size of all following buttons
-        ing_units.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        //ing_units.setPreferredSize(new Dimension(122, 42)); // this set the size of all following buttons
+        ing_units.setFont(new Font("Century Gothic", Font.PLAIN, 15));
         ing_units.setForeground(new Color(255,255,255));
         ing_units.setBackground(new Color(28, 31, 46));
         ing_units.setOpaque(true);
@@ -235,7 +201,7 @@ public class TESTUI extends JPanel {
         JComboBox ing_list = new JComboBox(getIngredientsList());
         ing_list.setSelectedItem(ing_name);
         ((JLabel)ing_list.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
-        ing_list.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        ing_list.setFont(new Font("Century Gothic", Font.PLAIN, 15));
         ing_list.addActionListener(e -> {
             for (IngredientDisplayObject i : system_ingredients) {
                 if (i.getName().equals(ing_list.getSelectedItem())) {
@@ -250,7 +216,7 @@ public class TESTUI extends JPanel {
 
         // create the add button
         JButton addButton = new JButton("+");
-        addButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        addButton.setFont(new Font("Century Gothic", Font.PLAIN, 15));
         addButton.setForeground(new Color(255,255,255));
         addButton.setBackground(new Color(28, 31, 46));
         addButton.setFocusPainted(false);
@@ -277,7 +243,7 @@ public class TESTUI extends JPanel {
 
         // create the sub button
         JButton subButton = new JButton("-");
-        subButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        subButton.setFont(new Font("Century Gothic", Font.PLAIN, 15));
         subButton.setForeground(new Color(255,255,255));
         subButton.setBackground(new Color(28, 31, 46));
         subButton.setFocusPainted(false);
@@ -312,8 +278,12 @@ public class TESTUI extends JPanel {
         ingredientPanel.add(addButton);
         ingredientPanel.add(subButton);
 
-        // add this new ingredient panel to the container panel
         containerPanel.add(ingredientPanel);
+        innerInventoryPanel.add(containerPanel, BorderLayout.NORTH);
+        inventoryContainerPanel.add(innerInventoryPanel, gbc);
+
+        mainPanel.add(scrollPane, gbc);
+        this.add(mainPanel, BorderLayout.CENTER);
 
         // add this ingredient panel to the list containing all of them
         all_ingredient_panels.add(ingredientPanel);
