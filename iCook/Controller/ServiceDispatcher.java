@@ -13,7 +13,7 @@ import java.util.Vector;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 04/29/2021
+ * @version 04/30/2021
  */
 public class ServiceDispatcher {
     // user need to be static (not unique for each ServiceDispatcher object)
@@ -452,6 +452,10 @@ public class ServiceDispatcher {
 
         facade.updateRecipe(recipe);
     }
+
+
+//    public void cloneRecipe(int id) {
+//    }
 
 
     /**

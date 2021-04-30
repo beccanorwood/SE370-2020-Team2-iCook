@@ -6,10 +6,10 @@ import java.util.ArrayList;
  * Recipe creates an object that holds relevant information including the name, id number, a list of
  * RecipeIngredient objects, as well as the number of servings a given recipe will produce
  *
- * @Author: Team 2
- * @date: 4/25/2021
+ * @author Team 2
+ * @version 04/30/2021
  */
-public class Recipe {
+public class Recipe implements RecipeIF {
     // instance variables
     private int recipeID;           // id number associated with given recipe in database
     private String recipeName;      // name of recipe
@@ -59,8 +59,25 @@ public class Recipe {
     }
 
 
+    public void setInstructions(String instructions) {
+         this.instructions = instructions;
+    }
+
+
     public boolean isPublished() {
         return isPublished;
+    }
+
+
+    /**
+     * Returns a clone of this object
+     */
+    public RecipeIF clone() {
+        try {
+            return (RecipeIF) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
 
 
