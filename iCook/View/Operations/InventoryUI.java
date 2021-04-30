@@ -2,22 +2,17 @@ package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * User interface for user's to view their inventory.
  *
  * @author Team 2
- * @version 04/29/2021
+ * @version 04/30/2021
  */
 public class InventoryUI extends JPanel {
     // instance variables
@@ -44,7 +39,6 @@ public class InventoryUI extends JPanel {
 
     // styling
     private Border emptyBorder = BorderFactory.createEmptyBorder(); // btn formatting
-    private BufferedImage img;
 
 
     /**

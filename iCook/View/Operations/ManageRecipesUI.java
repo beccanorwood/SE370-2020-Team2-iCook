@@ -1,13 +1,10 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
@@ -17,7 +14,7 @@ import java.util.Vector;
  * An Admin can create a new recipe from this GUI or modify existing recipes.
  *
  * @author Team 2
- * @version 04/27/2021
+ * @version 04/30/2021
  */
 public class ManageRecipesUI extends JPanel {
     // instance variables
@@ -59,7 +56,7 @@ public class ManageRecipesUI extends JPanel {
         mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setPreferredSize(new Dimension(824, 600));
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(FG),
-                "iCook Recipes", TitledBorder.CENTER, TitledBorder.TOP)); // compound titled line border
+                "iCook Recipes", TitledBorder.CENTER, TitledBorder.TOP, new Font("Century Gothic", Font.PLAIN, 14))); // compound titled line border
         ((TitledBorder)mainPanel.getBorder()).setTitleColor(FG);
         mainPanel.setBackground(new Color(246,251,253));
         mainPanel.setForeground(FG);
@@ -132,12 +129,7 @@ public class ManageRecipesUI extends JPanel {
             }
         });
 
-        addBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                serviceDispatcher.gotoModifyRecipeUI();
-            }
-        });
+        addBtn.addActionListener(e -> serviceDispatcher.gotoModifyRecipeUI());
 
         addBtn.setPreferredSize(new Dimension(144,32));
         gbc.gridy++;
@@ -162,12 +154,9 @@ public class ManageRecipesUI extends JPanel {
             }
         });
 
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // back button goes to the HomeUI
-                serviceDispatcher.gotoHome();
-            }
+        backBtn.addActionListener(e -> {
+            // back button goes to the HomeUI
+            serviceDispatcher.gotoHome();
         });
 
         backBtn.setPreferredSize(new Dimension(100,32));
