@@ -3,11 +3,14 @@ package iCook.View.Operations;
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -41,6 +44,7 @@ public class InventoryUI extends JPanel {
 
     // styling
     private Border emptyBorder = BorderFactory.createEmptyBorder(); // btn formatting
+    private BufferedImage img;
 
 
     /**
@@ -87,25 +91,18 @@ public class InventoryUI extends JPanel {
         //Top panel attributes and creation
         JLabel title;
         JPanel titlePanel;
-        JLabel instructionsTitle;
 
         title = new JLabel("Ingredient Inventory");
         title.setFont(new Font("Century Gothic", Font.PLAIN, 40));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        instructionsTitle = new JLabel("Click '+' to add an ingredient to your inventory");
-        instructionsTitle.setFont(new Font("Century Gothic", Font.PLAIN, 18));
-        instructionsTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        instructionsTitle.setForeground(new Color(51,51,51));
-
         // ************************************
         // this is the header (top panel)
         titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
-        titlePanel.setBorder(new EmptyBorder(15,0,0,0));
+        titlePanel.setBorder(new EmptyBorder(15,0,15,0));
         titlePanel.setBackground(new Color(255,255,255));
         titlePanel.add(title);
-        titlePanel.add(instructionsTitle);
         this.add(titlePanel, BorderLayout.NORTH);
 
         // ************************************
@@ -127,13 +124,17 @@ public class InventoryUI extends JPanel {
 
         // make the inventory panel scrollable
         scrollPane = new JScrollPane(inventoryContainerPanel);
-        scrollPane.setPreferredSize(new Dimension(824,550));
+        scrollPane.setPreferredSize(new Dimension(800,500));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
 
         // contains all center components
         main_center_Panel = new JPanel(new GridBagLayout());
         main_center_Panel.setBackground(new Color(255,255,255));
+        main_center_Panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(51,51,51)),
+                "Click '+' to add an ingredient to your inventory", TitledBorder.CENTER, TitledBorder.TOP,
+                new Font("Century Gothic", Font.PLAIN, 14)));
         main_center_Panel.add(scrollPane, gbc); // add scrollable to the main center panel
         this.add(main_center_Panel, BorderLayout.CENTER);
 
