@@ -6,7 +6,9 @@ import iCook.View.Operations.*;
 import iCook.View.Operations.DisplayObjects.*;
 
 import javax.swing.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Vector;
 
 /**
@@ -276,6 +278,9 @@ public class ServiceDispatcher {
             inventory.add(new IngredientDisplayObject(ingredientID, name, unitOfMeasure, quantity));
         }
 
+
+        Collections.sort(inventory);
+
         // return the ArrayList
         return inventory;
     }
@@ -318,6 +323,34 @@ public class ServiceDispatcher {
 
 
     /**
+     * The following three methods
+     * are the sorting algorithm for the
+     * RecipeDisplayObjects that implement
+     * the Comparable Interface
+     */
+
+
+    /*private void sortRecipes(Comparable<ArrayList> recipes, int size)
+    {
+        int index, smallestIndex;
+
+        for(index = 0; index < size - 1; index++)
+        {
+            smallestIndex = indexofSmallest()
+        }
+    }
+
+
+    private int indexofSmallest(int start, Comparable<RecipeDisplayObject> recipes, int size)
+    {
+        Comparable min = recipes.
+    }*/
+
+
+
+
+
+    /**
      * Requests the facade to return an ArrayList of recipes available to the user
      *
      * @return an ArrayList of RecipeDisplayObjects that represent recipes satisfiable to the user, based on their inventory
@@ -340,6 +373,10 @@ public class ServiceDispatcher {
                 display_recipes.add(new RecipeDisplayObject(recipe.getRecipeID(),
                         recipe.getRecipeName(), recipe.getInstructions(), getIngredientDisplayObjects(recipe), recipe.isPublished()));
             }
+
+
+            //Sorts the recipe display objects alphabetically by recipe name
+            Collections.sort(display_recipes);
 
             // return the list of available recipes
             return display_recipes;

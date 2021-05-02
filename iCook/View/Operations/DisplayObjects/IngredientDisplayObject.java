@@ -1,12 +1,14 @@
 package iCook.View.Operations.DisplayObjects;
 
+import iCook.Model.Ingredient;
+
 /**
  * Display object for an ingredient used in the View package
  *
  * @Author: Team 2
  * @Date: 4/25/2020
  */
-public class IngredientDisplayObject {
+public class IngredientDisplayObject implements Comparable<IngredientDisplayObject> {
 
     // instance variables
     private int ingredientID;
@@ -101,4 +103,8 @@ public class IngredientDisplayObject {
     }
 
 
+    @Override
+    public int compareTo(IngredientDisplayObject o) {
+        return this.getName().charAt(0) - o.getName().charAt(0);
+    }
 } // end of IngredientDisplayObject class

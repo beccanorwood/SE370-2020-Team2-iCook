@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @Author: Team 2
  * @Date: 4/25/2021
  */
-public class RecipeDisplayObject {
+public class RecipeDisplayObject implements Comparable<RecipeDisplayObject>{
 
     // instance variables
     private int recipeID;
@@ -89,6 +89,18 @@ public class RecipeDisplayObject {
         return isPublished;
     }
 
+
+    /**
+     *
+     Comparable Interface Method that will compare
+     the names of RDO and sorts them accordingly
+     */
+
+    @Override
+    public int compareTo(RecipeDisplayObject o) {
+
+        return this.getName().charAt(0) - o.getName().charAt(0);
+    }
 
 } // end of RecipeDisplayObject class
 
