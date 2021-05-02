@@ -114,11 +114,12 @@ public class Facade {
      * Sends a Request to the RecipeDAO to get a list of recipes available to the user based on their inventory
      *
      * @param userIngredients the ArrayList containing UserIngredient objects (the user's inventory)
+     * @param owner_id the user's id so we can include their modified recipes
      * @return an ArrayList of Recipe objects satisfiable to the user, based on their inventory
      */
-    public ArrayList<Recipe> getSatisfiedRecipes(ArrayList<UserIngredient> userIngredients)
+    public ArrayList<Recipe> getSatisfiedRecipes(ArrayList<UserIngredient> userIngredients, int owner_id)
     {
-        return recipeDAO.getSatisfiedRecipes(userIngredients);
+        return recipeDAO.getSatisfiedRecipes(userIngredients, owner_id);
     }
 
 
@@ -162,6 +163,27 @@ public class Facade {
      */
     public void updateRecipe(Recipe recipe) {
         recipeDAO.updateRecipe(recipe);
+    }
+
+
+    /**
+     * Sends a Request to the RecipeDAO to get an ArrayList of all recipes
+     *
+     * @return ArrayList containing RecipeIF objects
+     */
+    public ArrayList<RecipeIF> getAllSystemRecipes() {
+        return recipeDAO.getAllSystemRecipes();
+    }
+
+
+    /**
+     * Sends a Request to the RecipeDAO to insert a cloned recipe
+     *
+     * @param cloned_recipe the cloned recipe to be inserted into the database
+     * @param owner_id owner of this cloned recipe
+     */
+    public void insertClonedRecipe(RecipeIF cloned_recipe, int owner_id) {
+        recipeDAO.insertClonedRecipe(cloned_recipe, owner_id);
     }
 
 

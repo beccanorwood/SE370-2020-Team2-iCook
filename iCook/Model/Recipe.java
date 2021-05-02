@@ -59,11 +59,6 @@ public class Recipe implements RecipeIF {
     }
 
 
-    public void setInstructions(String instructions) {
-         this.instructions = instructions;
-    }
-
-
     public boolean isPublished() {
         return isPublished;
     }
@@ -78,6 +73,16 @@ public class Recipe implements RecipeIF {
         } catch (CloneNotSupportedException e) {
             return null;
         }
+    }
+
+
+    public void setName(String name) {
+        this.recipeName = name;
+    }
+
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
 

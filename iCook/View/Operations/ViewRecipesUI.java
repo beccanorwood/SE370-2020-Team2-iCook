@@ -427,47 +427,21 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         }
     }
 
-    private void SaveNewRecipe(String recipe, String newRecipeInstructions)
-    {
-        newRecipes.add(new JButton(recipe));
 
-        for(int i = 0; i < newRecipes.size(); i++)
-        {
-            newRecipes.get(i).setFont(new Font("Century Gothic", Font.PLAIN, 16));
-            newRecipes.get(i).setPreferredSize(new Dimension(200,32));
-            newRecipes.get(i).setHorizontalAlignment(JButton.CENTER);
-            newRecipes.get(i).setForeground(new Color(255,255,255));
-            newRecipes.get(i).setBackground(new Color(28, 31, 46));
-            newRecipes.get(i).setFocusPainted(false);
-            newRecipes.get(i).setBorder(emptyBorder);
+    /**
+     * Gets the RecipeDisplayObject to be cloned and requests the serviceDispatcher
+     * to update the information accordingly. Refreshes this UI when done.
+     *
+     * @param newRecipeName the name of this cloned recipe
+     * @param newRecipeInstructions the instructions of this cloned recipe
+     */
+    private void SaveNewRecipe(String newRecipeName, String newRecipeInstructions) {
+        // get the corresponding recipe (recipe the user clicked)
+        RecipeDisplayObject recipe_to_clone = selectedRecipe;
 
-            newRecipes.get(i).addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    e.getComponent().setForeground(new Color(255,255,255));
-                    e.getComponent().setBackground(new Color(68, 166, 154));
-                }
-                public void mouseExited(MouseEvent e){
-                    e.getComponent().setForeground(new Color(255,255,255));
-                    e.getComponent().setBackground(new Color(28, 31, 46));
-                }
-            });
-
-            gbc.gridy++;
-            recipe_panel.add(newRecipes.get(i), gbc);
-
-            iCook.setText(recipe);
-            instructions.setText(newRecipeInstructions);
-        }
-
-        instructions.setBackground(new Color(246,251,253));
-        center_panel.setBackground(new Color(246,251,253));
-        modifyRecipe.setVisible(false);
-        cancel.setVisible(false);
-        save.setVisible(false);
-
-        this.revalidate();
-        this.repaint();
+        // request the serviceDispatcher to clone this recipe for the user
+        serviceDispatcher.cloneRecipe(recipe_to_clone.getRecipeID(), newRecipeName, newRecipeInstructions);
+        serviceDispatcher.gotoViewRecipes();
     }
 
 

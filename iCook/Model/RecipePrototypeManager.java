@@ -3,10 +3,10 @@ package iCook.Model;
 import java.util.ArrayList;
 
 /**
- * RecipePrototypeManager
+ * Manages all RecipeIF objects. Used in the Prototype design pattern.
  *
  * @Author: Team 2
- * @date: 4/30/2021
+ * @date: 5/2/2021
  */
 public class RecipePrototypeManager {
     // instance variables
@@ -21,11 +21,21 @@ public class RecipePrototypeManager {
     }
 
 
+    /**
+     * Setter for the list of RecipeIF objects
+     *
+     * @param prototypeRecipes the list of RecipeIF objects
+     */
     public void setPrototypeRecipes(ArrayList<RecipeIF> prototypeRecipes) {
         this.prototypeRecipes = prototypeRecipes;
     }
 
 
+    /**
+     * Getter for the list of RecipeIF objects
+     *
+     * @return the list of RecipeIF objects
+     */
     public ArrayList<RecipeIF> getPrototypeRecipes() {
         return this.prototypeRecipes;
     }

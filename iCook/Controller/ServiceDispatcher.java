@@ -6,7 +6,6 @@ import iCook.View.Operations.*;
 import iCook.View.Operations.DisplayObjects.*;
 
 import javax.swing.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Vector;
@@ -15,7 +14,7 @@ import java.util.Vector;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 04/30/2021
+ * @version 5/2/2021
  */
 public class ServiceDispatcher {
     // user need to be static (not unique for each ServiceDispatcher object)
@@ -28,14 +27,6 @@ public class ServiceDispatcher {
 
     // all UI elements needed
     private static JFrame frame;
-//    private WelcomeUI welcomeUI;
-//    private LoginUI loginUI;
-//    private SignUpUI signUpUI;
-//    private HomeUI homeUI;
-//    private ManageRecipesUI manageRecipesUI;
-//    private ModifyRecipeUI modifyRecipeUI;
-//    private InventoryUI inventoryUI;
-//    private RecipeUI recipeUI;
 
 
     /**
@@ -50,22 +41,6 @@ public class ServiceDispatcher {
         getSystemIngredients();
         getUserIngredients();
     }
-
-
-//    private void setupLoginUI() {
-//        welcomeUI = new WelcomeUI();
-//        loginUI = new LoginUI();
-//        signUpUI = new SignUpUI();
-//    }
-//
-//
-//    private void setupOperationUIs() {
-//        homeUI = new HomeUI();
-//        manageRecipesUI = new ManageRecipesUI();
-//        modifyRecipeUI = new ModifyRecipeUI();
-//        inventoryUI = new InventoryUI();
-//        recipeUI = new RecipeUI();
-//    }
 
 
     /**
@@ -323,34 +298,6 @@ public class ServiceDispatcher {
 
 
     /**
-     * The following three methods
-     * are the sorting algorithm for the
-     * RecipeDisplayObjects that implement
-     * the Comparable Interface
-     */
-
-
-    /*private void sortRecipes(Comparable<ArrayList> recipes, int size)
-    {
-        int index, smallestIndex;
-
-        for(index = 0; index < size - 1; index++)
-        {
-            smallestIndex = indexofSmallest()
-        }
-    }
-
-
-    private int indexofSmallest(int start, Comparable<RecipeDisplayObject> recipes, int size)
-    {
-        Comparable min = recipes.
-    }*/
-
-
-
-
-
-    /**
      * Requests the facade to return an ArrayList of recipes available to the user
      *
      * @return an ArrayList of RecipeDisplayObjects that represent recipes satisfiable to the user, based on their inventory
@@ -358,8 +305,7 @@ public class ServiceDispatcher {
     public ArrayList<RecipeDisplayObject> getSatisfiedRecipes()
     {
         // send the user's inventory to the facade to be processed
-        ArrayList<Recipe> recipes = facade.getSatisfiedRecipes(userIngredients);
-
+        ArrayList<Recipe> recipes = facade.getSatisfiedRecipes(userIngredients, user.getId());
 
         // make sure the user has recipes available to them
         if (recipes != null && !recipes.isEmpty())
@@ -491,8 +437,27 @@ public class ServiceDispatcher {
     }
 
 
-//    public void cloneRecipe(int id) {
-//    }
+    /**
+     * Clones an existing RecipeIF object for the currently logged in user and
+     * requests the facade to insert it into iCook's database.
+     * (USES THE PROTOTYPE DESIGN PATTERN)
+     *
+     * @param id the id of the recipe we want to clones
+     * @param newRecipeName the name of this new cloned recipe
+     * @param newRecipeInstructions the instructions of this new cloned recipe
+     */
+    public void cloneRecipe(int id, String newRecipeName, String newRecipeInstructions) {
+        RecipePrototypeManager recipe_manager = new RecipePrototypeManager();
+        recipe_manager.setPrototypeRecipes(facade.getAllSystemRecipes());    // call the facade to set the manager's list of recipes
+
+        // get the clone of the original recipe and change the variables that need to be different
+        RecipeIF cloned_recipe = recipe_manager.createRecipePrototype(id);
+        cloned_recipe.setName(newRecipeName);
+        cloned_recipe.setInstructions(newRecipeInstructions);
+
+        // request the facade to insert this newly cloned recipe
+        facade.insertClonedRecipe(cloned_recipe, user.getId());
+    }
 
 
     /**
@@ -500,9 +465,6 @@ public class ServiceDispatcher {
      * (Starts the application)
      */
     public void startProgram() {
-//        // when program first starts, create the login UIs
-//        setupLoginUI();
-
         // set the look and feel to be uniform on all operating systems
         try{
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -569,9 +531,6 @@ public class ServiceDispatcher {
      * Sets the frame's contents to the contents of the HomeUI
      */
     public void gotoHome() {
-//        // user is now logged in, create the operation UIs
-//        setupOperationUIs();
-
         frame.getContentPane().removeAll();
         frame.getContentPane().add(new HomeUI());
         frame.setVisible(true);

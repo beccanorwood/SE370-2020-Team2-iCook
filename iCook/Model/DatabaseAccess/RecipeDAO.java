@@ -1,9 +1,6 @@
 package iCook.Model.DatabaseAccess;
 
-import iCook.Model.Ingredient;
-import iCook.Model.Recipe;
-import iCook.Model.RecipeIngredient;
-import iCook.Model.UserIngredient;
+import iCook.Model.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +16,7 @@ import java.util.Vector;
  * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
- * @version 4/26/2021
+ * @version 5/2/2021
  */
 public class RecipeDAO extends BaseDAO {
 
@@ -35,12 +32,12 @@ public class RecipeDAO extends BaseDAO {
      * based on their ingredient list
      *
      * @param userIngredients the user's inventory containing UserIngredient objects
+     * @param owner_id the owner's id so we can include their modified recipes in the list
      * @return an ArrayList containing Recipe objects satisfiable to a user
      */
-    public ArrayList<Recipe> getSatisfiedRecipes(ArrayList<UserIngredient> userIngredients)
+    public ArrayList<Recipe> getSatisfiedRecipes(ArrayList<UserIngredient> userIngredients, int owner_id)
     {
-        try
-        {
+        try {
             // create a new statement to execute a query
             Statement statement = this.createStatement();
 
@@ -64,6 +61,7 @@ public class RecipeDAO extends BaseDAO {
                                                         "WHERE RI.recipe_id = R.id " +
                                                         "AND I.id = RI.ingredient_id " +
                                                         "AND R.published = 1 " +
+                                                        "AND (owner_id IS NULL OR owner_id = '"+owner_id+"') " +
                                                         "GROUP BY R.id");
 
             // do this for every row returned from query (aka every recipe)
@@ -160,6 +158,111 @@ public class RecipeDAO extends BaseDAO {
 
 
     /**
+     * Performs a SQL statement to return an Arraylist of RecipeIF objects representing all
+     * of the entries in the recipes table.
+     *
+     * @return an ArrayList<RecipeIF>
+     */
+    public ArrayList<RecipeIF> getAllSystemRecipes() {
+        try {
+            // create a new statement to execute a query
+            Statement statement = this.createStatement();
+
+            // store recipes in this array list
+            ArrayList<RecipeIF> recipes = new ArrayList<>();
+
+            // sql query here to get all recipes
+            ResultSet rs = statement.executeQuery("SELECT * FROM recipes");
+            while (rs.next()) {
+                // info we need for each recipe
+                int recipe_id = rs.getInt("id");
+                String recipe_name = rs.getString("name");
+                String recipe_instructions = rs.getString("instruction");
+                ArrayList<RecipeIngredient> ingredients = new ArrayList<>();
+                boolean is_published = rs.getBoolean("published");
+
+                // create a new statement to execute a query
+                Statement statement2 = this.createStatement();
+
+                // sql query here to get all the ingredients
+                ResultSet rs2 = statement2.executeQuery("SELECT RI.id, RI.ingredient_quantity, I.id, I.name, I.unit_of_measure " +
+                                                            "FROM recipe_ingredients RI, ingredients I " +
+                                                            "WHERE recipe_id = '"+recipe_id+"' " +
+                                                            "AND RI.ingredient_id = I.id");
+                while (rs2.next()) {
+                    // info we need for each recipe ingredient
+                    int ri_id = rs2.getInt("RI.id");
+                    int ri_qty = rs2.getInt("RI.ingredient_quantity");
+                    int ing_id = rs2.getInt("I.id");
+                    String ing_name = rs2.getString("I.name");
+                    String ing_unit = rs2.getString("I.unit_of_measure");
+
+                    // add a new RecipeIngredient object to the recipe's list of ingredients
+                    ingredients.add(new RecipeIngredient(ri_id, new Ingredient(ing_id, ing_name, ing_unit), ri_qty));
+                }
+
+                // add the new RecipeIF object to the array list of recipes
+                recipes.add(new Recipe(recipe_id, recipe_name, recipe_instructions, ingredients, is_published));
+            }
+
+            // return the array list
+            return recipes;
+        }
+
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * Performs a SQL statement to insert a new recipe into the recipes table.
+     * This newly added recipe will be a clone from an existing recipe.
+     * Its ingredients shall remain the same but not its name or instructions.
+     * This ingredient is owned by 1 user only.
+     *
+     * @param cloned_recipe the recipe to be inserted into the recipes table
+     * @param owner_id owner of this cloned recipe
+     */
+    public void insertClonedRecipe(RecipeIF cloned_recipe, int owner_id) {
+        try {
+            // create a new statement to execute a query
+            Statement statement = this.createStatement();
+
+            // info needed to insert into the recipes table
+            int original_recipe_id = cloned_recipe.getRecipeID();
+            String name = cloned_recipe.getRecipeName();
+            String instructions = cloned_recipe.getInstructions();
+            int isPublished = cloned_recipe.isPublished() ? 1 : 0;
+
+            // insert recipe data into the recipes table
+            statement.executeUpdate("INSERT INTO recipes " +
+                    "VALUES(NULL, '" + name + "', '" + instructions + "', '" + isPublished + "', '" + owner_id + "' )", Statement.RETURN_GENERATED_KEYS);
+
+            // get the new entry id
+            int cloned_recipe_id = 0;
+            ResultSet rs = statement.getGeneratedKeys();
+            if (rs.next()) {
+                cloned_recipe_id = rs.getInt(1);
+            }
+            rs.close();
+
+            // clone the recipe_ingredients that correspond to the original recipe (these entries will be linked to the new cloned recipe id)
+            statement.executeUpdate("INSERT INTO recipe_ingredients (ingredient_id, ingredient_quantity, recipe_id) " +
+                                        "SELECT ingredient_id, ingredient_quantity, '"+cloned_recipe_id+"' " +
+                                        "FROM recipe_ingredients " +
+                                        "WHERE recipe_id = '"+original_recipe_id+"' ");
+
+        }
+
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+
+    /**
      * Performs a SQL statement to return a Vector of all iCook's recipes.
      * Info we are retrieving from each recipe: id, name, published
      *
@@ -170,12 +273,12 @@ public class RecipeDAO extends BaseDAO {
             // create a new statement to execute a query
             Statement statement = this.createStatement();
 
-            // store recipes in this array list
+            // store recipes in this Vector
             Vector<Vector> recipes = new Vector<>();
 
-            // sql query here
+            // sql query here to get all system ingredients (not owned by anyone)
             ResultSet rs = statement.executeQuery("SELECT id, name, published " +
-                                                        "FROM recipes");
+                                                        "FROM recipes WHERE owner_id IS NULL");
             while (rs.next()) {
                 // info we are interested in
                 Vector<String> recipe = new Vector<>();
@@ -301,22 +404,23 @@ public class RecipeDAO extends BaseDAO {
 
             // insert recipe data into the recipes table
             statement.executeUpdate("INSERT INTO recipes " +
-                                        "VALUES(NULL, '"+name+"', '"+instructions+"', '"+isPublished+"' )");
+                                        "VALUES(NULL, '"+name+"', '"+instructions+"', '"+isPublished+"', NULL)", Statement.RETURN_GENERATED_KEYS);
 
-            // insert ingredient data into the recipe_ingredients table
-            ResultSet rs = statement.executeQuery("SELECT id FROM recipes WHERE name = '"+name+"' ");
+            // get the newly added recipe's id
+            int new_recipe_id = 0;
+            ResultSet rs = statement.getGeneratedKeys();
             if (rs.next()) {
-                // get the newly added recipe's id
-                int recipe_id = rs.getInt("id");
+                new_recipe_id = rs.getInt(1);
+            }
+            rs.close();
 
-                // for each RecipeIngredient in the recipe, insert it into the recipe_ingredients table
-                for (RecipeIngredient ing : recipe.getIngredients()) {
-                    int ing_id = ing.getIngredient().getIngredientID();
-                    int ing_qty = ing.getQuantity();
+            // for each RecipeIngredient in the recipe, insert it into the recipe_ingredients table
+            for (RecipeIngredient ing : recipe.getIngredients()) {
+                int ing_id = ing.getIngredient().getIngredientID();
+                int ing_qty = ing.getQuantity();
 
-                    statement.executeUpdate("INSERT INTO recipe_ingredients " +
-                                                "VALUES(NULL, '"+ing_id+"', '"+ing_qty+"', '"+recipe_id+"' )");
-                }
+                statement.executeUpdate("INSERT INTO recipe_ingredients " +
+                                            "VALUES(NULL, '"+ing_id+"', '"+ing_qty+"', '"+new_recipe_id+"' )");
             }
 
         } catch (SQLException throwables) {
