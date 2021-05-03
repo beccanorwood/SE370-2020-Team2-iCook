@@ -3,7 +3,7 @@ package iCook.Model;
 import java.util.ArrayList;
 
 /**
- * RecipeIF
+ * Interface for Recipe objects.
  *
  * @Author: Team 2
  * @date: 5/2/2021

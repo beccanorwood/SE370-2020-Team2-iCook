@@ -408,31 +408,41 @@ public class ServiceDispatcher {
 
 
     /**
-     * Sends request to the Facade to add a new recipe to the database.
-     * Converts the accepted RecipeDisplayObject into a Recipe object for the
-     * Facade to handle.
+     * Builds a new RecipeIF object which is then
+     * sent to the Facade to add a new recipe to the database.
+     * Uses the Builder design pattern.
      *
      * @param recipeDO the RecipeDisplayObject to be added to the database
      */
     public void addNewRecipe(RecipeDisplayObject recipeDO) {
-        Recipe recipe = new Recipe(recipeDO.getRecipeID(), recipeDO.getName(),
-                recipeDO.getInstructions(), getIngredientList(recipeDO), recipeDO.isPublished());
+        AbstractBuilder builder = AbstractBuilder.getInstance();
+        builder.buildRecipeID(recipeDO.getRecipeID());
+        builder.buildRecipeName(recipeDO.getName());
+        builder.buildRecipeInstructions(recipeDO.getInstructions());
+        builder.buildRecipeIngredients(getIngredientList(recipeDO));
+        builder.buildRecipeStatus(recipeDO.isPublished());
 
+        RecipeIF recipe = builder.getRecipe();
         facade.addNewRecipe(recipe);
     }
 
 
     /**
-     * Sends request to the Facade to update an existing recipe in the database.
-     * Converts the accepted RecipeDisplayObject into a Recipe object for the
-     * Facade to handle.
+     * Builds a new RecipeIF object from an existing recipe which is then sent
+     * to the Facade to update an existing recipe in the database.
+     * Uses the Builder design pattern.
      *
      * @param recipeDO the RecipeDisplayObject to be updated in the database
      */
     public void updateRecipe(RecipeDisplayObject recipeDO) {
-        Recipe recipe = new Recipe(recipeDO.getRecipeID(), recipeDO.getName(),
-                recipeDO.getInstructions(), getIngredientList(recipeDO), recipeDO.isPublished());
+        AbstractBuilder builder = AbstractBuilder.getInstance();
+        builder.buildRecipeID(recipeDO.getRecipeID());
+        builder.buildRecipeName(recipeDO.getName());
+        builder.buildRecipeInstructions(recipeDO.getInstructions());
+        builder.buildRecipeIngredients(getIngredientList(recipeDO));
+        builder.buildRecipeStatus(recipeDO.isPublished());
 
+        RecipeIF recipe = builder.getRecipe();
         facade.updateRecipe(recipe);
     }
 

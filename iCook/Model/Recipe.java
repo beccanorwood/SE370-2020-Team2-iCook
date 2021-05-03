@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * RecipeIngredient objects, as well as the number of servings a given recipe will produce
  *
  * @author Team 2
- * @version 04/30/2021
+ * @version 5/2/2021
  */
 public class Recipe implements RecipeIF {
     // instance variables
@@ -32,6 +32,26 @@ public class Recipe implements RecipeIF {
         this.instructions = instructions;
         this.ingredients = ingredients;
         this.isPublished = isPublished;
+
+        // set this recipe as the recipe ingredient's recipe object
+        for (RecipeIngredient ing : ingredients)
+            ing.setRecipe(this);
+    }
+
+
+    /**
+     * Constructor that takes in a recipe builder.
+     * Used for the Builder design pattern.
+     *
+     * @param builder the builder that will initialize this recipe object
+     */
+    public Recipe(RecipeBuilder builder) {
+        // use the builder to get all the parts needed for the recipe
+        this.recipeID = builder.getRecipeID();
+        this.recipeName = builder.getRecipeName();
+        this.instructions = builder.getRecipeInstructions();
+        this.ingredients = builder.getRecipeIngredients();
+        this.isPublished = builder.getRecipeStatus();
 
         // set this recipe as the recipe ingredient's recipe object
         for (RecipeIngredient ing : ingredients)
@@ -65,7 +85,10 @@ public class Recipe implements RecipeIF {
 
 
     /**
-     * Returns a clone of this object
+     * Returns a clone of this object.
+     * Used for the Prototype design pattern.
+     *
+     * @return a RecipeIF clone of this recipe
      */
     public RecipeIF clone() {
         try {

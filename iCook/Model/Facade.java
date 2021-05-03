@@ -3,14 +3,13 @@ package iCook.Model;
 import iCook.Model.DatabaseAccess.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Vector;
 
 /**
  * Central class for all DAO classes. Has access to all DAO classes.
  *
  * @author Team 2
- * @version 4/26/2021
+ * @version 5/2/2021
  */
 public class Facade {
 
@@ -151,7 +150,7 @@ public class Facade {
      *
      * @param recipe to be inserted into the database
      */
-    public void addNewRecipe(Recipe recipe) {
+    public void addNewRecipe(RecipeIF recipe) {
         recipeDAO.addNewRecipe(recipe);
     }
 
@@ -161,7 +160,7 @@ public class Facade {
      *
      * @param recipe to be updated in the database
      */
-    public void updateRecipe(Recipe recipe) {
+    public void updateRecipe(RecipeIF recipe) {
         recipeDAO.updateRecipe(recipe);
     }
 

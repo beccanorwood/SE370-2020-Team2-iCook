@@ -393,7 +393,7 @@ public class RecipeDAO extends BaseDAO {
      *
      * @param recipe to be inserted into the database
      */
-    public void addNewRecipe(Recipe recipe) {
+    public void addNewRecipe(RecipeIF recipe) {
         try {
             Statement statement = this.createStatement();
 
@@ -435,7 +435,7 @@ public class RecipeDAO extends BaseDAO {
      *
      * @param recipe to be updated in the database
      */
-    public void updateRecipe(Recipe recipe) {
+    public void updateRecipe(RecipeIF recipe) {
         try {
             Statement statement = this.createStatement();
 

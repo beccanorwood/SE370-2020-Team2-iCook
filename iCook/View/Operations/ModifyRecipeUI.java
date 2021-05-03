@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * User interface for Admins to modify existing recipes or to create new recipes.
  *
  * @author Team 2
- * @version 04/29/2021
+ * @version 5/2/2021
  */
 public class ModifyRecipeUI extends JPanel {
     // instance variables
@@ -41,7 +41,7 @@ public class ModifyRecipeUI extends JPanel {
     private JRadioButton notPublishedButton;
 
     private JButton backBtn;
-    private JButton submitBtn;
+    private JButton saveBtn;
 
     private JPanel ingredientPanel;             // Panel that holds the 4 elements in bottom rows for ingredients
     private ArrayList<JPanel> all_ingredient_panels;
@@ -580,59 +580,63 @@ public class ModifyRecipeUI extends JPanel {
     private void createSubmitButton() {
         gbc.gridx = 3;
         gbc.gridy = 1;
-        submitBtn = new JButton("Submit");
-        submitBtn.setForeground(new Color(255,255,255));
-        submitBtn.setBackground(new Color(28, 31, 46));
-        submitBtn.setFocusPainted(false);
-        submitBtn.setBorder(emptyBorder);
-        submitBtn.setPreferredSize(new Dimension(100,32));
+        saveBtn = new JButton("Save");
+        saveBtn.setForeground(new Color(255,255,255));
+        saveBtn.setBackground(new Color(28, 31, 46));
+        saveBtn.setFocusPainted(false);
+        saveBtn.setBorder(emptyBorder);
+        saveBtn.setPreferredSize(new Dimension(100,32));
 
-        submitBtn.addMouseListener(new MouseAdapter() {
+        saveBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                submitBtn.setForeground(new Color(255,255,255));
-                submitBtn.setBackground(new Color(68, 166, 154));
+                saveBtn.setForeground(new Color(255,255,255));
+                saveBtn.setBackground(new Color(68, 166, 154));
             }
             public void mouseExited(MouseEvent e){
-                submitBtn.setForeground(new Color(255,255,255));
-                submitBtn.setBackground(new Color(28, 31, 46));
+                saveBtn.setForeground(new Color(255,255,255));
+                saveBtn.setBackground(new Color(28, 31, 46));
             }
         });
 
         // define what happens when admin clicks the submit button
-        submitBtn.addActionListener(e -> {
+        saveBtn.addActionListener(e -> {
             // create a RecipeDisplayObject to be passed to the serviceDispatcher
             RecipeDisplayObject recipeDO = createRecipeDO();
 
-            for (IngredientDisplayObject i : recipeDO.getIngredients()) {
-                System.out.println(i.getName());
-                System.out.println(i.getQuantity());
+            // recipe must at least have a name to be sent to the service dispatcher
+            if (!recipeDO.getName().isEmpty()) {
+
+//            // if the recipe is going from not published --> published, call the builder!!!
+//            if (initially_published != recipeDO.isPublished() && recipeDO.isPublished()) {
+//                System.out.println("Went from not published to published!!!");
+//            }
+//
+//            // otherwise, we do not want to use the builder!!!
+//            else {
+//                System.out.println("Went from published to not published :(");
+//            }
+
+                // recipe exists, so UPDATE the recipe's info
+                if (recipe != null) {
+                    serviceDispatcher.updateRecipe(recipeDO);
+                }
+                // recipe does not exist, so ADD a new recipe
+                else {
+                    serviceDispatcher.addNewRecipe(recipeDO);
+                }
+
+                // take admin back to the ManageRecipesUI to see changes
+                serviceDispatcher.gotoManageRecipesUI();
             }
 
-            // if the recipe is going from not published --> published, call the builder!!!
-            if (initially_published != recipeDO.isPublished() && recipeDO.isPublished()) {
-                System.out.println("Went from not published to published!!!");
-            }
-
-            // otherwise, we do not want to use the builder!!!
+            // display error message if there is no recipe name (cannot save)
             else {
-                System.out.println("Went from published to not published :(");
+                JOptionPane.showMessageDialog(this, "Recipe must have name before saving.", "Inane error", JOptionPane.ERROR_MESSAGE);
             }
-
-            // recipe exists, so UPDATE the recipe's info
-            if (recipe != null) {
-                serviceDispatcher.updateRecipe(recipeDO);
-            }
-            // recipe does not exist, so ADD a new recipe
-            else {
-                serviceDispatcher.addNewRecipe(recipeDO);
-            }
-
-            // take admin back to the ManageRecipesUI to see changes
-            serviceDispatcher.gotoManageRecipesUI();
         });
 
-        centerPanel.add(submitBtn, gbc);
+        centerPanel.add(saveBtn, gbc);
     }
 
 
