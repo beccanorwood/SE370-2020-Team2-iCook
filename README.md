@@ -1,4 +1,4 @@
-# iCook :doughnut:
+# iCook   :plate_with_cutlery:
 
 <img align="right" src="https://github.com/benderminguez89/SE370-2020-Team2-iCook/blob/master/iCook.png" width="300" height="300">
 
