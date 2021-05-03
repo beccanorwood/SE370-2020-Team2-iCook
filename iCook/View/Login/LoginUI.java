@@ -154,10 +154,6 @@ public class LoginUI extends JPanel implements ActionListener {
             String username = userName_field.getText();
             String password = new String(passwordField.getPassword());
 
-            // print them out on the console
-            System.out.println("User name: " + username);
-            System.out.println("Password: " + password);
-
             // try to login with given credentials
             // if valid, send them to home page
             if ( serviceDispatcher.login(username, password) ) {

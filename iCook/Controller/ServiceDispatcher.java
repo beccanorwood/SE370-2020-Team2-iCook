@@ -4,9 +4,17 @@ import iCook.Model.*;
 import iCook.View.Login.*;
 import iCook.View.Operations.*;
 import iCook.View.Operations.DisplayObjects.*;
-
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.swing.*;
+import java.nio.charset.StandardCharsets;
+import java.security.spec.KeySpec;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -20,9 +28,11 @@ public class ServiceDispatcher {
     // user need to be static (not unique for each ServiceDispatcher object)
     private static User user = null;
 
+    private static String SECRET_KEY = "my_super_secret_key";
+    private static String SALT = "ssshhhhhhhhhhh!!!!";
+
     // instance variables
     private Facade facade;
-    private ArrayList<Ingredient> systemIngredients;
     private ArrayList<UserIngredient> userIngredients;
 
     // all UI elements needed
@@ -31,15 +41,40 @@ public class ServiceDispatcher {
 
     /**
      * Constructor - initializes instance variables.
-     * Calls getSystemIngredients to populate systemIngredients.
      * Calls getUserIngredients to populate userIngredients.
      */
     public ServiceDispatcher() {
         facade = new Facade();
-        systemIngredients = new ArrayList<>();
         userIngredients = new ArrayList<>();
-        getSystemIngredients();
         getUserIngredients();
+    }
+
+
+    /**
+     * Hashes the user's password using one-way encryption
+     *
+     * @param strToEncrypt the password to be encrypted
+     * @return the hashed password
+     */
+    private String encrypt(String strToEncrypt) {
+        try {
+            byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            IvParameterSpec ivspec = new IvParameterSpec(iv);
+
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            KeySpec spec = new PBEKeySpec(SECRET_KEY.toCharArray(), SALT.getBytes(), 65536, 256);
+            SecretKey tmp = factory.generateSecret(spec);
+            SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
+
+            return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes(StandardCharsets.UTF_8)));
+        }
+        catch (Exception e) {
+            System.out.println("Error while encrypting: " + e);
+        }
+        return null;
     }
 
 
@@ -51,9 +86,11 @@ public class ServiceDispatcher {
      * @param password the password of the user trying to login
      * @return true if the login was successful, false otherwise
      */
-    public boolean login(String username, String password)
-    {
-        if ( facade.login(username, password) ) {
+    public boolean login(String username, String password) {
+        // get the hashed password
+        String hashedPassword = encrypt(password);
+
+        if ( facade.login(username, hashedPassword) ) {
             // initialize the user SINGLETON here
             // initialize the user's list of ingredient here (1st time)
             user = User.getUser();
@@ -75,15 +112,17 @@ public class ServiceDispatcher {
      * @param password the password of the user trying to sign up
      * @return the username if sign up was successful, error message if the username is taken
      */
-    public String signUp(String username, String password)
-    {
-        try
-        {
-            facade.signUp(username, password);
+    public String signUp(String username, String password) {
+        try {
+            // get the hashed password
+            String hashedPassword = encrypt(password);
+
+            facade.signUp(username, hashedPassword);
             user = User.getUser();
             userIngredients = null;
             return username;
         }
+
         catch (UsernameTakenException error)
         {
             return error.toString();
@@ -96,20 +135,16 @@ public class ServiceDispatcher {
      *
      * @return the username of the logged in user
      */
-    public String getUserName()
-    {
+    public String getUserName() {
         return user.getUserName();
     }
 
 
     /**
-     * TESTING --- displays the singleton's variables
+     * Displays the user singleton in the console
      */
-    public void displayUser()
-    {
-        System.out.println(user.getId());
-        System.out.println(user.getUserName());
-        System.out.println(user.getPassword());
+    public void displayUser() {
+        System.out.println(user.getId() + " " + user.getUserName());
     }
 
 
@@ -118,8 +153,7 @@ public class ServiceDispatcher {
      *
      * @return true if the singleton object is not null, false otherwise
      */
-    public boolean isLoggedIn()
-    {
+    public boolean isLoggedIn() {
         return user != null;
     }
 
@@ -130,70 +164,8 @@ public class ServiceDispatcher {
      *
      * @return true if the user is an admin, false otherwise
      */
-    public boolean isUserAdmin()
-    {
+    public boolean isUserAdmin() {
         return user.isAdmin();
-    }
-
-
-    /**
-     * Gets all of the ingredients that the user doesn't already have and stores them into an ArrayList of IngredientDisplayObjects
-     *
-     * @return an ArrayList of IngredientDisplayObject representing all system ingredients the user doesn't have (no quantity here)
-     */
-    public ArrayList<IngredientDisplayObject> getAvailableIngredients()
-    {
-        // make sure we have the most up to date version of the user's ingredients
-        getUserIngredients();
-
-        // the available ingredients will be stored in an ArrayList
-        ArrayList<IngredientDisplayObject> allIngredients = new ArrayList<>();
-
-        // for every ingredient in the list of system ingredients
-        for(Ingredient ingredient : systemIngredients)
-        {
-            // store the Ingredient's id
-            int ingredientID = ingredient.getIngredientID();
-
-            // store the Ingredient's name
-            String name = ingredient.getIngredientName();
-
-            // store the Ingredient's unit of measure
-            String unitOfMeasure = ingredient.getUnitOfMeasure();
-
-            // create a new IngredientDisplayObject
-            IngredientDisplayObject availableIngredient = new IngredientDisplayObject(ingredientID, name, unitOfMeasure);
-
-            // if the userIngredients list is empty, add all ingredients
-            if (userIngredients.isEmpty())
-                allIngredients.add(availableIngredient);
-
-            // otherwise filter the available ingredients to the user
-            else {
-                for (int i = 0; i < userIngredients.size(); i++)
-                {
-                    // if the ingredient is found in the user's inventory, do not add it to the return list
-                    if (availableIngredient.getName().equals(userIngredients.get(i).getUserIngredientName()))
-                        break;
-
-                    // else if the ingredient is not in the user's inventory && the ingredient isn't already in the returning list, add it
-                    else if (i == userIngredients.size() - 1 && !allIngredients.contains(availableIngredient))
-                        // add a new IngredientDisplayObject to the ArrayList
-                        allIngredients.add(availableIngredient);
-                }
-            }
-        }
-
-        // return the ArrayList
-        return allIngredients;
-    }
-
-
-    /**
-     * Initializes systemIngredients with an ArrayList containing Ingredient objects
-     */
-    private void getSystemIngredients() {
-        systemIngredients = facade.getSystemIngredients();
     }
 
 
@@ -225,8 +197,7 @@ public class ServiceDispatcher {
      *
      * @return an ArrayList of IngredientDisplayObjects representing all user ingredients
      */
-    public ArrayList<IngredientDisplayObject> getUserInventory()
-    {
+    public ArrayList<IngredientDisplayObject> getUserInventory() {
         // initialize the user's ingredients
         // ** this will change so need call here **
         getUserIngredients();
@@ -264,8 +235,7 @@ public class ServiceDispatcher {
     /**
      * Initializes userIngredients with an ArrayList containing UserIngredient objects
      */
-    private void getUserIngredients()
-    {
+    private void getUserIngredients() {
         // only call the facade if the user singleton has been initialized
         if (user != null)
             userIngredients = facade.getUserIngredients(user.getId());
@@ -302,8 +272,7 @@ public class ServiceDispatcher {
      *
      * @return an ArrayList of RecipeDisplayObjects that represent recipes satisfiable to the user, based on their inventory
      */
-    public ArrayList<RecipeDisplayObject> getSatisfiedRecipes()
-    {
+    public ArrayList<RecipeDisplayObject> getSatisfiedRecipes() {
         // send the user's inventory to the facade to be processed
         ArrayList<Recipe> recipes = facade.getSatisfiedRecipes(userIngredients, user.getId());
 
@@ -579,21 +548,21 @@ public class ServiceDispatcher {
 
 
     /**
-     * Sets the frame's contents to the contents of the ViewRecipesUI
-     */
-    public void gotoViewRecipes() {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new ViewRecipesUI());
-        frame.setVisible(true);
-    }
-
-
-    /**
      * Sets the frame's contents to the contents of the InventoryUI
      */
     public void gotoInventory() {
         frame.getContentPane().removeAll();
         frame.getContentPane().add(new InventoryUI());
+        frame.setVisible(true);
+    }
+
+
+    /**
+     * Sets the frame's contents to the contents of the ViewRecipesUI
+     */
+    public void gotoViewRecipes() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(new ViewRecipesUI());
         frame.setVisible(true);
     }
 
