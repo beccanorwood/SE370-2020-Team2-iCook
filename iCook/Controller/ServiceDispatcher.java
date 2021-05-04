@@ -10,7 +10,11 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.spec.KeySpec;
 import java.util.ArrayList;
@@ -22,7 +26,7 @@ import java.util.Vector;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 5/2/2021
+ * @version 5/3/2021
  */
 public class ServiceDispatcher {
     // user need to be static (not unique for each ServiceDispatcher object)
@@ -272,7 +276,7 @@ public class ServiceDispatcher {
      *
      * @return an ArrayList of RecipeDisplayObjects that represent recipes satisfiable to the user, based on their inventory
      */
-    public ArrayList<RecipeDisplayObject> getSatisfiedRecipes() {
+    public ArrayList<RecipeDisplayObjectIF> getSatisfiedRecipes() {
         // send the user's inventory to the facade to be processed
         ArrayList<Recipe> recipes = facade.getSatisfiedRecipes(userIngredients, user.getId());
 
@@ -280,17 +284,41 @@ public class ServiceDispatcher {
         if (recipes != null && !recipes.isEmpty())
         {
             // create new ArrayList of RecipeDisplayObjects to be sent to the View
-            ArrayList<RecipeDisplayObject> display_recipes = new ArrayList<>();
+            ArrayList<RecipeDisplayObjectIF> display_recipes = new ArrayList<>();
 
-            // for every Recipe object, create a RecipeDisplayObject and add it to
+            // for every Recipe object, create a RecipeDisplayObjectIF and add it to
             // the ArrayList to be returned
             for (Recipe recipe : recipes) {
-                display_recipes.add(new RecipeDisplayObject(recipe.getRecipeID(),
-                        recipe.getRecipeName(), recipe.getInstructions(), getIngredientDisplayObjects(recipe), recipe.isPublished()));
-            }
+                RecipeDisplayObjectIF recipeDO = new RecipeDisplayObject(recipe.getRecipeID(),
+                                                        recipe.getRecipeName(), recipe.getInstructions(),
+                                                        getIngredientDisplayObjects(recipe), recipe.isPublished());
+
+                // get the current recipe's image URL
+                String img_url = facade.getRecipeImageURL(recipe.getRecipeID());
+
+                // if the image has a supported protocol, decorate the recipeDO with an image & add it to the arraylist.
+                if (img_url.startsWith("http")) {
+                    try {
+                        URL url = new URL(img_url);
+                        BufferedImage image = ImageIO.read(url);
+                        RecipeDisplayObjectIF decorated_recipeDO = new Recipe_With_Image(recipeDO, image);
+
+                        display_recipes.add(decorated_recipeDO);
+                    }
+                    catch (IOException e) {
+                        System.out.println(e);
+                    }
+                }
+
+                // otherwise add the concrete recipeDO to the arraylist.
+                else {
+                    display_recipes.add(recipeDO);
+                }
+
+            } // end of for-loop
 
 
-            //Sorts the recipe display objects alphabetically by recipe name
+            // Sorts the recipe display objects alphabetically by recipe name
             Collections.sort(display_recipes);
 
             // return the list of available recipes

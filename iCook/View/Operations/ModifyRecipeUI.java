@@ -235,6 +235,7 @@ public class ModifyRecipeUI extends JPanel {
         scrollPane = new JScrollPane(mainPanel);
         scrollPane.setBackground(new Color(255,255,255));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         this.add(scrollPane, BorderLayout.CENTER);
     }
 
@@ -343,6 +344,7 @@ public class ModifyRecipeUI extends JPanel {
         scrollPane = new JScrollPane(mainPanel);
         scrollPane.setBackground(new Color(255,255,255));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         this.add(scrollPane, BorderLayout.CENTER);
     }
 

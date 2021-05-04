@@ -1,14 +1,15 @@
 package iCook.View.Operations.DisplayObjects;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
  * Display object for a recipe used in the View package
  *
  * @Author: Team 2
- * @Date: 4/25/2021
+ * @Date: 5/3/2021
  */
-public class RecipeDisplayObject implements Comparable<RecipeDisplayObject>{
+public class RecipeDisplayObject implements RecipeDisplayObjectIF {
 
     // instance variables
     private int recipeID;
@@ -91,16 +92,26 @@ public class RecipeDisplayObject implements Comparable<RecipeDisplayObject>{
 
 
     /**
-     *
-     Comparable Interface Method that will compare
-     the names of RDO and sorts them accordingly
+     * Comparable Interface Method that will compare
+     * the names of RDO and sorts them accordingly
      */
-
     @Override
-    public int compareTo(RecipeDisplayObject o) {
-
+    public int compareTo(RecipeDisplayObjectIF o) {
         return this.getName().charAt(0) - o.getName().charAt(0);
     }
+
+
+    /**
+     * Used for the Decorator design pattern. A normal RecipeDisplayObject
+     * will not display anything.
+     *
+     * @return null since a normal RecipeDisplayObject does not have an image.
+     */
+    @Override
+    public BufferedImage display() {
+        return null;
+    }
+
 
 } // end of RecipeDisplayObject class
 

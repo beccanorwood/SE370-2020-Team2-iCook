@@ -186,4 +186,15 @@ public class Facade {
     }
 
 
+    /**
+     * Sends a Request to the RecipeDAO to retrieve the recipe's image URL
+     *
+     * @param recipe_ID the id of the recipe we are interested in
+     * @return a string containing the recipe's image URL
+     */
+    public String getRecipeImageURL(int recipe_ID) {
+        return recipeDAO.getRecipeImageURL(recipe_ID);
+    }
+
+
 } // end of Facade class

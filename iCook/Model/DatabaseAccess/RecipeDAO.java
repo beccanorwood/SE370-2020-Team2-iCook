@@ -16,7 +16,7 @@ import java.util.Vector;
  * Every method requires a try and catch for a SQLException.
  *
  * @author Team 2
- * @version 5/2/2021
+ * @version 5/3/2021
  */
 public class RecipeDAO extends BaseDAO {
 
@@ -465,6 +465,29 @@ public class RecipeDAO extends BaseDAO {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+
+    /**
+     * Performs a SQL statement to get the URL of a recipe.
+     *
+     * @param recipe_ID the id of the recipe we are interested in.
+     * @return the URL of the recipe's image. Returns null if there is no URL.
+     */
+    public String getRecipeImageURL(int recipe_ID) {
+        try {
+            Statement statement = this.createStatement();
+
+            // query the db to get the recipe's image_path
+            ResultSet rs = statement.executeQuery("SELECT image_path from recipes WHERE id = '"+recipe_ID+"' ");
+            if (rs.next())
+                return rs.getString("image_path");
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return null;
     }
 
 

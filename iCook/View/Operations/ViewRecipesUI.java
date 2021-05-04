@@ -2,7 +2,7 @@ package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
 import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
-import iCook.View.Operations.DisplayObjects.RecipeDisplayObject;
+import iCook.View.Operations.DisplayObjects.RecipeDisplayObjectIF;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -42,13 +42,13 @@ public class ViewRecipesUI extends JPanel implements ActionListener
     private JButton modifyRecipe;
     private JButton cancel;
     private JButton save;
-    private RecipeDisplayObject selectedRecipe;
+    private RecipeDisplayObjectIF selectedRecipe;
 
     private ArrayList<JButton> newRecipes;
 
     private ServiceDispatcher serviceDispatcher;
 
-    private ArrayList<RecipeDisplayObject> satisfiedRecipes;
+    private ArrayList<RecipeDisplayObjectIF> satisfiedRecipes;
     private int numOfRecipes;
 
     private Border emptyBorder = BorderFactory.createEmptyBorder();
@@ -437,7 +437,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
      */
     private void SaveNewRecipe(String newRecipeName, String newRecipeInstructions) {
         // get the corresponding recipe (recipe the user clicked)
-        RecipeDisplayObject recipe_to_clone = selectedRecipe;
+        RecipeDisplayObjectIF recipe_to_clone = selectedRecipe;
 
         // request the serviceDispatcher to clone this recipe for the user
         serviceDispatcher.cloneRecipe(recipe_to_clone.getRecipeID(), newRecipeName, newRecipeInstructions);
