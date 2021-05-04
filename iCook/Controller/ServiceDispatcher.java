@@ -297,7 +297,7 @@ public class ServiceDispatcher {
                 String img_url = facade.getRecipeImageURL(recipe.getRecipeID());
 
                 // if the image has a supported protocol, decorate the recipeDO with an image & add it to the arraylist.
-                if (img_url.startsWith("http")) {
+                if (img_url != null && img_url.startsWith("http")) {
                     try {
                         URL url = new URL(img_url);
                         BufferedImage image = ImageIO.read(url);

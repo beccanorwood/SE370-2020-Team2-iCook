@@ -235,10 +235,17 @@ public class RecipeDAO extends BaseDAO {
             String name = cloned_recipe.getRecipeName();
             String instructions = cloned_recipe.getInstructions();
             int isPublished = cloned_recipe.isPublished() ? 1 : 0;
+            String img_url = "NULL";
+
+            // get the image url from the original recipe
+            ResultSet resultSet = statement.executeQuery("Select image_path FROM recipes WHERE id = '"+original_recipe_id+"' ");
+            if (resultSet.next())
+                img_url = resultSet.getString("image_path");
+            resultSet.close();
 
             // insert recipe data into the recipes table
             statement.executeUpdate("INSERT INTO recipes " +
-                    "VALUES(NULL, '" + name + "', '" + instructions + "', '" + isPublished + "', '" + owner_id + "' )", Statement.RETURN_GENERATED_KEYS);
+                    "VALUES(NULL, '" + name + "', '" + instructions + "', '" + isPublished + "', '" + owner_id + "', '"+img_url+"' )", Statement.RETURN_GENERATED_KEYS);
 
             // get the new entry id
             int cloned_recipe_id = 0;
@@ -404,7 +411,7 @@ public class RecipeDAO extends BaseDAO {
 
             // insert recipe data into the recipes table
             statement.executeUpdate("INSERT INTO recipes " +
-                                        "VALUES(NULL, '"+name+"', '"+instructions+"', '"+isPublished+"', NULL)", Statement.RETURN_GENERATED_KEYS);
+                                        "VALUES(NULL, '"+name+"', '"+instructions+"', '"+isPublished+"', NULL, NULL)", Statement.RETURN_GENERATED_KEYS);
 
             // get the newly added recipe's id
             int new_recipe_id = 0;
