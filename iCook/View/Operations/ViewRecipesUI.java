@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * wish to create and view its instructions. If a user does not have a sufficient inventory for any recipes, a message will be displayed
  *
  * @author Team 2
- * @version 04/28/2021
+ * @version 5/3/2021
  */
 public class ViewRecipesUI extends JPanel implements ActionListener
 {
@@ -48,8 +48,6 @@ public class ViewRecipesUI extends JPanel implements ActionListener
     private JButton save;
     private RecipeDisplayObjectIF selectedRecipe;
 
-    private ArrayList<JButton> newRecipes;
-
     private ServiceDispatcher serviceDispatcher;
 
     private ArrayList<RecipeDisplayObjectIF> satisfiedRecipes;
@@ -63,19 +61,17 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         this.setLayout(new BorderLayout());
         satisfiedRecipes = serviceDispatcher.getSatisfiedRecipes();
 
-        //Initialize arraylist for newly added recipes from user
-        newRecipes = new ArrayList<>();
-
         // ************************************************************
         // *** Setting up the text fields & labels for center panel ***
         // ***    and setting up the frame for this GUI    **
         // ************************************************************
 
-
         //Ingredient Label
         ingredients_label = new JLabel("INGREDIENTS");
         ingredients_label.setFont(new Font("Century Gothic", Font.BOLD, 25));
         ingredients_label.setVisible(false);
+        ingredients_label.setBackground(new Color(246,251,253));
+        ingredients_label.setForeground(new Color(51,51,51));
 
 
         //Ingredient Text Area
@@ -83,12 +79,16 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         ingredients.setEditable(false);
         ingredients.setFont(new Font("Century Gothic", Font.PLAIN, 22));
         ingredients.setVisible(false);
+        ingredients.setBackground(new Color(246,251,253));
+        ingredients.setForeground(new Color(51,51,51));
 
 
         //Instructions Label
         instructions_label = new JLabel("INSTRUCTIONS");
         instructions_label.setFont(new Font("Century Gothic", Font.BOLD, 25));
         instructions_label.setVisible(false);
+        instructions_label.setBackground(new Color(246,251,253));
+        instructions_label.setForeground(new Color(51,51,51));
 
         //Instructions Text Area
         instructions = new JTextArea();
@@ -96,6 +96,8 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         instructions.setWrapStyleWord(true);
         instructions.setEditable(false);
         instructions.setFont(new Font("Century Gothic", Font.PLAIN, 22));
+        instructions.setBackground(new Color(246,251,253));
+        instructions.setForeground(new Color(51,51,51));
 
 
 
@@ -496,13 +498,11 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         if ("Home".equals(buttonChosen)) {
             serviceDispatcher.gotoHome();
 
-            // take user to InventoryUI
-        } else if ("Inventory".equals(buttonChosen)) {
-            //serviceDispatcher.gotoInventory();
+        } else if ("Inventory".equals(buttonChosen)) { // take user to InventoryUI
             serviceDispatcher.gotoInventory();
 
-            // makes text area with recipe instructions editable
-        } else if ("Modify Recipe".equals(buttonChosen)) {
+
+        } else if ("Modify Recipe".equals(buttonChosen)) { // makes text area with recipe instructions editable
             instructions.setEditable(true);
             iCook.setText("Modifying " + selectedRecipe.getName());
             instructions.setBackground(new Color(226, 220, 236));
@@ -517,6 +517,9 @@ public class ViewRecipesUI extends JPanel implements ActionListener
             modifyRecipe.setVisible(false);
             save.setVisible(false);
             cancel.setVisible(false);
+            ingredients.setVisible(false);
+            ingredients_label.setVisible(false);
+            instructions_label.setVisible(false);
             ingredients.setBackground(new Color(246, 251, 253));
             instructions.setBackground(new Color(246, 251, 253));
             center_panel.setBackground(new Color(246, 251, 253));
