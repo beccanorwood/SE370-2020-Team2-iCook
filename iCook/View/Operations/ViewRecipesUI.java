@@ -25,6 +25,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
 {
     // instance variables
     private GridBagConstraints gbc;
+    private GridBagConstraints gbc2;
 
     private JPanel toppanel;
     private JLabel iCook;
@@ -34,6 +35,9 @@ public class ViewRecipesUI extends JPanel implements ActionListener
 
     private JPanel center_panel;
     private JScrollPane center_scrollable;
+    private JLabel ingredients_label;
+    private JLabel instructions_label;
+    private JTextArea ingredients;
     private JTextArea instructions;
 
     private JPanel bottom_panel;
@@ -62,17 +66,38 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         //Initialize arraylist for newly added recipes from user
         newRecipes = new ArrayList<>();
 
-        // **************************************************
-        // *** Setting up the text field for instructions ***
+        // ************************************************************
+        // *** Setting up the text fields & labels for center panel ***
         // ***    and setting up the frame for this GUI    **
-        // **************************************************
+        // ************************************************************
+
+
+        //Ingredient Label
+        ingredients_label = new JLabel("INGREDIENTS");
+        ingredients_label.setFont(new Font("Century Gothic", Font.BOLD, 25));
+        ingredients_label.setVisible(false);
+
+
+        //Ingredient Text Area
+        ingredients = new JTextArea();
+        ingredients.setEditable(false);
+        ingredients.setFont(new Font("Century Gothic", Font.PLAIN, 22));
+        ingredients.setVisible(false);
+
+
+        //Instructions Label
+        instructions_label = new JLabel("INSTRUCTIONS");
+        instructions_label.setFont(new Font("Century Gothic", Font.BOLD, 25));
+        instructions_label.setVisible(false);
+
+        //Instructions Text Area
         instructions = new JTextArea();
         instructions.setLineWrap(true);
         instructions.setWrapStyleWord(true);
         instructions.setEditable(false);
         instructions.setFont(new Font("Century Gothic", Font.PLAIN, 22));
-        instructions.setBackground(new Color(246,251,253));
-        instructions.setForeground(new Color(51,51,51));
+
+
 
         instructions.addFocusListener(new FocusListener() {
             @Override
@@ -164,10 +189,23 @@ public class ViewRecipesUI extends JPanel implements ActionListener
 
         // set the center panel
         center_panel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc2 = new GridBagConstraints();
-        gbc2.anchor = GridBagConstraints.CENTER;
-        gbc2.fill = GridBagConstraints.HORIZONTAL;
+        gbc2 = new GridBagConstraints();
+        gbc2.anchor = GridBagConstraints.WEST;
+        gbc2.insets = new Insets(5,5,5,5);
+        gbc2.gridy = 0;
         center_panel.setBackground(new Color(246,251,253));
+
+
+        //Add labels & text areas to center panel
+        center_panel.add(ingredients_label, gbc2);
+        gbc2.gridy++;
+        center_panel.add(ingredients, gbc2);
+        gbc2.gridy++;
+        center_panel.add(instructions_label, gbc2);
+        gbc2.gridy++;
+        center_panel.add(instructions, gbc2);
+
+
 
         // **************************************
         // *** Bottom panel is worked on here ***
@@ -331,8 +369,6 @@ public class ViewRecipesUI extends JPanel implements ActionListener
                                 "\nAdd more ingredients to your inventory to get recipes!");
             instructions.setSize(740, 900);
             instructions.setForeground(new Color(51,51,51));
-
-            center_panel.add(instructions, gbc2);
             center_panel.setAlignmentY(Component.CENTER_ALIGNMENT);
             center_panel.setAlignmentX(Component.CENTER_ALIGNMENT);
             center_panel.setVisible(true);
@@ -343,7 +379,6 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         else {
             instructions.setText("Click on a recipe to get started!");
             instructions.setSize(740, 900);
-            center_panel.add(instructions, gbc2);
             center_panel.setAlignmentY(Component.CENTER_ALIGNMENT);
             center_panel.setAlignmentX(Component.CENTER_ALIGNMENT);
             center_panel.setVisible(true);
@@ -397,6 +432,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
                     save.setVisible(true);
                     modifyRecipe.setVisible(true);
                     cancel.setVisible(true);
+                    ingredients.setBackground(new Color(226, 220, 236));
                     instructions.setBackground(new Color(226, 220, 236));
                     center_panel.setBackground(new Color(226, 220, 236));
                 }
@@ -411,6 +447,9 @@ public class ViewRecipesUI extends JPanel implements ActionListener
                     instructions.getCaret().setSelectionVisible(false);
                     instructions.setBackground(new Color(246,251,253));
                     center_panel.setBackground(new Color(246,251,253));
+                    ingredients.setVisible(false);
+                    ingredients_label.setVisible(false);
+                    instructions_label.setVisible(false);
                     instructions.setText(selectedRecipe.getInstructions());
                     instructions.select(0,0);
                     iCook.setText(selectedRecipe.getName());
@@ -467,6 +506,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
             instructions.setEditable(true);
             iCook.setText("Modifying " + selectedRecipe.getName());
             instructions.setBackground(new Color(226, 220, 236));
+            ingredients.setBackground(new Color(226, 220, 236));
             center_panel.setBackground(new Color(226, 220, 236));
             cancel.setVisible(true);
             save.setVisible(true);
@@ -477,6 +517,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
             modifyRecipe.setVisible(false);
             save.setVisible(false);
             cancel.setVisible(false);
+            ingredients.setBackground(new Color(246, 251, 253));
             instructions.setBackground(new Color(246, 251, 253));
             center_panel.setBackground(new Color(246, 251, 253));
 
@@ -497,31 +538,33 @@ public class ViewRecipesUI extends JPanel implements ActionListener
                     selectedRecipe = satisfiedRecipes.get(i);
                     iCook.setText(selectedRecipe.getName());
 
-                    // create the string to hold the instruction's text
-                    String instructions_text = "";
+                    // create the string to hold the ingredient text
+                    String ingredients_text = "";
 
                     // populate the string's ingredient section
-                    instructions_text += "Ingredients:\n-------------------\n";
                     for (IngredientDisplayObject ing : selectedRecipe.getIngredients())
-                        instructions_text += ing.getQuantity() + " " + ing.getUnitOfMeasure() + " " + ing.getName() + "\n";
+                        ingredients_text += ing.getQuantity() + " " + ing.getUnitOfMeasure() + " " + ing.getName() + "\n"; //text for ingredient text area
 
-                    // populate the string's step's section
-                    instructions_text += "\n\nInstructions:\n-------------------\n";
-                    instructions_text += selectedRecipe.getInstructions();
+
+                    //String used for instructions text
+                    String instructions_text = "";
+                    instructions_text += selectedRecipe.getInstructions(); //retrieves recipe instructions from recipe display object
+
+
+                    //Set text to change to selected recipe
+                    ingredients.setText(ingredients_text);
 
                     // add the string to the instructions text area
                     instructions.setText(instructions_text);
                     instructions.setSize(740, 900);
                     instructions.select(0, 0);
 
-                    // Enable modify recipe button to be visible
+                    //Set up the corresponding center panel text area, labels, & buttons to be set visible
                     modifyRecipe.setVisible(true);
-
-                    // this will make the instructions start at the top of the panel!!!
-                    gbc.weighty = 1;
-                    gbc.weightx = 1;
-
-                    center_panel.add(instructions, gbc);
+                    ingredients_label.setVisible(true);
+                    ingredients.setVisible(true);
+                    instructions_label.setVisible(true);
+                    instructions.setVisible(true);
                     center_panel.setAlignmentY(Component.TOP_ALIGNMENT);
                     center_panel.setAlignmentX(Component.CENTER_ALIGNMENT);
                     center_panel.setVisible(true);
