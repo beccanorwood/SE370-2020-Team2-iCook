@@ -26,7 +26,7 @@ import java.util.Vector;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 5/5/2021
+ * @version 5/6/2021
  */
 public class ServiceDispatcher {
     // user needs to be static (not unique for each ServiceDispatcher object)
@@ -496,9 +496,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Ends the program from the WelcomeUI
-     * (Used in the WelcomeUI)
-     *
+     * Ends the program
      */
     public void quitProgram() {
         frame.setVisible(false);
