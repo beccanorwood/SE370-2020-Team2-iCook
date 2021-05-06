@@ -1,6 +1,6 @@
 package iCook.View.Operations.DisplayObjects;
 
-import java.awt.image.BufferedImage;
+import javax.swing.*;
 import java.util.ArrayList;
 
 
@@ -37,7 +37,7 @@ public abstract class Recipe_With_Decorator implements RecipeDisplayObjectIF {
      * defined by classes that implement this abstract class.
      */
     @Override
-    public abstract BufferedImage display();
+    public abstract void display(JLabel label);
 
 
     @Override

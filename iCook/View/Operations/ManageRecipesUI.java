@@ -1,6 +1,8 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.AbstractUI;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -14,9 +16,9 @@ import java.util.Vector;
  * An Admin can create a new recipe from this GUI or modify existing recipes.
  *
  * @author Team 2
- * @version 04/30/2021
+ * @version 5/5/2021
  */
-public class ManageRecipesUI extends JPanel {
+public class ManageRecipesUI extends AbstractUI {
     // instance variables
     private ServiceDispatcher serviceDispatcher;
     private JPanel mainPanel;
@@ -30,21 +32,32 @@ public class ManageRecipesUI extends JPanel {
     private final Color FG = new Color(51,51,51);
 
 
-
     /**
      * Constructor
      */
     public ManageRecipesUI() {
+
+    }
+
+
+    @Override
+    public void initializePanel() {
+        this.removeAll();
+
         serviceDispatcher = new ServiceDispatcher();
         this.setLayout(new BorderLayout());
         initialize();
+
+        this.revalidate();
+        this.repaint();
+        this.setVisible(true); // show the next state (panel)
     }
 
 
     /**
      * Initializes the frame's contents
      */
-    public void initialize() {
+    private void initialize() {
         // set the frame up
         this.setLayout(new FlowLayout(FlowLayout.CENTER, 0,60));
         this.setBackground(BG);
@@ -102,7 +115,8 @@ public class ManageRecipesUI extends JPanel {
                     int column = 0;                     // get the first column containing the recipe's id
 
                     // go to the modify UI for this selected recipe
-                    serviceDispatcher.gotoModifyRecipeUI(Integer.parseInt((String)table.getValueAt(row,column)));
+                    AbstractUI.modifyRecipeUI.setRecipeID(Integer.parseInt((String)table.getValueAt(row,column)));
+                    serviceDispatcher.updateState(nextState(AbstractUI.modifyRecipeUI));
                 }
             }
         });
@@ -129,7 +143,11 @@ public class ManageRecipesUI extends JPanel {
             }
         });
 
-        addBtn.addActionListener(e -> serviceDispatcher.gotoModifyRecipeUI());
+        addBtn.addActionListener(e -> {
+            // creating a new recipe
+            AbstractUI.modifyRecipeUI.setRecipeID(0);
+            serviceDispatcher.updateState(nextState(AbstractUI.modifyRecipeUI));
+        });
 
         addBtn.setPreferredSize(new Dimension(144,32));
         gbc.gridy++;
@@ -156,7 +174,7 @@ public class ManageRecipesUI extends JPanel {
 
         backBtn.addActionListener(e -> {
             // back button goes to the HomeUI
-            serviceDispatcher.gotoHome();
+            serviceDispatcher.updateState(nextState(AbstractUI.homeUI));
         });
 
         backBtn.setPreferredSize(new Dimension(100,32));
@@ -175,6 +193,7 @@ public class ManageRecipesUI extends JPanel {
     private Vector<Vector> getData() {
         return serviceDispatcher.getRecipes();
     }
+
 
 }
 

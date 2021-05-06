@@ -1,6 +1,7 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.AbstractUI;
 import iCook.View.Operations.DisplayObjects.*;
 
 import javax.swing.*;
@@ -8,7 +9,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ import java.util.ArrayList;
  * User interface for Admins to modify existing recipes or to create new recipes.
  *
  * @author Team 2
- * @version 5/2/2021
+ * @version 5/5/2021
  */
-public class ModifyRecipeUI extends JPanel {
+public class ModifyRecipeUI extends AbstractUI {
     // instance variables
     private ServiceDispatcher serviceDispatcher;
 
@@ -51,59 +51,33 @@ public class ModifyRecipeUI extends JPanel {
     private ArrayList<IngredientDisplayObject> system_ingredients;  // list of all system ingredients
     private JComboBox ing_list; // combo box containing all of the system's ingredients
 
+    private int recipeID;   // used if the admin is modifying an existing recipe
     private RecipeDisplayObject recipe; // used if the admin is modifying an existing recipe
-
-    private boolean initially_published;  // this determines if we call the builder
 
     private Border emptyBorder = BorderFactory.createEmptyBorder();
 
 
     /**
-     * Constructor - for brand new recipe
+     * Constructor
      */
     public ModifyRecipeUI() {
-        // initialize instance variables here
-        serviceDispatcher = new ServiceDispatcher();    // create the ServiceDispatcher
-        system_ingredients = serviceDispatcher.getSystemIngredientDisplayObjects(); // get the list of system ingredients
-        all_ingredient_panels = new ArrayList<>();
 
-        this.setLayout(new BorderLayout());
-        this.setBackground(new Color(255,255,255));
-
-        // set up the container panel
-        containerPanel = new JPanel();
-        containerPanel.setLayout(new GridLayout(0,1)); //Panel for Buttons on bottom to dynamically add/remove
-
-        // ****************************
-        // Main Panel Set Up - BLANK
-        // ****************************
-        setupMainPanel_blank();
-
-        // *************************
-        // 1st Ingredient Panel
-        // *************************
-        addIngredientRow();
-
-        // ********************************************
-        // Set frame visible at end to show all changes
-        // ********************************************
-        this.setVisible(true);
-        scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMinimum());
     }
 
 
-    /**
-     * Constructor - 1 parameter
-     *
-     * @param recipeID id of the selected recipe to modify/edit
-     */
-    public ModifyRecipeUI(int recipeID) {
+    @Override
+    public void initializePanel() {
+        this.removeAll();
+
         // initialize instance variables here
-        serviceDispatcher = new ServiceDispatcher();    // create the ServiceDispatcher
-        system_ingredients = serviceDispatcher.getSystemIngredientDisplayObjects(); // get the list of system ingredients
-        recipe = serviceDispatcher.getRecipeDisplayObject(recipeID);    // get the recipe display object
+        serviceDispatcher = new ServiceDispatcher();
+        system_ingredients = serviceDispatcher.getSystemIngredientDisplayObjects();
         all_ingredient_panels = new ArrayList<>();
 
+        // get the recipe display object
+        recipe = (recipeID != 0) ? serviceDispatcher.getRecipeDisplayObject(recipeID) : null;
+
+        // set up this panel's layout
         this.setLayout(new BorderLayout());
         this.setBackground(new Color(255,255,255));
 
@@ -111,31 +85,44 @@ public class ModifyRecipeUI extends JPanel {
         containerPanel = new JPanel();
         containerPanel.setLayout(new GridLayout(0,1)); //Panel for Buttons on bottom to dynamically add/remove
 
-        // ****************************
-        // Main Panel Set Up - FILLED
-        // ****************************
-        setupMainPanel_filled();
+        // set up the main panel and ingredient(s) accordingly
+        if (recipe != null) {
+            // modifying recipe
+            setupMainPanel_filled();
 
-        // ******************************
-        // n number of Ingredient Panels
-        // ******************************
-        if (recipe.getIngredients().isEmpty()){
+            // set up n number of Ingredient Panels
+            if (recipe.getIngredients().isEmpty()){
+                addIngredientRow();
+            } else {
+                for (IngredientDisplayObject ing : recipe.getIngredients())
+                    addRecipeIngredientRow(ing);
+            }
+        } else {
+            // creating a new recipe
+            setupMainPanel_blank();
             addIngredientRow();
-        }else {
-            for (IngredientDisplayObject ing : recipe.getIngredients())
-                addRecipeIngredientRow(ing);
         }
 
-        // ********************************************
-        // Set frame visible at end to show all changes
-        // ********************************************
-        this.setVisible(true);
         scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMinimum());
+
+        this.revalidate();
+        this.repaint();
+        this.setVisible(true); // show the next state (panel)
     }
 
 
     /**
-     * Initializes the frame's contents - BLANK
+     * Setter for the recipeID. An ID of 0 means we are creating a new recipe.
+     *
+     * @param recipeID the id of the recipe we are modifying
+     */
+    public void setRecipeID(int recipeID) {
+        this.recipeID = recipeID;
+    }
+
+
+    /**
+     * sets up the main panel's contents - NEW RECIPE
      */
     private void setupMainPanel_blank() {
         //************************************
@@ -221,12 +208,7 @@ public class ModifyRecipeUI extends JPanel {
             }
         });
 
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                serviceDispatcher.gotoManageRecipesUI();
-            }
-        });
+        backBtn.addActionListener(e -> serviceDispatcher.updateState(nextState(AbstractUI.manageRecipesUI)));
         centerPanel.add(backBtn, gbc);
 
         centerPanel.setBackground(new Color(255,255,255));
@@ -241,7 +223,7 @@ public class ModifyRecipeUI extends JPanel {
 
 
     /**
-     * Initializes the frame's contents - FILLED
+     * sets up the main panel's contents - EXISTING RECIPE
      */
     private void setupMainPanel_filled() {
         //************************************
@@ -330,12 +312,7 @@ public class ModifyRecipeUI extends JPanel {
             }
         });
 
-        backBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                serviceDispatcher.gotoManageRecipesUI();
-            }
-        });
+        backBtn.addActionListener(e -> serviceDispatcher.updateState(nextState(AbstractUI.manageRecipesUI)));
         centerPanel.add(backBtn, gbc);
 
         centerPanel.setBackground(new Color(255,255,255));
@@ -376,12 +353,7 @@ public class ModifyRecipeUI extends JPanel {
             }
         });
 
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addIngredientRow();
-            }
-        });
+        addButton.addActionListener(e -> addIngredientRow());
 
         // create the sub button
         JButton subButton = new JButton("-");
@@ -411,12 +383,7 @@ public class ModifyRecipeUI extends JPanel {
             });
         }
 
-        subButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removeIngredientRow(e);
-            }
-        });
+        subButton.addActionListener(e -> removeIngredientRow(e));
 
         // create the combo box here
         createComboBox();
@@ -609,16 +576,6 @@ public class ModifyRecipeUI extends JPanel {
             // recipe must at least have a name to be sent to the service dispatcher
             if (!recipeDO.getName().isEmpty()) {
 
-//            // if the recipe is going from not published --> published, call the builder!!!
-//            if (initially_published != recipeDO.isPublished() && recipeDO.isPublished()) {
-//                System.out.println("Went from not published to published!!!");
-//            }
-//
-//            // otherwise, we do not want to use the builder!!!
-//            else {
-//                System.out.println("Went from published to not published :(");
-//            }
-
                 // recipe exists, so UPDATE the recipe's info
                 if (recipe != null) {
                     serviceDispatcher.updateRecipe(recipeDO);
@@ -629,7 +586,7 @@ public class ModifyRecipeUI extends JPanel {
                 }
 
                 // take admin back to the ManageRecipesUI to see changes
-                serviceDispatcher.gotoManageRecipesUI();
+                serviceDispatcher.updateState(nextState(AbstractUI.manageRecipesUI));
             }
 
             // display error message if there is no recipe name (cannot save)
@@ -745,8 +702,6 @@ public class ModifyRecipeUI extends JPanel {
             }
         }
 
-        // set the initial publish status (false = not published / true = published)
-        initially_published = publishedButton.isSelected();
     }
 
 

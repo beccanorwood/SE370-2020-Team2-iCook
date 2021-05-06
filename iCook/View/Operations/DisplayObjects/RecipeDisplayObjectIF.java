@@ -1,6 +1,6 @@
 package iCook.View.Operations.DisplayObjects;
 
-import java.awt.image.BufferedImage;
+import javax.swing.*;
 import java.util.ArrayList;
 
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public interface RecipeDisplayObjectIF extends Comparable<RecipeDisplayObjectIF> {
     int compareTo(RecipeDisplayObjectIF o);
-    BufferedImage display();
+    void display(JLabel label);
 
     int getRecipeID();
     String getName();

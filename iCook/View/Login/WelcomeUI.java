@@ -1,6 +1,7 @@
 package iCook.View.Login;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.AbstractUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,9 +19,9 @@ import java.io.IOException;
  * The applications alternative mode of termination is located on this screen via the "Quit" button.
  *
  * @author Team 2
- * @version 04/27/2021
+ * @version 5/5/2021
  */
-public class WelcomeUI extends JPanel implements ActionListener {
+public class WelcomeUI extends AbstractUI implements ActionListener {
     private JPanel panel;
     private JLabel iCook;
     private JButton login;
@@ -34,13 +35,23 @@ public class WelcomeUI extends JPanel implements ActionListener {
      * Constructor
      */
     public WelcomeUI() {
+
+    }
+
+
+    /**
+     * Called to initialize the panel's contents
+     */
+    @Override
+    public void initializePanel() {
+        this.removeAll();
+
         serviceDispatcher = new ServiceDispatcher();
         this.setLayout(new BorderLayout());
 
 
-        /*
-        Splits frame into two panels vertically
-         */
+
+        // Splits frame into two panels vertically
         this.panel = new JPanel(new GridLayout(1,0)); //Left panel of welcomeUI
 
 
@@ -51,18 +62,18 @@ public class WelcomeUI extends JPanel implements ActionListener {
             e.printStackTrace();
         }
 
-        //*****************************
-        //Initialize left side of panel
-        //*****************************
+        // Initialize left side of panel
         setUpLeftPanel();
 
-        //*****************************
-        //Setup Button & Image Effects
-        //*****************************
+        // Setup Button & Image Effects
         componentEffects();
 
         this.panel.setBackground(new Color(234, 246, 248));
         this.add(this.panel, BorderLayout.CENTER);
+
+        this.revalidate();
+        this.repaint();
+        this.setVisible(true); // show the next state (panel)
     }
 
 
@@ -179,18 +190,17 @@ public class WelcomeUI extends JPanel implements ActionListener {
 
 
 
-    public void actionPerformed(ActionEvent e)
-    {
-
-        //get Action Command will find resulting action based upon button name
+    public void actionPerformed(ActionEvent e) {
+        // get Action Command will find resulting action based upon button name
         String buttonChosen = e.getActionCommand();
 
-        //Create 3 separate classes for each actionEvent to populate the proper JFrame
-
+        // set the appropriate next state based on button click
         switch (buttonChosen) {
-            case "Login" -> serviceDispatcher.gotoLogin();
-            case "Signup" -> serviceDispatcher.gotoSignup();
+            case "Login" -> serviceDispatcher.updateState(nextState(AbstractUI.loginUI));
+            case "Signup" -> serviceDispatcher.updateState(nextState(AbstractUI.signUpUI));
             case "Quit" -> serviceDispatcher.quitProgram();
         }
     }
+
+
 }

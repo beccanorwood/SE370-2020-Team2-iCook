@@ -1,7 +1,9 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.AbstractUI;
 import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
@@ -12,9 +14,9 @@ import java.util.ArrayList;
  * User interface for user's to view their inventory.
  *
  * @author Team 2
- * @version 04/30/2021
+ * @version 5/5/2021
  */
-public class InventoryUI extends JPanel {
+public class InventoryUI extends AbstractUI {
     // instance variables
     private JPanel inventoryContainerPanel;
     private JPanel innerInventoryPanel;
@@ -45,6 +47,14 @@ public class InventoryUI extends JPanel {
      * Constructor
      */
     public InventoryUI() {
+
+    }
+
+
+    @Override
+    public void initializePanel() {
+        this.removeAll();
+
         // initialize instance variables here
         serviceDispatcher = new ServiceDispatcher();
         system_ingredients = serviceDispatcher.getSystemIngredientDisplayObjects();
@@ -63,14 +73,17 @@ public class InventoryUI extends JPanel {
         }
 
         scrollPane.getVerticalScrollBar().setValue(0);  // make the scrollbar set to the top when page
-        this.setVisible(true);  // set this panel to be visible
+
+        this.revalidate();
+        this.repaint();
+        this.setVisible(true); // show the next state (panel)
     }
 
 
     /**
      * Initializes the panel's contents
      */
-    public void initialize() {
+    private void initialize() {
         this.setLayout(new BorderLayout());
         this.setBackground(new Color(255, 255, 255));
 
@@ -122,7 +135,6 @@ public class InventoryUI extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-
         // contains all center components
         main_center_Panel = new JPanel(new GridBagLayout());
         main_center_Panel.setBackground(new Color(255,255,255));
@@ -147,7 +159,7 @@ public class InventoryUI extends JPanel {
         backBtn.setBackground(new Color(28, 31, 46));
         backBtn.setFocusPainted(false);
         backBtn.setBorder(emptyBorder);
-        backBtn.addActionListener(e -> serviceDispatcher.gotoHome());
+        backBtn.addActionListener(e -> serviceDispatcher.updateState(nextState(AbstractUI.homeUI)));
 
         backBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -173,9 +185,9 @@ public class InventoryUI extends JPanel {
             // populate all_ingredients_to_save
             getIngredientsToSave(all_ingredient_panels);
 
-            // send data to serviceDispatcher
+            // send data to serviceDispatcher and refresh this page
             serviceDispatcher.updateUserInventory(all_ingredients_to_save);
-            serviceDispatcher.gotoInventory();
+            initializePanel();
         });
 
         saveBtn.addMouseListener(new MouseAdapter() {

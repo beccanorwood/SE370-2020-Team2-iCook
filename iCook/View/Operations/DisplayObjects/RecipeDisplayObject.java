@@ -1,6 +1,6 @@
 package iCook.View.Operations.DisplayObjects;
 
-import java.awt.image.BufferedImage;
+import javax.swing.*;
 import java.util.ArrayList;
 
 /**
@@ -104,12 +104,11 @@ public class RecipeDisplayObject implements RecipeDisplayObjectIF {
     /**
      * Used for the Decorator design pattern. A normal RecipeDisplayObject
      * will not display anything.
-     *
-     * @return null since a normal RecipeDisplayObject does not have an image.
      */
     @Override
-    public BufferedImage display() {
-        return null;
+    public void display(JLabel label) {
+        label.removeAll();
+        label.setVisible(false);
     }
 
 

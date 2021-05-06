@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.AbstractUI;
 
 /**
  * User interface for the sign up screen. A user can create a new account for iCook by entering
@@ -16,9 +17,9 @@ import iCook.Controller.ServiceDispatcher;
  * a username that is already in use.
  *
  * @author Team 2
- * @version 04/29/2021
+ * @version 5/5/2021
  */
-public class SignUpUI extends JPanel implements ActionListener {
+public class SignUpUI extends AbstractUI implements ActionListener {
     private JPanel signup_panel;
     private JTextField userName_field;
     private JPasswordField passwordField;
@@ -26,13 +27,24 @@ public class SignUpUI extends JPanel implements ActionListener {
     private GridBagConstraints constraints;
 
     public SignUpUI() {
+
+    }
+
+    /**
+     * Called to initialize the panel's contents
+     */
+    @Override
+    public void initializePanel() {
+        this.removeAll();
+
         // Create ServiceDispatcher
         serviceDispatcher = new ServiceDispatcher();
         this.setLayout(new BorderLayout());
 
         Border emptyBorder = BorderFactory.createEmptyBorder();
 
-        signup_panel = new JPanel(new GridBagLayout()); //GridBagLayout specifies size and position of components in row/column layout
+        //GridBagLayout specifies size and position of components in row/column layout
+        signup_panel = new JPanel(new GridBagLayout());
 
         constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
@@ -128,6 +140,10 @@ public class SignUpUI extends JPanel implements ActionListener {
         signup_panel.repaint();
 
         this.add(signup_panel);
+
+        this.revalidate();
+        this.repaint();
+        this.setVisible(true); // show the next state (panel)
     }
 
     @Override
@@ -138,7 +154,7 @@ public class SignUpUI extends JPanel implements ActionListener {
 
         // the user wants to go back to the WelcomeUI
         if(btn_Selection.equals("Back"))
-            serviceDispatcher.gotoWelcome();
+            serviceDispatcher.updateState(nextState(AbstractUI.welcomeUI));
 
         // user click on "Create Account"
         else if (btn_Selection.equals("Create Account"))
@@ -176,7 +192,7 @@ public class SignUpUI extends JPanel implements ActionListener {
                 {
                     // if the user is logged in, go to HomeUI
                     if (serviceDispatcher.isLoggedIn())
-                        serviceDispatcher.gotoHome();
+                        serviceDispatcher.updateState(nextState(AbstractUI.homeUI));
                 }
                 // if the creation was not successful, display the error
                 else {
@@ -189,5 +205,17 @@ public class SignUpUI extends JPanel implements ActionListener {
         }
 
     } // end of actionPerformed
+
+    @Override
+    protected AbstractUI nextState(AbstractUI state) {
+        this.setVisible(false); // hide the current state (panel)
+
+        // re-initialize the next state's contents
+        state.initializePanel();
+        state.setVisible(true); // show the next state (panel)
+
+        return state;
+    }
+
 
 } // end of SignUpUI class

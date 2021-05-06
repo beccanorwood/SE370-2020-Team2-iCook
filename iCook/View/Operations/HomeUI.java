@@ -1,6 +1,7 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.AbstractUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,16 +20,27 @@ import java.io.IOException;
  * A user can chose to go to the inventory page, recipes page, or logout from this screen.
  *
  * @author Team 2
- * @version 04/27/2021
+ * @version 5/5/2021
  */
-public class HomeUI extends JPanel implements ActionListener {
-    //User Home Page with two buttons
-    //Search and My Inventory
+public class HomeUI extends AbstractUI implements ActionListener {
+    // instance variables
     private BufferedImage img;
     private JPanel homepanel;
     private ServiceDispatcher serviceDispatcher;
 
+
+    /**
+     * Constructor
+     */
     public HomeUI() {
+
+    }
+
+
+    @Override
+    public void initializePanel() {
+        this.removeAll();
+
         serviceDispatcher = new ServiceDispatcher();
         this.setLayout(new BorderLayout());
         homepanel = new JPanel(new GridBagLayout());
@@ -179,31 +191,26 @@ public class HomeUI extends JPanel implements ActionListener {
         this.add(homepanel, BorderLayout.CENTER);
         this.add(buttonPanel, BorderLayout.SOUTH);
         this.setVisible(true);
+
+        this.revalidate();
+        this.repaint();
+        this.setVisible(true); // show the next state (panel)
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         String btn = e.getActionCommand();
 
-        //User goes to view all recipes if search is clicked, otherwise they view their inventory
-        //and add, update, or delete ingredients
-
-        if (btn.equals("Logout")) {
-            // log the user out of their account && take them back to WelcomeUI
-            serviceDispatcher.logUserOut();
-            serviceDispatcher.gotoWelcome(); //WelcomeUI with JPanel & JFrame as parameters
-        }
-        // take the user to RecipeUI
-        else if (btn.equals("Recipes")) {
-            serviceDispatcher.gotoViewRecipes();
-        }
-        else if (btn.equals("Manage")) {
-            serviceDispatcher.gotoManageRecipesUI();
-        }
-        // take the user to InventoryUI
-        else if (btn.equals("Inventory")){
-            serviceDispatcher.gotoInventory();
+        // update the state's state accordingly
+        switch (btn) {
+            case "Manage" -> serviceDispatcher.updateState(nextState(AbstractUI.manageRecipesUI));
+            case "Inventory" -> serviceDispatcher.updateState(nextState(AbstractUI.inventoryUI));
+            case "Recipes" -> serviceDispatcher.updateState(nextState(AbstractUI.viewRecipesUI));
+            case "Logout" -> {
+                // log the user out of their account && take them back to WelcomeUI
+                serviceDispatcher.logUserOut();
+                serviceDispatcher.updateState(nextState(AbstractUI.welcomeUI));
+            }
         }
     }
 

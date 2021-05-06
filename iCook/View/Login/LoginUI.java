@@ -8,14 +8,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.AbstractUI;
 
 /**
  * User interface for the login page. A user can login to iCook with their existing account.
  *
  * @author Team 2
- * @version 04/29/2021
+ * @version 5/5/2021
  */
-public class LoginUI extends JPanel implements ActionListener {
+public class LoginUI extends AbstractUI implements ActionListener {
     private JPanel login_panel;
     private JTextField userName_field;
     private JPasswordField passwordField;
@@ -23,6 +24,16 @@ public class LoginUI extends JPanel implements ActionListener {
     private GridBagConstraints constraints;
 
     public LoginUI() {
+
+    }
+
+    /**
+     * Called to initialize the panel's contents
+     */
+    @Override
+    public void initializePanel() {
+        this.removeAll();
+
         // Create ServiceDispatcher instance
         serviceDispatcher = new ServiceDispatcher();
         this.setLayout(new BorderLayout());
@@ -125,6 +136,10 @@ public class LoginUI extends JPanel implements ActionListener {
         login_panel.repaint();
 
         this.add(login_panel);
+
+        this.revalidate();
+        this.repaint();
+        this.setVisible(true); // show the next state (panel)
     }
 
     @Override
@@ -145,7 +160,7 @@ public class LoginUI extends JPanel implements ActionListener {
 
         // the user wants to go back to the WelcomeUI
         if (btn_Selection.equals("Back"))
-            serviceDispatcher.gotoWelcome();
+            serviceDispatcher.updateState(nextState(AbstractUI.welcomeUI));
 
         // user clicks on "Login"
         else if (btn_Selection.equals("Login")) {
@@ -159,7 +174,7 @@ public class LoginUI extends JPanel implements ActionListener {
             if ( serviceDispatcher.login(username, password) ) {
                 System.out.println("Successfully logged in");
                 serviceDispatcher.displayUser();
-                serviceDispatcher.gotoHome();
+                serviceDispatcher.updateState(nextState(AbstractUI.homeUI));
             }
 
             // else, display an error
@@ -176,6 +191,7 @@ public class LoginUI extends JPanel implements ActionListener {
         }
 
     } // end of actionPerformed
+
 
 } // end of LoginUI class
 

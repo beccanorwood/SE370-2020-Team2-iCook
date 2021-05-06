@@ -1,9 +1,9 @@
 package iCook.Controller;
 
 import iCook.Model.*;
-import iCook.View.Login.*;
-import iCook.View.Operations.*;
+import iCook.View.AbstractUI;
 import iCook.View.Operations.DisplayObjects.*;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -26,10 +26,10 @@ import java.util.Vector;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 5/3/2021
+ * @version 5/5/2021
  */
 public class ServiceDispatcher {
-    // user need to be static (not unique for each ServiceDispatcher object)
+    // user needs to be static (not unique for each ServiceDispatcher object)
     private static User user = null;
 
     private static String SECRET_KEY = "my_super_secret_key";
@@ -41,6 +41,7 @@ public class ServiceDispatcher {
 
     // all UI elements needed
     private static JFrame frame;
+    private AbstractUI current_state;
 
 
     /**
@@ -307,6 +308,7 @@ public class ServiceDispatcher {
                     }
                     catch (IOException e) {
                         System.out.println(e);
+                        display_recipes.add(recipeDO);
                     }
                 }
 
@@ -487,8 +489,9 @@ public class ServiceDispatcher {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
 
-        // first panel to be displayed is the welcomeUI
-        gotoWelcome(); // CHANGE BACK WHEN DONE WITH TESTING!!!
+        // update the current state to the starting state of iCook
+        current_state = AbstractUI.start();
+        updateState(current_state);
     }
 
 
@@ -505,92 +508,14 @@ public class ServiceDispatcher {
 
 
     /**
-     * Sets the frame's contents to the contents of the WelcomeUI
+     * Update the current state of the program (UI).
+     *
+     * @param next_state to be the current state
      */
-    public void gotoWelcome() {
+    public void updateState(AbstractUI next_state) {
+        current_state = next_state;
         frame.getContentPane().removeAll();
-        frame.getContentPane().add(new WelcomeUI());
-        frame.setVisible(true);
-    }
-
-
-    /**
-     * Sets the frame's contents to the contents of the LoginUI
-     */
-    public void gotoLogin() {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new LoginUI());
-        frame.setVisible(true);
-    }
-
-
-    /**
-     * Sets the frame's contents to the contents of the SignUpUI
-     */
-    public void gotoSignup() {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new SignUpUI());
-        frame.setVisible(true);
-    }
-
-
-    /**
-     * Sets the frame's contents to the contents of the HomeUI
-     */
-    public void gotoHome() {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new HomeUI());
-        frame.setVisible(true);
-    }
-
-
-    /**
-     * Sets the frame's contents to the contents of the ManageRecipesUI
-     */
-    public void gotoManageRecipesUI() {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new ManageRecipesUI());
-        frame.setVisible(true);
-    }
-
-
-    /**
-     * Sets the frame's contents to the contents of the ModifyRecipeUI
-     */
-    public void gotoModifyRecipeUI() {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new ModifyRecipeUI());
-        frame.setVisible(true);
-    }
-
-
-    /**
-     * Sets the frame's contents to the contents of the ModifyRecipeUI
-     * (USED FOR EXISTING RECIPES)
-     */
-    public void gotoModifyRecipeUI(int recipeID) {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new ModifyRecipeUI(recipeID));
-        frame.setVisible(true);
-    }
-
-
-    /**
-     * Sets the frame's contents to the contents of the InventoryUI
-     */
-    public void gotoInventory() {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new InventoryUI());
-        frame.setVisible(true);
-    }
-
-
-    /**
-     * Sets the frame's contents to the contents of the ViewRecipesUI
-     */
-    public void gotoViewRecipes() {
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(new ViewRecipesUI());
+        frame.getContentPane().add(current_state);
         frame.setVisible(true);
     }
 

@@ -1,6 +1,7 @@
 package iCook.View.Operations;
 
 import iCook.Controller.ServiceDispatcher;
+import iCook.View.AbstractUI;
 import iCook.View.Operations.DisplayObjects.IngredientDisplayObject;
 import iCook.View.Operations.DisplayObjects.RecipeDisplayObjectIF;
 
@@ -19,10 +20,9 @@ import java.util.ArrayList;
  * wish to create and view its instructions. If a user does not have a sufficient inventory for any recipes, a message will be displayed
  *
  * @author Team 2
- * @version 5/3/2021
+ * @version 5/5/2021
  */
-public class ViewRecipesUI extends JPanel implements ActionListener
-{
+public class ViewRecipesUI extends AbstractUI implements ActionListener {
     // instance variables
     private GridBagConstraints gbc;
     private GridBagConstraints gbc2;
@@ -35,6 +35,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
 
     private JPanel center_panel;
     private JScrollPane center_scrollable;
+    private JLabel recipe_image_panel;
     private JLabel ingredients_label;
     private JLabel instructions_label;
     private JTextArea ingredients;
@@ -43,7 +44,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
     private JPanel bottom_panel;
     private JButton[] recipesBtn;
 
-    private JButton modifyRecipe;
+    private JButton modifyBtn;
     private JButton cancel;
     private JButton save;
     private RecipeDisplayObjectIF selectedRecipe;
@@ -55,7 +56,19 @@ public class ViewRecipesUI extends JPanel implements ActionListener
 
     private Border emptyBorder = BorderFactory.createEmptyBorder();
 
+
+    /**
+     * Constructor
+     */
     public ViewRecipesUI() {
+
+    }
+
+
+    @Override
+    public void initializePanel() {
+        this.removeAll();
+
         // use the service dispatcher to get the recipe list for the logged in user
         serviceDispatcher = new ServiceDispatcher();
         this.setLayout(new BorderLayout());
@@ -65,6 +78,11 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         // *** Setting up the text fields & labels for center panel ***
         // ***    and setting up the frame for this GUI    **
         // ************************************************************
+
+        // holding the image
+        recipe_image_panel = new JLabel();
+        recipe_image_panel.setPreferredSize(new Dimension(150,150));
+        recipe_image_panel.setVisible(false);
 
         //Ingredient Label
         ingredients_label = new JLabel("INGREDIENTS");
@@ -134,7 +152,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         // *********************************************
 
         // numOfRecipes will be the size of the array returned from the controller containing recipes
-        if(satisfiedRecipes == null || satisfiedRecipes.isEmpty())
+        if (satisfiedRecipes == null || satisfiedRecipes.isEmpty())
             numOfRecipes = 0;
         else
             numOfRecipes = satisfiedRecipes.size();
@@ -155,7 +173,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         recipesBtn = new JButton[numOfRecipes];
 
         // populate the left scrollable with recipe buttons
-        for(int i = 0; i < numOfRecipes; i++)
+        for (int i = 0; i < numOfRecipes; i++)
         {
             recipesBtn[i] = new JButton();
             recipesBtn[i].setText(satisfiedRecipes.get(i).getName());
@@ -185,6 +203,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
             gbc.gridy++;
         }
 
+
         // **************************************
         // *** Center panel is worked on here ***
         // **************************************
@@ -195,10 +214,12 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         gbc2.anchor = GridBagConstraints.WEST;
         gbc2.insets = new Insets(5,5,5,5);
         gbc2.gridy = 0;
+        gbc2.gridx = 0;
         center_panel.setBackground(new Color(246,251,253));
 
-
         //Add labels & text areas to center panel
+        center_panel.add(recipe_image_panel, gbc2);
+        gbc2.gridy++;
         center_panel.add(ingredients_label, gbc2);
         gbc2.gridy++;
         center_panel.add(ingredients, gbc2);
@@ -208,71 +229,46 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         center_panel.add(instructions, gbc2);
 
 
-
         // **************************************
         // *** Bottom panel is worked on here ***
         // **************************************
 
         // create button to go back to home page
-        JButton home = new JButton("Home");
-        home.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-        home.setPreferredSize(new Dimension(144,32));
-        home.setForeground(new Color(255,255,255));
-        home.setBackground(new Color(28, 31, 46));
-        home.setFocusPainted(false);
-        home.setBorder(emptyBorder);
+        JButton backBtn = new JButton("Back");
+        backBtn.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        backBtn.setPreferredSize(new Dimension(144,32));
+        backBtn.setForeground(new Color(255,255,255));
+        backBtn.setBackground(new Color(28, 31, 46));
+        backBtn.setFocusPainted(false);
+        backBtn.setBorder(emptyBorder);
 
-        home.addMouseListener(new MouseAdapter() {
+        backBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                home.setForeground(new Color(255,255,255));
-                home.setBackground(new Color(68, 166, 154));
+                backBtn.setBackground(new Color(248, 68, 149));
             }
             public void mouseExited(MouseEvent e){
-                home.setForeground(new Color(255,255,255));
-                home.setBackground(new Color(28, 31, 46));
+                backBtn.setBackground(new Color(28, 31, 46));
             }
         });
 
-        // create button to go to inventory page
-        JButton inv = new JButton("Inventory");
-        inv.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-        inv.setPreferredSize(new Dimension(144,32));
-        inv.setForeground(new Color(255,255,255));
-        inv.setBackground(new Color(28, 31, 46));
-        inv.setFocusPainted(false);
-        inv.setBorder(emptyBorder);
+        // create button to modify the selected recipe's instructions
+        modifyBtn = new JButton("Modify Recipe");
+        modifyBtn.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        modifyBtn.setPreferredSize(new Dimension(144,32));
+        modifyBtn.setVisible(false);
+        modifyBtn.setForeground(new Color(255,255,255));
+        modifyBtn.setBackground(new Color(28, 31, 46));
+        modifyBtn.setFocusPainted(false);
+        modifyBtn.setBorder(emptyBorder);
 
-        inv.addMouseListener(new MouseAdapter() {
+        modifyBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                inv.setForeground(new Color(255,255,255));
-                inv.setBackground(new Color(68, 166, 154));
+                modifyBtn.setBackground(new Color(68, 166, 154));
             }
             public void mouseExited(MouseEvent e){
-                inv.setForeground(new Color(255,255,255));
-                inv.setBackground(new Color(28, 31, 46));
-            }
-        });
-
-        modifyRecipe = new JButton("Modify Recipe");
-        modifyRecipe.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-        modifyRecipe.setPreferredSize(new Dimension(144,32));
-        modifyRecipe.setVisible(false);
-        modifyRecipe.setForeground(new Color(255,255,255));
-        modifyRecipe.setBackground(new Color(28, 31, 46));
-        modifyRecipe.setFocusPainted(false);
-        modifyRecipe.setBorder(emptyBorder);
-
-        modifyRecipe.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                modifyRecipe.setForeground(new Color(255,255,255));
-                modifyRecipe.setBackground(new Color(248, 68, 149));
-            }
-            public void mouseExited(MouseEvent e){
-                modifyRecipe.setForeground(new Color(255,255,255));
-                modifyRecipe.setBackground(new Color(28, 31, 46));
+                modifyBtn.setBackground(new Color(28, 31, 46));
             }
         });
 
@@ -320,18 +316,16 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         });
 
         // make them work
-        home.addActionListener(this);
-        inv.addActionListener(this);
-        modifyRecipe.addActionListener(this);
+        backBtn.addActionListener(this);
+        modifyBtn.addActionListener(this);
         save.addActionListener(this);
         cancel.addActionListener(this);
 
         // set the bottom panel to contain the navigation buttons
         bottom_panel = new JPanel();
         bottom_panel.setBackground(new Color(255,255,255));
-        bottom_panel.add(home);
-        bottom_panel.add(inv);
-        bottom_panel.add(modifyRecipe);
+        bottom_panel.add(backBtn);
+        bottom_panel.add(modifyBtn);
         bottom_panel.add(save);
         bottom_panel.add(cancel);
 
@@ -368,7 +362,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         // if no available recipes, display an error message
         if(numOfRecipes < 1){
             instructions.setText("We cannot find any recipes given your inventory! " +
-                                "\nAdd more ingredients to your inventory to get recipes!");
+                    "\nAdd more ingredients to your inventory to get recipes!");
             instructions.setSize(740, 900);
             instructions.setForeground(new Color(51,51,51));
             center_panel.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -385,11 +379,14 @@ public class ViewRecipesUI extends JPanel implements ActionListener
             center_panel.setAlignmentX(Component.CENTER_ALIGNMENT);
             center_panel.setVisible(true);
         }
+
+        this.revalidate();
+        this.repaint();
+        this.setVisible(true); // show the next state (panel)
     }
 
 
-    private void ModifyRecipe(String button)
-    {
+    private void ModifyRecipe(String button) {
         // get the og instructions from db
         String modifiedInstructions = instructions.getText();
 
@@ -419,6 +416,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
                     SaveNewRecipe(tempRecipe, modifiedInstructions);
                 }
             }
+
             else if(button.equals("Cancel"))
             {
                 Object[] options = {"Continue Editing", "Discard Changes"};
@@ -428,22 +426,34 @@ public class ViewRecipesUI extends JPanel implements ActionListener
                                                             JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
                                                             new ImageIcon(img), options, options[0]);
 
-                if(result == JOptionPane.YES_OPTION)
-                {
+                if(result == JOptionPane.YES_OPTION) {
+                    for (JButton recipeBtn : recipesBtn)
+                        recipeBtn.setEnabled(false);
+
+                    ingredients_label.setVisible(true);
+                    ingredients.setVisible(true);
+                    instructions_label.setVisible(true);
                     instructions.setEditable(true);
+                    instructions.getCaret().setVisible(true);
+                    instructions.getCaret().setSelectionVisible(true);
+
                     save.setVisible(true);
-                    modifyRecipe.setVisible(true);
+                    modifyBtn.setVisible(true);
                     cancel.setVisible(true);
                     ingredients.setBackground(new Color(226, 220, 236));
                     instructions.setBackground(new Color(226, 220, 236));
                     center_panel.setBackground(new Color(226, 220, 236));
                 }
 
-                else
-                {
+                else {
+                    for (JButton recipeBtn : recipesBtn)
+                        recipeBtn.setEnabled(true);
+
                     save.setVisible(false);
                     cancel.setVisible(false);
-                    modifyRecipe.setVisible(false);
+                    modifyBtn.setVisible(false);
+
+                    recipe_image_panel.setVisible(false);
                     instructions.setEditable(false);
                     instructions.getCaret().setVisible(false);
                     instructions.getCaret().setSelectionVisible(false);
@@ -480,9 +490,9 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         // get the corresponding recipe (recipe the user clicked)
         RecipeDisplayObjectIF recipe_to_clone = selectedRecipe;
 
-        // request the serviceDispatcher to clone this recipe for the user
+        // request the serviceDispatcher to clone this recipe for the user and refresh this panel
         serviceDispatcher.cloneRecipe(recipe_to_clone.getRecipeID(), newRecipeName, newRecipeInstructions);
-        serviceDispatcher.gotoViewRecipes();
+        initializePanel();
     }
 
 
@@ -495,15 +505,15 @@ public class ViewRecipesUI extends JPanel implements ActionListener
         String buttonChosen = e.getActionCommand();
 
         // take user to HomeUI
-        if ("Home".equals(buttonChosen)) {
-            serviceDispatcher.gotoHome();
+        if ("Back".equals(buttonChosen)) {
+            serviceDispatcher.updateState(nextState(AbstractUI.homeUI));
 
-        } else if ("Inventory".equals(buttonChosen)) { // take user to InventoryUI
-            serviceDispatcher.gotoInventory();
-
-
-        } else if ("Modify Recipe".equals(buttonChosen)) { // makes text area with recipe instructions editable
+        }  else if ("Modify Recipe".equals(buttonChosen)) { // makes text area with recipe instructions editable
+            recipe_image_panel.setVisible(false);
             instructions.setEditable(true);
+            for (JButton button : recipesBtn)
+                button.setEnabled(false);
+
             iCook.setText("Modifying " + selectedRecipe.getName());
             instructions.setBackground(new Color(226, 220, 236));
             ingredients.setBackground(new Color(226, 220, 236));
@@ -513,10 +523,15 @@ public class ViewRecipesUI extends JPanel implements ActionListener
             save.setEnabled(false);
         }
         else if ("Cancel".equals(buttonChosen)) {
+            for (JButton button : recipesBtn)
+                button.setEnabled(true);
+
             instructions.setEditable(false);
-            modifyRecipe.setVisible(false);
+            modifyBtn.setVisible(false);
             save.setVisible(false);
             cancel.setVisible(false);
+
+            recipe_image_panel.setVisible(false);
             ingredients.setVisible(false);
             ingredients_label.setVisible(false);
             instructions_label.setVisible(false);
@@ -541,6 +556,8 @@ public class ViewRecipesUI extends JPanel implements ActionListener
                     selectedRecipe = satisfiedRecipes.get(i);
                     iCook.setText(selectedRecipe.getName());
 
+                    selectedRecipe.display(recipe_image_panel);
+
                     // create the string to hold the ingredient text
                     String ingredients_text = "";
 
@@ -563,7 +580,7 @@ public class ViewRecipesUI extends JPanel implements ActionListener
                     instructions.select(0, 0);
 
                     //Set up the corresponding center panel text area, labels, & buttons to be set visible
-                    modifyRecipe.setVisible(true);
+                    modifyBtn.setVisible(true);
                     ingredients_label.setVisible(true);
                     ingredients.setVisible(true);
                     instructions_label.setVisible(true);
