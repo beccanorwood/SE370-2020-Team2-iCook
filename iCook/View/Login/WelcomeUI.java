@@ -57,7 +57,7 @@ public class WelcomeUI extends AbstractUI implements ActionListener {
 
         //Read image to be displayed on left panel
         try {
-            img = ImageIO.read(new File("logo_welcome_transp.png"));
+            img = ImageIO.read(new File("images/iCook_logo_welcome.png"));
         }catch(IOException e){
             e.printStackTrace();
         }

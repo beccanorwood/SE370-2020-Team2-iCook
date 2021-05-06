@@ -56,7 +56,7 @@ public class HomeUI extends AbstractUI implements ActionListener {
 
         //iCook Logo
         try{
-            img = ImageIO.read(new File("iCook_Logo(125).png"));
+            img = ImageIO.read(new File("images/iCook_logo_small.png"));
         }
         catch(IOException e){
             e.printStackTrace();
@@ -80,7 +80,7 @@ public class HomeUI extends AbstractUI implements ActionListener {
         homepanel.add(pic, constraints);
 
         // Buttons
-        JButton manageBtn = new JButton("Manage");
+        JButton manageBtn = new JButton("Manage DB");
         manageBtn.setFont(new Font("Century Gothic", Font.PLAIN, 20));
         manageBtn.setPreferredSize(new Dimension(144,35));
         manageBtn.setForeground(new Color(255,255,255));
@@ -203,7 +203,7 @@ public class HomeUI extends AbstractUI implements ActionListener {
 
         // update the state's state accordingly
         switch (btn) {
-            case "Manage" -> serviceDispatcher.updateState(nextState(AbstractUI.manageRecipesUI));
+            case "Manage DB" -> serviceDispatcher.updateState(nextState(AbstractUI.manageRecipesUI));
             case "Inventory" -> serviceDispatcher.updateState(nextState(AbstractUI.inventoryUI));
             case "Recipes" -> serviceDispatcher.updateState(nextState(AbstractUI.viewRecipesUI));
             case "Logout" -> {

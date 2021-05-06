@@ -393,7 +393,7 @@ public class ViewRecipesUI extends AbstractUI implements ActionListener {
         // Logo for JoptionPane Window
         BufferedImage img = null;
         try{
-            img = ImageIO.read(new File("iCook_Logo(125).png"));
+            img = ImageIO.read(new File("images/Chef_illustration.png"));
         }
         catch(IOException e)
         {
