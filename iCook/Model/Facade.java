@@ -1,18 +1,19 @@
 package iCook.Model;
 
 import iCook.Model.DatabaseAccess.*;
+import iCook.View.Operations.DisplayObjects.RecipeDisplayObject;
 
 import java.util.ArrayList;
 import java.util.Vector;
 
 /**
- * Central class for all DAO classes. Has access to all DAO classes.
+ * Central class for the Model package. Has access to all DAO classes and has
+ * access to the AbstractBuilder and RecipePrototypeManager.
  *
  * @author Team 2
- * @version 5/2/2021
+ * @version 5/7/2021
  */
 public class Facade {
-
     // instance variables
     private UserDAO userDAO;
     private IngredientDAO ingredientDAO;
@@ -37,8 +38,7 @@ public class Facade {
      * @param password the password of the user trying to login
      * @return true if the user can login, false otherwise
      */
-    public boolean login(String username, String password)
-    {
+    public boolean login(String username, String password) {
         // determine if the user's login info is valid. If so return true, false otherwise
         if ( userDAO.validUserLogin(username, password) )
         {
@@ -58,8 +58,7 @@ public class Facade {
      * @param password the password of the user trying to sign up
      * @throws UsernameTakenException if the username is already taken
      */
-    public void signUp(String username, String password) throws UsernameTakenException
-    {
+    public void signUp(String username, String password) throws UsernameTakenException {
         // make sure the username isn't taken
         // NEED TO THROW AN EXCEPTION HERE
         if ( userDAO.usernameIsTaken(username) ) {
@@ -79,8 +78,7 @@ public class Facade {
      *
      * @return an ArrayList of Ingredient objects (all system ingredients)
      */
-    public ArrayList<Ingredient> getSystemIngredients()
-    {
+    public ArrayList<Ingredient> getSystemIngredients() {
         return ingredientDAO.getAllIngredients();
     }
 
@@ -91,8 +89,7 @@ public class Facade {
      * @param userID the user's id whose ingredients we want to get
      * @return an ArrayList of UserIngredient objects (user's inventory)
      */
-    public ArrayList<UserIngredient> getUserIngredients(int userID)
-    {
+    public ArrayList<UserIngredient> getUserIngredients(int userID) {
         return userDAO.getUserIngredients(userID);
     }
 
@@ -103,8 +100,7 @@ public class Facade {
      * @param userID the user's id whose ingredients we want to update
      * @param userIngredients an ArrayList of UserIngredient objects to be updated
      */
-    public void updateUserInventory(int userID, ArrayList<UserIngredient> userIngredients)
-    {
+    public void updateUserInventory(int userID, ArrayList<UserIngredient> userIngredients) {
         userDAO.updateUserIngredientTable(userID, userIngredients);
     }
 
@@ -116,8 +112,7 @@ public class Facade {
      * @param owner_id the user's id so we can include their modified recipes
      * @return an ArrayList of Recipe objects satisfiable to the user, based on their inventory
      */
-    public ArrayList<Recipe> getSatisfiedRecipes(ArrayList<UserIngredient> userIngredients, int owner_id)
-    {
+    public ArrayList<Recipe> getSatisfiedRecipes(ArrayList<UserIngredient> userIngredients, int owner_id) {
         return recipeDAO.getSatisfiedRecipes(userIngredients, owner_id);
     }
 
@@ -127,8 +122,7 @@ public class Facade {
      *
      * @return a Vector containing vectors (each inner vector contains a recipe's info).
      */
-    public Vector<Vector> getRecipes()
-    {
+    public Vector<Vector> getRecipes() {
         return recipeDAO.getRecipes();
     }
 
@@ -137,11 +131,31 @@ public class Facade {
      * Sends a Request to the RecipeDAO to get the desired Recipe object
      *
      * @param id the id of the recipe we want to retrieve
-     * @return a Recipe object corresponding to its id
+     * @return a Recipe corresponding to the passed in id
      */
-    public Recipe getRecipe(int id)
-    {
+    public Recipe getRecipe(int id) {
         return recipeDAO.getRecipe(id);
+    }
+
+
+    /**
+     * Builds a new RecipeIF object which is then sent
+     * to the RecipeDAO to be added as a new recipe in the database.
+     * (Uses the Builder design pattern)
+     *
+     * @param recipeDO the RecipeDisplayObject containing info of the recipe to be built
+     * @param ingredients the ArrayList of RecipeIngredients corresponding to the passed in recipeDO
+     */
+    public void buildNewRecipe(RecipeDisplayObject recipeDO, ArrayList<RecipeIngredient> ingredients) {
+        AbstractBuilder builder = AbstractBuilder.getInstance();
+        builder.buildRecipeID(recipeDO.getRecipeID());
+        builder.buildRecipeName(recipeDO.getName());
+        builder.buildRecipeInstructions(recipeDO.getInstructions());
+        builder.buildRecipeIngredients(ingredients);
+        builder.buildRecipeStatus(recipeDO.isPublished());
+
+        RecipeIF recipe = builder.getRecipe();
+        addNewRecipe(recipe);
     }
 
 
@@ -152,6 +166,27 @@ public class Facade {
      */
     public void addNewRecipe(RecipeIF recipe) {
         recipeDAO.addNewRecipe(recipe);
+    }
+
+
+    /**
+     * Builds a new RecipeIF object from an existing recipe which is then sent
+     * to the RecipeDAO to update the corresponding recipe in the database.
+     * (Uses the Builder design pattern)
+     *
+     * @param recipeDO the RecipeDisplayObject containing the updated info of the recipe to be built
+     * @param ingredients the ArrayList of RecipeIngredients corresponding to the passed in recipeDO
+     */
+    public void buildUpdateRecipe(RecipeDisplayObject recipeDO, ArrayList<RecipeIngredient> ingredients) {
+        AbstractBuilder builder = AbstractBuilder.getInstance();
+        builder.buildRecipeID(recipeDO.getRecipeID());
+        builder.buildRecipeName(recipeDO.getName());
+        builder.buildRecipeInstructions(recipeDO.getInstructions());
+        builder.buildRecipeIngredients(ingredients);
+        builder.buildRecipeStatus(recipeDO.isPublished());
+
+        RecipeIF recipe = builder.getRecipe();
+        updateRecipe(recipe);
     }
 
 
@@ -172,6 +207,30 @@ public class Facade {
      */
     public ArrayList<RecipeIF> getAllSystemRecipes() {
         return recipeDAO.getAllSystemRecipes();
+    }
+
+
+    /**
+     * Clones an existing RecipeIF object for the currently logged in user and
+     * sends a request to the RecipeDAO to insert it into iCook's database.
+     * (USES THE PROTOTYPE DESIGN PATTERN)
+     *
+     * @param id the id of the recipe we want to clones
+     * @param newRecipeName the name of this new cloned recipe
+     * @param newRecipeInstructions the instructions of this new cloned recipe
+     * @param userID the id of the user this cloned recipe belongs to
+     */
+    public void cloneRecipe(int id, String newRecipeName, String newRecipeInstructions, int userID) {
+        RecipePrototypeManager recipe_manager = new RecipePrototypeManager(); // initialize a prototype manager
+        recipe_manager.setPrototypeRecipes(getAllSystemRecipes()); // set the recipe manager's list of recipes
+
+        // get a clone of the original recipe and change the variables that need to be different
+        RecipeIF cloned_recipe = recipe_manager.createRecipePrototype(id);
+        cloned_recipe.setName(newRecipeName);
+        cloned_recipe.setInstructions(newRecipeInstructions);
+
+        // request the recipeDAO to insert this newly cloned recipe
+        insertClonedRecipe(cloned_recipe, userID);
     }
 
 

@@ -26,7 +26,7 @@ import java.util.Vector;
  * The main controller class for iCook's MVC design pattern. Communicates between the View and Model packages.
  *
  * @author Team 2
- * @version 5/6/2021
+ * @version 5/7/2021
  */
 public class ServiceDispatcher {
     // user needs to be static (not unique for each ServiceDispatcher object)
@@ -354,6 +354,7 @@ public class ServiceDispatcher {
      * Sends a Request to the Facade to return a Recipe object which is then converted
      * to a RecipeDisplayObject for the View to access.
      *
+     * @param id the id of the recipe we want access to
      * @return a RecipeDisplayObject corresponding to the passed in recipe id
      */
     public RecipeDisplayObject getRecipeDisplayObject(int id) {
@@ -367,6 +368,7 @@ public class ServiceDispatcher {
      * Converts a Recipe object's ingredient list to an ArrayList of IngredientDisplayObjects.
      * Used in conversions between Recipe objects and RecipeDisplayObjects
      *
+     * @param recipe the Recipe whose list of ingredients we want to convert
      * @return an ArrayList of IngredientDisplayObjects
      */
     private ArrayList<IngredientDisplayObject> getIngredientDisplayObjects(Recipe recipe) {
@@ -387,6 +389,7 @@ public class ServiceDispatcher {
      * Converts a RecipeDisplayObject's ingredient list to an ArrayList of RecipeIngredient Objects.
      * Used in conversions between RecipeDisplayObjects and Recipe objects.
      *
+     * @param recipeDO the RecipeDisplayObject whose list of ingredients we want to convert
      * @return an ArrayList of RecipeIngredient Objects
      */
     private ArrayList<RecipeIngredient> getIngredientList(RecipeDisplayObject recipeDO) {
@@ -407,65 +410,39 @@ public class ServiceDispatcher {
 
 
     /**
-     * Builds a new RecipeIF object which is then
-     * sent to the Facade to add a new recipe to the database.
-     * Uses the Builder design pattern.
+     * Sends a request to the Facade to build a new RecipeIF object
+     * which should then be added to the database.
+     * (Uses the Builder design pattern)
      *
      * @param recipeDO the RecipeDisplayObject to be added to the database
      */
     public void addNewRecipe(RecipeDisplayObject recipeDO) {
-        AbstractBuilder builder = AbstractBuilder.getInstance();
-        builder.buildRecipeID(recipeDO.getRecipeID());
-        builder.buildRecipeName(recipeDO.getName());
-        builder.buildRecipeInstructions(recipeDO.getInstructions());
-        builder.buildRecipeIngredients(getIngredientList(recipeDO));
-        builder.buildRecipeStatus(recipeDO.isPublished());
-
-        RecipeIF recipe = builder.getRecipe();
-        facade.addNewRecipe(recipe);
+        facade.buildNewRecipe(recipeDO, getIngredientList(recipeDO));
     }
 
 
     /**
-     * Builds a new RecipeIF object from an existing recipe which is then sent
-     * to the Facade to update an existing recipe in the database.
-     * Uses the Builder design pattern.
+     * Sends a request to the Facade to build a new RecipeIF object
+     * from an existing recipe which should then be updated in the database.
+     * (Uses the Builder design pattern)
      *
      * @param recipeDO the RecipeDisplayObject to be updated in the database
      */
     public void updateRecipe(RecipeDisplayObject recipeDO) {
-        AbstractBuilder builder = AbstractBuilder.getInstance();
-        builder.buildRecipeID(recipeDO.getRecipeID());
-        builder.buildRecipeName(recipeDO.getName());
-        builder.buildRecipeInstructions(recipeDO.getInstructions());
-        builder.buildRecipeIngredients(getIngredientList(recipeDO));
-        builder.buildRecipeStatus(recipeDO.isPublished());
-
-        RecipeIF recipe = builder.getRecipe();
-        facade.updateRecipe(recipe);
+        facade.buildUpdateRecipe(recipeDO, getIngredientList(recipeDO));
     }
 
 
     /**
-     * Clones an existing RecipeIF object for the currently logged in user and
-     * requests the facade to insert it into iCook's database.
+     * Sends a request to the facade to clone and insert a recipe into iCook's database.
      * (USES THE PROTOTYPE DESIGN PATTERN)
      *
-     * @param id the id of the recipe we want to clones
+     * @param id the id of the recipe we want to clone
      * @param newRecipeName the name of this new cloned recipe
      * @param newRecipeInstructions the instructions of this new cloned recipe
      */
     public void cloneRecipe(int id, String newRecipeName, String newRecipeInstructions) {
-        RecipePrototypeManager recipe_manager = new RecipePrototypeManager();
-        recipe_manager.setPrototypeRecipes(facade.getAllSystemRecipes());    // call the facade to set the manager's list of recipes
-
-        // get the clone of the original recipe and change the variables that need to be different
-        RecipeIF cloned_recipe = recipe_manager.createRecipePrototype(id);
-        cloned_recipe.setName(newRecipeName);
-        cloned_recipe.setInstructions(newRecipeInstructions);
-
-        // request the facade to insert this newly cloned recipe
-        facade.insertClonedRecipe(cloned_recipe, user.getId());
+        facade.cloneRecipe(id, newRecipeName, newRecipeInstructions, user.getId());
     }
 
 
@@ -506,7 +483,7 @@ public class ServiceDispatcher {
 
 
     /**
-     * Update the current state of the program (UI).
+     * Update the current state (UI) of the program.
      *
      * @param next_state to be the current state
      */

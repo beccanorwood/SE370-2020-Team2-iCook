@@ -9,7 +9,6 @@ import java.sql.*;
  * @version 4/25/2021
  */
 public class BaseDAO {
-
     // connection to the database is independent of classes
     private static Connection connection = null;
 
@@ -40,8 +39,7 @@ public class BaseDAO {
      *
      * @throws SQLException if there is a problem connecting to the database
      */
-    private void connect() throws SQLException
-    {
+    private void connect() throws SQLException {
         // only establish a connection to the database if the connection is null
         if (connection == null) {
             // Register the iCook.Controller.Driver
@@ -62,8 +60,7 @@ public class BaseDAO {
      * @return a Statement object created from the established connection
      * @throws SQLException if there is a problem with the connection
      */
-    protected Statement createStatement() throws SQLException
-    {
+    protected Statement createStatement() throws SQLException {
         // make the statement traversable and not one direction only
         return connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
     }
